@@ -49,6 +49,7 @@ import GenerateSuratJalan from "layouts/surat-jalan/generate-surat-jalan";
 import ApprovalSuratJalan from "layouts/surat-jalan/approval-surat-jalan";
 import ApprovalBarangMasuk from "layouts/barang-masuk/approval-barang-masuk";
 import GenerateMutasi from "layouts/mutasi-barang/GenerateMutasi";
+import ApprovalMutasi from "layouts/mutasi-barang/ApprovalMutasi";
 import SignUp from "layouts/authentication/sign-up";
 
 // @mui iconsππ
@@ -169,7 +170,7 @@ const routes = [
     key: "approval-mutasi-barang",
     icon: <Icon fontSize="small">warehouse</Icon>,
     route: "/approval-mutasi-barang",
-    component: <ApprovalBarangMasuk />,
+    component: <ApprovalMutasi />,
     roles: ["2"],
   },
   {

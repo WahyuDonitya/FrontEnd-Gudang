@@ -121,7 +121,7 @@ function GenerateMutasi() {
     }
   };
 
-  const addBarangMasuk = async () => {
+  const addMutasiBarang = async () => {
     try {
       // console.log("nota supplier", notaSupplier);
       const dataKirim = {
@@ -519,7 +519,7 @@ function GenerateMutasi() {
 
             {/* Untuk Add data ke DB */}
             <Grid item xs={12}>
-              <MDButton variant="gradient" color="success" fullWidth onClick={addBarangMasuk}>
+              <MDButton variant="gradient" color="success" fullWidth onClick={addMutasiBarang}>
                 Add data
               </MDButton>
             </Grid>
