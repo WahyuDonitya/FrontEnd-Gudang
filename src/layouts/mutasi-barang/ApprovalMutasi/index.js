@@ -28,12 +28,12 @@ import DataTable from "examples/Tables/DataTable";
 
 // Data
 import approvalBarangMasuk from "./data/approvalTableData";
-// import rejectedSJ from "./data/listRejectSuratJalan";
+import rejectedSJ from "./data/listRejectedData";
 // import projectsTableData from "layouts/tables/data/projectsTableData";
 
 function ApprovalMutasi() {
   const { columns, rows } = approvalBarangMasuk();
-  //   const { columnsreject, rowsreject } = rejectedSJ();
+  const { columnsreject, rowsreject } = rejectedSJ();
 
   return (
     <DashboardLayout>
@@ -85,13 +85,14 @@ function ApprovalMutasi() {
                 </MDTypography>
               </MDBox>
               <MDBox pt={3}>
-                {/* <DataTable
+                <DataTable
                   table={{ columns: columnsreject, rows: rowsreject }}
                   isSorted={true}
                   entriesPerPage={false}
                   showTotalEntries={false}
                   noEndBorder
-                /> */}
+                  canSearch
+                />
               </MDBox>
             </Card>
           </Grid>

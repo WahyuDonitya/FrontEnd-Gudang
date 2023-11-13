@@ -93,7 +93,7 @@ function DetailMB() {
       };
       console.log(datatosend);
       const response = await axios.post(
-        "http://127.0.0.1:8000/api/suratjalan/suratjalan-approval",
+        "http://127.0.0.1:8000/api/gudang/transaksi-accept",
         datatosend,
         {
           headers: { Authorization: `Bearer ${accessToken}` },
@@ -114,7 +114,7 @@ function DetailMB() {
       };
       console.log(datatosend);
       const response = await axios.post(
-        "http://127.0.0.1:8000/api/suratjalan/suratjalan-reject",
+        "http://127.0.0.1:8000/api/gudang/transaksi-reject",
         datatosend,
         {
           headers: { Authorization: `Bearer ${accessToken}` },
