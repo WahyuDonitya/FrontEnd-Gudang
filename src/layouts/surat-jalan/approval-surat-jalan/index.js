@@ -28,12 +28,12 @@ import DataTable from "examples/Tables/DataTable";
 
 // Data
 import approvalSJ from "./data/approvalTableData";
-import rejectedSJ from "./data/listRejectSuratJalan";
+import approvalSJTrans from "./data/approvalSuratJalanTransfer";
 // import projectsTableData from "layouts/tables/data/projectsTableData";
 
 function ApprovalSuratJalan() {
   const { columns, rows } = approvalSJ();
-  const { columnsreject, rowsreject } = rejectedSJ();
+  const { columnstrans, rowstrans } = approvalSJTrans();
 
   return (
     <DashboardLayout>
@@ -80,12 +80,12 @@ function ApprovalSuratJalan() {
                 coloredShadow="info"
               >
                 <MDTypography variant="h6" color="white">
-                  List Rejected Surat Jalan
+                  List Approval Surat Jalan Transfer Barang
                 </MDTypography>
               </MDBox>
               <MDBox pt={3}>
                 <DataTable
-                  table={{ columns: columnsreject, rows: rowsreject }}
+                  table={{ columns: columnstrans, rows: rowstrans }}
                   isSorted={true}
                   entriesPerPage={false}
                   showTotalEntries={false}
