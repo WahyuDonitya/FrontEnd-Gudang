@@ -30,6 +30,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import MDButton from "components/MDButton";
 import MDSnackbar from "components/MDSnackbar";
+import PrintableformSJ from "./PrintableformSJ";
 // import projectsTableData from "layouts/tables/data/projectsTableData";
 
 function DetailSJ() {
@@ -127,6 +128,23 @@ function DetailSJ() {
     }
   };
 
+  const handlePrint = () => {
+    const printableContent = document.getElementById("printable-content");
+
+    const printWindow = window.open("", "_blank");
+    printWindow.document.write(`
+      <html>
+        <head>
+          <title>Print</title>
+        </head>
+        <body>${printableContent.innerHTML}</body>
+      </html>
+    `);
+    printWindow.document.close();
+    printWindow.print();
+    printWindow.onafterprint = () => printWindow.close();
+  };
+
   // END API
 
   useEffect(() => {
@@ -210,6 +228,13 @@ function DetailSJ() {
         <Grid container spacing={6}>
           <Grid item xs={12}>
             <Card>
+              <div id="printable-content" style={{ display: "none" }}>
+                {/* Include PrintableForm component */}
+                <PrintableformSJ
+                  detailSuratJalan={detailSuratJalan}
+                  headerSuratJalan={headerSuratJalan}
+                />
+              </div>
               <Grid container pt={4}>
                 <Grid item xs={12}>
                   <DataTable
@@ -231,6 +256,16 @@ function DetailSJ() {
                   <Grid item xs={6}>
                     <MDButton variant="gradient" color="success" fullWidth onClick={handleApprove}>
                       Approve
+                    </MDButton>
+                  </Grid>
+                </Grid>
+              )}
+
+              {headerSuratJalan.suratjalantransfer_status !== 2 && (
+                <Grid container pt={5} spacing={7} px={3} mb={4}>
+                  <Grid item xs={12}>
+                    <MDButton variant="gradient" color="info" fullWidth onClick={handlePrint}>
+                      Print Nota
                     </MDButton>
                   </Grid>
                 </Grid>
