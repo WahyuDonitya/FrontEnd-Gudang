@@ -64,7 +64,6 @@ export default function data() {
       { Header: "Dari Gudang", accessor: "gudang.gudang_nama", align: "center" },
       { Header: "Tanggal Kirim", accessor: "suratjalan_tanggalkirim", align: "center" },
       { Header: "Action", accessor: "action", align: "center" },
-      { Header: "Print Surat Jalan", accessor: "action_print", align: "center" },
     ],
 
     rows: approvalList.map((item) => ({
@@ -81,18 +80,10 @@ export default function data() {
       action: (
         <Link to={`/detailsurat-jalan/${item.suratjalan_nota}`}>
           <MDTypography variant="caption" color="text" fontWeight="medium">
-            Detail
+            {item.suratjalan_status === 3 ? "Print" : "Detail"}
           </MDTypography>
         </Link>
       ),
-      action_print:
-        item.suratjalan_status === 3 ? (
-          <Link to={`/detailsurat-jalan/${item.suratjalan_nota}`}>
-            <MDTypography variant="caption" color="text" fontWeight="medium">
-              Print
-            </MDTypography>
-          </Link>
-        ) : null,
     })),
   };
 }
