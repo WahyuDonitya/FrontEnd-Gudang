@@ -152,6 +152,39 @@ function GenerateSuratJalan() {
     getHtransfer();
   }, []);
 
+  // ini pengganti web socket dengan melakukan pengambilan data ke API lagi setiap 10 detik sekali
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const response = await fetch("http://127.0.0.1:8000/api/suratjalan/get-hkeluar-approved", {
+  //         headers: {
+  //           Authorization: `Bearer ${accessToken}`,
+  //         },
+  //       });
+  //       const data = await response.json();
+
+  //       console.log("Data terbaru:", data);
+  //       // Implementasikan logika pembaruan tampilan di sini
+  //       setHkeluar(data);
+  //     } catch (error) {
+  //       console.error("Terjadi kesalahan:", error);
+  //     }
+  //   };
+
+  //   // Panggil fetchData pertama kali
+  //   fetchData();
+
+  //   // Atur interval untuk memanggil fetchData setiap 5 detik
+  //   const intervalId = setInterval(() => {
+  //     fetchData();
+  //   }, 10000);
+
+  //   // Membersihkan interval saat komponen di-unmount
+  //   return () => {
+  //     clearInterval(intervalId);
+  //   };
+  // }, []);
+
   // Function
   const addSuratJalan = async () => {
     try {

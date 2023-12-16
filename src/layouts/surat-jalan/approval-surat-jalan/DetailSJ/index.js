@@ -97,7 +97,10 @@ function DetailSJ() {
         }
       );
       openSuccessSB();
-      console.log(response);
+      // console.log(response);`
+      setTimeout(() => {
+        window.location.reload();
+      }, 2000);
     } catch (error) {
       openErrorSB();
       console.error("Terjadi kesalahan saat melakukan approval surat jalan : ", error);
@@ -261,7 +264,7 @@ function DetailSJ() {
                 </Grid>
               )}
 
-              {headerSuratJalan.suratjalantransfer_status !== 2 && (
+              {headerSuratJalan.suratjalan_status !== 2 && (
                 <Grid container pt={5} spacing={7} px={3} mb={4}>
                   <Grid item xs={12}>
                     <MDButton variant="gradient" color="info" fullWidth onClick={handlePrint}>
