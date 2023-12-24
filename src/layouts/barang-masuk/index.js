@@ -71,6 +71,15 @@ function BarangMasuk() {
   const [isInputInvalid, setIsInputInvalid] = useState(false);
 
   const accessToken = localStorage.getItem("access_token");
+  let gudang_id;
+  if (accessToken) {
+    // Decode token
+    const tokenParts = accessToken.split(".");
+    const payload = JSON.parse(atob(tokenParts[1]));
+
+    // Ambil nilai gudang_id
+    gudang_id = payload.gudang_id;
+  }
 
   // API
 
@@ -277,23 +286,25 @@ function BarangMasuk() {
               )}
             </Grid>
             <Grid item xs={6}>
-              {Array.isArray(suppliers) && suppliers.length > 0 ? (
-                <Autocomplete
-                  disablePortal
-                  id="combo-box-demo"
-                  options={suppliers}
-                  getOptionLabel={(option) => option.supplier_name}
-                  onChange={(event, newValue) => {
-                    // console.log(newValue);
-                    setSupplierPick(newValue.supplier_id);
-                  }}
-                  fullWidth
-                  renderInput={(params) => <TextField {...params} label="Supplier" />}
-                />
-              ) : (
-                <p>Loading customer data...</p>
-              )}
+              {gudang_id === 1 &&
+                (Array.isArray(suppliers) && suppliers.length > 0 ? (
+                  <Autocomplete
+                    disablePortal
+                    id="combo-box-demo"
+                    options={suppliers}
+                    getOptionLabel={(option) => option.supplier_name}
+                    onChange={(event, newValue) => {
+                      // console.log(newValue);
+                      setSupplierPick(newValue.supplier_id);
+                    }}
+                    fullWidth
+                    renderInput={(params) => <TextField {...params} label="Supplier" />}
+                  />
+                ) : (
+                  <p>Loading customer data...</p>
+                ))}
             </Grid>
+
             <Grid item xs={12}>
               <TextField
                 label="Nota Supplier"

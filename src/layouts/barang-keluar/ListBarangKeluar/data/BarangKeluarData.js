@@ -36,12 +36,17 @@ export default function data() {
   //    API
   const getApprovalList = async () => {
     try {
-      const response = await axios.get("http://127.0.0.1:8000/api/transaksi-barang-keluar", {
-        Authorization: `Bearer ${accessToken}`,
-      });
+      const response = await axios.get(
+        "http://127.0.0.1:8000/api/transaksi-barang/getAll-hkeluar",
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
 
       setApprovalList(response.data);
-      console.log(approvalList);
+      // console.log(approvalList);
     } catch (error) {
       console.error("Terjadi kesalahan saat mengambil data Gudang:", error);
     }
@@ -58,18 +63,29 @@ export default function data() {
       { Header: "Nama Customer", accessor: "customer.customer_nama", align: "center" },
       { Header: "Gudang", accessor: "gudang.gudang_nama", align: "center" },
       { Header: "Tanggal Keluar", accessor: "hkeluar_tanggal", align: "center" },
+      { Header: "Status", accessor: "status", align: "center" },
       { Header: "Action", accessor: "action", align: "center" },
     ],
 
     rows: approvalList.map((item) => ({
       hkeluar_nota: item.hkeluar_nota,
-      customer: { customer_nama: item.customer.customer_nama },
-      gudang: { gudang_nama: item.gudang.gudang_nama },
+      customer: { customer_nama: item.customer?.customer_nama },
+      gudang: { gudang_nama: item.gudang?.gudang_nama },
       hkeluar_tanggal: item.hkeluar_tanggal,
+      status:
+        item.hkeluar_status === 0
+          ? "Sudah Tuntas Terkirim"
+          : item.hkeluar_status === 1
+          ? "Terkirim Sebagian"
+          : item.hkeluar_status === 2
+          ? "Belum Terkirim"
+          : item.hkeluar_status === 3
+          ? "Menunggu Approval"
+          : "Ditolak",
       action: (
         <Link to={`/detail/${item.hkeluar_nota}`}>
           <MDTypography variant="caption" color="text" fontWeight="medium">
-            Detail
+            {item.hkeluar_status === 2 ? "Print" : "Detail"}
           </MDTypography>
         </Link>
       ),

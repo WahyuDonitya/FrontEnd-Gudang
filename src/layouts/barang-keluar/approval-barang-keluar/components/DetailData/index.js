@@ -29,6 +29,8 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import MDButton from "components/MDButton";
+import MDSnackbar from "components/MDSnackbar";
+import PrintableFormBarangKeluar from "./PrintableFormSJTrans";
 // import projectsTableData from "layouts/tables/data/projectsTableData";
 
 function DetailData() {
@@ -36,6 +38,23 @@ function DetailData() {
   const [headerKeluar, setHeaderlKeluar] = useState([]);
   const { dataId } = useParams();
   const accessToken = localStorage.getItem("access_token");
+
+  // state untuk notification
+  const [successSB, setSuccessSB] = useState(false);
+  const openSuccessSB = () => setSuccessSB(true);
+  const closeSuccessSB = () => setSuccessSB(false);
+
+  const [errorSB, setErrorSB] = useState(false);
+  const openErrorSB = () => setErrorSB(true);
+  const closeErrorSB = () => setErrorSB(false);
+
+  const [successRejectSB, setSuccessRejectSB] = useState(false);
+  const openSuccessRejectSB = () => setSuccessRejectSB(true);
+  const closeSuccessRejectSB = () => setSuccessRejectSB(false);
+
+  const [errorRejectSB, setErrorRejectSB] = useState(false);
+  const openErrorRejectSB = () => setErrorRejectSB(true);
+  const closeErrorRejectSB = () => setErrorRejectSB(false);
 
   // API
 
@@ -80,7 +99,9 @@ function DetailData() {
         }
       );
       console.log(response);
+      openSuccessSB();
     } catch (error) {
+      openErrorSB();
       console.error("Terjadi kesalahan saat melakukan approval barang keluar : ", error);
     }
   };
@@ -99,9 +120,29 @@ function DetailData() {
         }
       );
       console.log(response);
+      openSuccessRejectSB();
     } catch (error) {
+      openErrorRejectSB();
       console.error("Terjadi kesalahan saat melakukan reject barang keluar : ", error);
     }
+  };
+
+  const handlePrint = () => {
+    // console.log(headerKeluar);
+    const printableContent = document.getElementById("printable-content");
+
+    const printWindow = window.open("", "_blank");
+    printWindow.document.write(`
+      <html>
+        <head>
+          <title>Print</title>
+        </head>
+        <body>${printableContent.innerHTML}</body>
+      </html>
+    `);
+    printWindow.document.close();
+    printWindow.print();
+    printWindow.onafterprint = () => printWindow.close();
   };
 
   // END API
@@ -124,6 +165,62 @@ function DetailData() {
     dkeluar_harga: item.dkeluar_harga !== null ? item.dkeluar_harga : "Tidak ada harga",
   }));
 
+  const renderSuccessSB = (
+    <MDSnackbar
+      color="success"
+      icon="check"
+      title="Notifikasi Berhasil"
+      content="Berhasil Melakukan approve Surat Jalan"
+      dateTime="Baru Saja"
+      open={successSB}
+      onClose={closeSuccessSB}
+      close={closeSuccessSB}
+      bgWhite
+    />
+  );
+
+  const renderErrorSB = (
+    <MDSnackbar
+      color="error"
+      icon="warning"
+      title="Notifikasi Error"
+      content="Error Melakukan approve Surat Jalan"
+      dateTime="Baru Saja"
+      open={errorSB}
+      onClose={closeErrorSB}
+      close={closeErrorSB}
+      bgWhite
+    />
+  );
+
+  const renderRejectSuccessSB = (
+    <MDSnackbar
+      color="success"
+      icon="check"
+      title="Notifikasi Berhasil"
+      content="Berhasil Melakukan Reject Surat Jalan"
+      dateTime="Baru Saja"
+      open={successRejectSB}
+      onClose={closeSuccessRejectSB}
+      close={closeSuccessRejectSB}
+      bgWhite
+    />
+  );
+
+  const renderRejectErrorSB = (
+    <MDSnackbar
+      color="error"
+      icon="warning"
+      title="Notifikasi Error"
+      content="Error Melakukan Reject Surat Jalan"
+      dateTime="Baru Saja"
+      open={errorRejectSB}
+      onClose={closeErrorRejectSB}
+      close={closeErrorRejectSB}
+      bgWhite
+    />
+  );
+
   // console.log("Rows Data:", detailKeluar);
   return (
     <DashboardLayout>
@@ -132,6 +229,12 @@ function DetailData() {
         <Grid container spacing={6}>
           <Grid item xs={12}>
             <Card>
+              <div id="printable-content" style={{ display: "none" }}>
+                <PrintableFormBarangKeluar
+                  detailKeluar={detailKeluar}
+                  headerKeluar={headerKeluar}
+                />
+              </div>
               <Grid container mt={4}>
                 <Grid item xs={6} style={{ textAlign: "center" }}>
                   <MDTypography variant="h6">Nomor Nota : {headerKeluar.hkeluar_nota}</MDTypography>
@@ -177,20 +280,40 @@ function DetailData() {
                   />
                 </Grid>
               </Grid>
-              <Grid container pt={5} spacing={7} px={3} mb={4}>
-                <Grid item xs={6}>
-                  <MDButton variant="gradient" color="error" fullWidth onClick={handleReject}>
-                    Reject
-                  </MDButton>
+              {headerKeluar.hkeluar_status === 3 && (
+                <Grid container pt={5} spacing={7} px={3} mb={4}>
+                  <Grid item xs={6}>
+                    <MDButton variant="gradient" color="error" fullWidth onClick={handleReject}>
+                      Reject
+                    </MDButton>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <MDButton variant="gradient" color="success" fullWidth onClick={handleApprove}>
+                      Approve
+                    </MDButton>
+                  </Grid>
                 </Grid>
-                <Grid item xs={6}>
-                  <MDButton variant="gradient" color="success" fullWidth onClick={handleApprove}>
-                    Approve
-                  </MDButton>
+              )}
+
+              {headerKeluar.hkeluar_status === 2 && (
+                <Grid container pt={5} spacing={7} px={3} mb={4}>
+                  <Grid item xs={12}>
+                    <MDButton variant="gradient" color="info" fullWidth onClick={handlePrint}>
+                      Print Nota
+                    </MDButton>
+                  </Grid>
                 </Grid>
-              </Grid>
+              )}
             </Card>
           </Grid>
+        </Grid>
+      </MDBox>
+      <MDBox p={2}>
+        <Grid container spacing={6}>
+          {renderSuccessSB}
+          {renderErrorSB}
+          {renderRejectSuccessSB}
+          {renderRejectErrorSB}
         </Grid>
       </MDBox>
     </DashboardLayout>

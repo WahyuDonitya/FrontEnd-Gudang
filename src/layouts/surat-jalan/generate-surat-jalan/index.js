@@ -177,7 +177,7 @@ function GenerateSuratJalan() {
   //   // Atur interval untuk memanggil fetchData setiap 5 detik
   //   const intervalId = setInterval(() => {
   //     fetchData();
-  //   }, 10000);
+  //   }, 15000);
 
   //   // Membersihkan interval saat komponen di-unmount
   //   return () => {

@@ -1,21 +1,3 @@
-/* eslint-disable react/prop-types */
-/* eslint-disable react/function-component-definition */
-/**
-=========================================================
-* Material Dashboard 2 React - v2.2.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/material-dashboard-react
-* Copyright 2023 Creative Tim (https://www.creative-tim.com)
-
-Coded by www.creative-tim.com
-
- =========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
-
-// Material Dashboard 2 React components
 import MDTypography from "components/MDTypography";
 
 import { useEffect, useState } from "react";
@@ -71,10 +53,6 @@ export default function data() {
           : item.hmasuk_status === 1
           ? "Sudah Disetujui"
           : "Ditolak",
-      //   gudang: {
-      //     gudang_nama: item.h_keluar.gudang.gudang_nama,
-      //   },
-      //   suratjalan_tanggalkirim: item.suratjalan_tanggalkirim,
       action: (
         <Link to={`/detailbarang-masuk/${item.hmasuk_nota}`}>
           <MDTypography variant="caption" color="text" fontWeight="medium">

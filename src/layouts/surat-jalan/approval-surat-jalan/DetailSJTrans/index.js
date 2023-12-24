@@ -75,7 +75,7 @@ function DetailSJTrans() {
           },
         }
       );
-      console.log("Response : ", response.data);
+      // console.log("Response : ", id.data);
       setDetailSuratJalan(response.data);
       setHeaderlSuratJalan(id.data);
     } catch (error) {

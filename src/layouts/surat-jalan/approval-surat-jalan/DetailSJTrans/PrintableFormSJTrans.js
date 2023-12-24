@@ -6,6 +6,7 @@ const PrintableFormSJTrans = ({ detailSuratJalan, headerSuratJalan }) => {
     <div>
       {/* Your printable content goes here */}
       <h1>Printable Content</h1>
+      <p>Nota : {headerSuratJalan?.htransfer?.htransfer_barang_nota}</p>
       <p>Surat Jalan Nota: {headerSuratJalan?.suratjalantransfer_nota}</p>
       <p>Tanggal: {headerSuratJalan?.suratjalantransfer_tanggalkirim}</p>
       <p>Gudang Tujuan: {headerSuratJalan.htransfer?.gudang_tujuan?.gudang_nama}</p>

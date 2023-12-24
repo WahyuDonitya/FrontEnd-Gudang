@@ -27,7 +27,7 @@ import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import DataTable from "examples/Tables/DataTable";
 
 // Data
-import authorsTableData from "layouts/approval-barang-keluar/data/approvalTableData";
+import authorsTableData from "layouts/barang-keluar/approval-barang-keluar/data/approvalTableData";
 // import projectsTableData from "layouts/tables/data/projectsTableData";
 
 function ApprovalBarangKeluar() {

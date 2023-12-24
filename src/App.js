@@ -48,7 +48,7 @@ import brandDark from "assets/images/logo-ct-dark.png";
 
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import DetailData from "layouts/approval-barang-keluar/components/DetailData";
+import DetailData from "layouts/barang-keluar/approval-barang-keluar/components/DetailData";
 import DetailSJ from "layouts/surat-jalan/approval-surat-jalan/DetailSJ";
 import DetailBarangMasuk from "layouts/barang-masuk/approval-barang-masuk/DetailBarangMasuk";
 import DetailMB from "layouts/mutasi-barang/ApprovalMutasi/detailMB";

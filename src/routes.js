@@ -44,12 +44,14 @@ import Profile from "layouts/profile";
 import BarangKeluar from "layouts/barang-keluar";
 import SignIn from "layouts/authentication/sign-in";
 import BarangMasuk from "layouts/barang-masuk";
-import ApprovalBarangKeluar from "layouts/approval-barang-keluar";
+import ApprovalBarangKeluar from "layouts/barang-keluar/approval-barang-keluar";
 import GenerateSuratJalan from "layouts/surat-jalan/generate-surat-jalan";
 import ApprovalSuratJalan from "layouts/surat-jalan/approval-surat-jalan";
 import ApprovalBarangMasuk from "layouts/barang-masuk/approval-barang-masuk";
 import GenerateMutasi from "layouts/mutasi-barang/GenerateMutasi";
 import ApprovalMutasi from "layouts/mutasi-barang/ApprovalMutasi";
+import ListBarangMasuk from "layouts/barang-masuk/list-barang-masuk";
+import ListBarangKeluar from "layouts/barang-keluar/ListBarangKeluar";
 import SignUp from "layouts/authentication/sign-up";
 
 // @mui iconsππ
@@ -63,44 +65,44 @@ const routes = [
     icon: <Icon fontSize="small">dashboard</Icon>,
     route: "/dashboard",
     component: <Dashboard />,
-    roles: ["2"],
+    roles: ["2", "1"],
   },
-  {
-    type: "collapse",
-    name: "Tables",
-    key: "tables",
-    icon: <Icon fontSize="small">table_view</Icon>,
-    route: "/tables",
-    component: <Tables />,
-    roles: ["1"],
-  },
-  {
-    type: "collapse",
-    name: "Billing",
-    key: "billing",
-    icon: <Icon fontSize="small">receipt_long</Icon>,
-    route: "/billing",
-    component: <Billing />,
-    roles: ["1"],
-  },
-  {
-    type: "collapse",
-    name: "Notifications",
-    key: "notifications",
-    icon: <Icon fontSize="small">notifications</Icon>,
-    route: "/notifications",
-    component: <Notifications />,
-    roles: ["1"],
-  },
-  {
-    type: "collapse",
-    name: "Profile",
-    key: "profile",
-    icon: <Icon fontSize="small">person</Icon>,
-    route: "/profile",
-    component: <Profile />,
-    roles: ["1"],
-  },
+  // {
+  //   type: "collapse",
+  //   name: "Tables",
+  //   key: "tables",
+  //   icon: <Icon fontSize="small">table_view</Icon>,
+  //   route: "/tables",
+  //   component: <Tables />,
+  //   roles: ["1"],
+  // },
+  // {
+  //   type: "collapse",
+  //   name: "Billing",
+  //   key: "billing",
+  //   icon: <Icon fontSize="small">receipt_long</Icon>,
+  //   route: "/billing",
+  //   component: <Billing />,
+  //   roles: ["1"],
+  // },
+  // {
+  //   type: "collapse",
+  //   name: "Notifications",
+  //   key: "notifications",
+  //   icon: <Icon fontSize="small">notifications</Icon>,
+  //   route: "/notifications",
+  //   component: <Notifications />,
+  //   roles: ["1"],
+  // },
+  // {
+  //   type: "collapse",
+  //   name: "Profile",
+  //   key: "profile",
+  //   icon: <Icon fontSize="small">person</Icon>,
+  //   route: "/profile",
+  //   component: <Profile />,
+  //   roles: ["1"],
+  // },
   {
     type: "collapse",
     name: "Barang Keluar",
@@ -108,7 +110,7 @@ const routes = [
     icon: <Icon fontSize="small">inventory</Icon>,
     route: "/barang-keluar",
     component: <BarangKeluar />,
-    roles: ["2"],
+    roles: ["2", "1"],
   },
   {
     type: "collapse",
@@ -117,7 +119,7 @@ const routes = [
     icon: <Icon fontSize="small">warehouse</Icon>,
     route: "/barang-masuk",
     component: <BarangMasuk />,
-    roles: ["2"],
+    roles: ["2", "1"],
   },
   {
     type: "collapse",
@@ -126,7 +128,7 @@ const routes = [
     icon: <Icon fontSize="small">warehouse</Icon>,
     route: "/mutasi-barang",
     component: <GenerateMutasi />,
-    roles: ["2"],
+    roles: ["2", "1"],
   },
   {
     type: "collapse",
@@ -135,7 +137,7 @@ const routes = [
     icon: <Icon fontSize="small">local_shipping</Icon>,
     route: "/generate-surat-jalan",
     component: <GenerateSuratJalan />,
-    roles: ["2"],
+    roles: ["2", "1"],
   },
   {
     type: "collapse",
@@ -172,6 +174,24 @@ const routes = [
     route: "/approval-mutasi-barang",
     component: <ApprovalMutasi />,
     roles: ["2"],
+  },
+  {
+    type: "collapse",
+    name: "List Barang Masuk",
+    key: "list-barang-masuk",
+    icon: <Icon fontSize="small">warehouse</Icon>,
+    route: "/list-barang-masuk",
+    component: <ListBarangMasuk />,
+    roles: ["1"],
+  },
+  {
+    type: "collapse",
+    name: "List Barang Keluar",
+    key: "list-barang-keluar",
+    icon: <Icon fontSize="small">warehouse</Icon>,
+    route: "/list-barang-keluar",
+    component: <ListBarangKeluar />,
+    roles: ["1"],
   },
   {
     type: "collapse",
