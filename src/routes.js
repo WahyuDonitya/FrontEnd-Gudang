@@ -52,6 +52,7 @@ import GenerateMutasi from "layouts/mutasi-barang/GenerateMutasi";
 import ApprovalMutasi from "layouts/mutasi-barang/ApprovalMutasi";
 import ListBarangMasuk from "layouts/barang-masuk/list-barang-masuk";
 import ListBarangKeluar from "layouts/barang-keluar/ListBarangKeluar";
+import ListSuratJalan from "layouts/surat-jalan/list-surat-jalan";
 import SignUp from "layouts/authentication/sign-up";
 
 // @mui iconsππ
@@ -182,7 +183,7 @@ const routes = [
     icon: <Icon fontSize="small">warehouse</Icon>,
     route: "/list-barang-masuk",
     component: <ListBarangMasuk />,
-    roles: ["1"],
+    roles: ["1", "2"],
   },
   {
     type: "collapse",
@@ -191,7 +192,16 @@ const routes = [
     icon: <Icon fontSize="small">warehouse</Icon>,
     route: "/list-barang-keluar",
     component: <ListBarangKeluar />,
-    roles: ["1"],
+    roles: ["1", "2"],
+  },
+  {
+    type: "collapse",
+    name: "List Surat Jalan",
+    key: "list-surat-jalan",
+    icon: <Icon fontSize="small">warehouse</Icon>,
+    route: "/list-surat-jalan",
+    component: <ListSuratJalan />,
+    roles: ["1", "2"],
   },
   {
     type: "collapse",
