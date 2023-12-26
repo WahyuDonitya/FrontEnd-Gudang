@@ -57,20 +57,29 @@ export default function data() {
       { Header: "Customer Alamat", accessor: "customer.customer_alamat", align: "center" },
       { Header: "Dari Gudang", accessor: "gudang.gudang_nama", align: "center" },
       { Header: "Tanggal Kirim", accessor: "suratjalan_tanggalkirim", align: "center" },
+      { Header: "Status", accessor: "status", align: "center" },
       { Header: "Action", accessor: "action", align: "center" },
     ],
 
     rows: approvalList.map((item) => ({
       suratjalan_nota: item.suratjalan_nota,
-      h_keluar: { hkeluar_nota: item.h_keluar.hkeluar_nota },
+      h_keluar: { hkeluar_nota: item.h_keluar?.hkeluar_nota },
       customer: {
-        customer_nama: item.h_keluar.customer.customer_nama,
-        customer_alamat: item.h_keluar.customer.customer_alamat,
+        customer_nama: item.h_keluar?.customer?.customer_nama,
+        customer_alamat: item.h_keluar?.customer?.customer_alamat,
       },
       gudang: {
-        gudang_nama: item.h_keluar.gudang.gudang_nama,
+        gudang_nama: item.h_keluar?.gudang?.gudang_nama,
       },
       suratjalan_tanggalkirim: item.suratjalan_tanggalkirim,
+      status:
+        item.suratjalan_status === 1
+          ? "Ditolak"
+          : item.suratjalan_status === 2
+          ? "Menunggu Approval"
+          : item.suratjalan_status === 3
+          ? "Proses Pengiriman"
+          : "Terkirim",
       action: (
         <Link to={`/detailsurat-jalan/${item.suratjalan_nota}`}>
           <MDTypography variant="caption" color="text" fontWeight="medium">
