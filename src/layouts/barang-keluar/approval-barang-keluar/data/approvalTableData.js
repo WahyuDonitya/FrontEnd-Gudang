@@ -37,7 +37,7 @@ export default function data() {
   const getApprovalList = async () => {
     try {
       const response = await axios.get("http://127.0.0.1:8000/api/transaksi-barang-keluar", {
-        Authorization: `Bearer ${accessToken}`,
+        headers: { Authorization: `Bearer ${accessToken}` },
       });
 
       setApprovalList(response.data);
@@ -63,8 +63,8 @@ export default function data() {
 
     rows: approvalList.map((item) => ({
       hkeluar_nota: item.hkeluar_nota,
-      customer: { customer_nama: item.customer.customer_nama },
-      gudang: { gudang_nama: item.gudang.gudang_nama },
+      customer: { customer_nama: item.customer?.customer_nama },
+      gudang: { gudang_nama: item.gudang?.gudang_nama },
       hkeluar_tanggal: item.hkeluar_tanggal,
       action: (
         <Link to={`/detail/${item.hkeluar_nota}`}>
