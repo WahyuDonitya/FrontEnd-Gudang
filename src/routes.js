@@ -54,6 +54,7 @@ import ListBarangMasuk from "layouts/barang-masuk/list-barang-masuk";
 import ListBarangKeluar from "layouts/barang-keluar/ListBarangKeluar";
 import ListSuratJalan from "layouts/surat-jalan/list-surat-jalan";
 import ListMutasiBarang from "layouts/mutasi-barang/ListMutasiBarang";
+import KartuStok from "layouts/report/kartu-stok";
 import SignUp from "layouts/authentication/sign-up";
 
 // @mui iconsππ
@@ -212,6 +213,15 @@ const routes = [
     route: "/list-mustasi-barang",
     component: <ListMutasiBarang />,
     roles: ["1", "2"],
+  },
+  {
+    type: "collapse",
+    name: "Kartu Stok",
+    key: "kartu-stok",
+    icon: <Icon fontSize="small">warehouse</Icon>,
+    route: "/kartu-stok",
+    component: <KartuStok />,
+    roles: ["2"],
   },
   {
     type: "collapse",

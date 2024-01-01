@@ -36,7 +36,7 @@ function ListBarangKeluar() {
                 coloredShadow="info"
               >
                 <MDTypography variant="h6" color="white">
-                  List Barang Masuk
+                  List Barang Keluar
                 </MDTypography>
               </MDBox>
               <MDBox pt={3}>
@@ -79,7 +79,6 @@ function ListBarangKeluar() {
           </Grid> */}
         </Grid>
       </MDBox>
-      <Footer />
     </DashboardLayout>
   );
 }
