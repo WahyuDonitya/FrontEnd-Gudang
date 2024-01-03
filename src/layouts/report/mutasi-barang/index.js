@@ -12,7 +12,7 @@ import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
 import DataTable from "examples/Tables/DataTable";
 import axios from "axios";
-import PrintAbleKartuStok from "./PrintAbleKartuStok";
+// import PrintAbleKartuStok from "./PrintAbleKartuStok";
 
 // Data
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
@@ -24,7 +24,7 @@ import MDButton from "components/MDButton";
 import { Link } from "react-router-dom";
 import { format } from "date-fns";
 
-function KartuStok() {
+function PergerakanBarang() {
   //   state
   const [barang, setBarang] = useState([]);
   const [barangId, setBarangId] = useState(null);
@@ -64,13 +64,22 @@ function KartuStok() {
 
   const handleSubmit = async () => {
     try {
-      const response = await axios.get(
-        `http://127.0.0.1:8000/api/report/get-kartu-stok/${barangId}/${datePickerAwal}/${datePickerAkhir}`,
-        {
-          headers: { Authorization: `Bearer ${accessToken}` },
-        }
-      );
-
+      let response = null;
+      if (datePickerAkhir != null) {
+        response = await axios.get(
+          `http://127.0.0.1:8000/api/report/get-pergerakan-barang/${barangId}/${datePickerAwal}/${datePickerAkhir}`,
+          {
+            headers: { Authorization: `Bearer ${accessToken}` },
+          }
+        );
+      } else {
+        response = await axios.get(
+          `http://127.0.0.1:8000/api/report/get-pergerakan-barang/${barangId}/${datePickerAwal}`,
+          {
+            headers: { Authorization: `Bearer ${accessToken}` },
+          }
+        );
+      }
       setKartuStok(response.data);
       console.log(response.data);
     } catch (error) {
@@ -78,63 +87,70 @@ function KartuStok() {
     }
   };
 
-  const handlePrint = () => {
-    // console.log(headerKeluar);
-    const printableContent = document.getElementById("printable-content");
+  //   const handlePrint = () => {
+  //     // console.log(headerKeluar);
+  //     const printableContent = document.getElementById("printable-content");
 
-    const printWindow = window.open("", "_blank");
-    printWindow.document.write(`
-      <html>
-        <head>
-          <title>Print</title>
-        </head>
-        <body>${printableContent.innerHTML}</body>
-      </html>
-    `);
-    printWindow.document.close();
-    printWindow.print();
-    printWindow.onafterprint = () => printWindow.close();
-  };
+  //     const printWindow = window.open("", "_blank");
+  //     printWindow.document.write(`
+  //       <html>
+  //         <head>
+  //           <title>Print</title>
+  //         </head>
+  //         <body>${printableContent.innerHTML}</body>
+  //       </html>
+  //     `);
+  //     printWindow.document.close();
+  //     printWindow.print();
+  //     printWindow.onafterprint = () => printWindow.close();
+  //   };
 
   const columns = [
-    { Header: "Tanggal Transaksi", accessor: "created_at", align: "center" },
-    { Header: "Batch Barang", accessor: "detail_barang.detailbarang_batch", align: "center" },
-    { Header: "Barang Masuk", accessor: "logbarang_masuk", align: "center" },
-    { Header: "Barang Keluar", accessor: "logbarang_keluar", align: "center" },
-    { Header: "Stok Tersedia", accessor: "logbarang_stoksekarang", align: "center" },
+    { Header: "No. Nota Keluar", accessor: "hkeluar_nota", align: "center" },
+    { Header: "No. Nota Masuk", accessor: "hmasuk_nota", align: "center" },
+    { Header: "No. Nota Supplier", accessor: "hmasuk_notasupplier", align: "center" },
+    { Header: "No. Nota Transfer", accessor: "htransfer_barang_nota", align: "center" },
+    { Header: "Nama Supplier", accessor: "supplier.supplier_name", align: "center" },
+    { Header: "Nama Customer", accessor: "customer.customer_nama", align: "center" },
+    { Header: "Catatan", accessor: "hmasuk_comment", align: "center" },
+    { Header: "Tanggal dibuat", accessor: "created_at", align: "center" },
     { Header: "Jenis Transaksi", accessor: "jenistransaksi", align: "center" },
     { Header: "Action", accessor: "action", align: "center" },
   ];
 
   const rows = kartuStok.map((item) => ({
+    hkeluar_nota: item.hkeluar_nota ? item.hkeluar_nota : "-",
+    hmasuk_nota: item.hmasuk_nota ? item.hmasuk_nota : "-",
+    hmasuk_notasupplier: item.hmasuk_notasupplier ? item.hmasuk_notasupplier : "-",
+    htransfer_barang_nota: item.htransfer_barang_nota ? item.htransfer_barang_nota : "-",
+    supplier: { supplier_name: item.supplier?.supplier_name },
+    customer: { customer_nama: item.customer?.customer_nama },
+    hmasuk_comment: item.hmasuk_comment ? item.hmasuk_comment : "-",
     created_at: item.created_at ? format(new Date(item.created_at), "dd-MM-yyyy") : "-",
-    detail_barang: { detailbarang_batch: item.detail_barang?.detailbarang_batch },
-    logbarang_masuk: item.logbarang_masuk ? item.logbarang_masuk : "-",
-    logbarang_keluar: item.logbarang_keluar ? item.logbarang_keluar : "-",
-    logbarang_stoksekarang: item.logbarang_stoksekarang,
-    jenistransaksi:
-      item.hkeluar_id !== null
-        ? "Barang Keluar"
-        : item.hmasuk_id !== null
-        ? "Barang Masuk"
-        : item.htransfer_barang_id !== null
-        ? "Transfer internal"
-        : "Belum ada",
+    jenistransaksi: item.hmasuk_id
+      ? "Barang Masuk"
+      : item.hkeluar_id
+      ? "Barang Keluar"
+      : item.htransfer_barang_id
+      ? "Transfer Internal"
+      : "Belum ada",
     action: (
-      <Link to={`/detailbarang-masuk/${item.hmasuk_nota}`}>
+      <Link
+        to={
+          item.hmasuk_id
+            ? `/detailbarang-masuk/${item.hmasuk_nota}`
+            : item.hkeluar_id
+            ? `/detail/${item.hkeluar_nota}`
+            : item.htransfer_barang_id
+            ? `/detailmutasi-barang/${item.htransfer_barang_id}`
+            : ""
+        }
+      >
         <MDTypography variant="caption" color="text" fontWeight="medium">
           Detail
         </MDTypography>
       </Link>
     ),
-    //   action_print:
-    //     item.suratjalan_status === 3 ? (
-    //       <Link to={`/detailsurat-jalan/${item.suratjalan_nota}`}>
-    //         <MDTypography variant="caption" color="text" fontWeight="medium">
-    //           Print
-    //         </MDTypography>
-    //       </Link>
-    //     ) : null,
   }));
 
   return (
@@ -144,9 +160,9 @@ function KartuStok() {
         <Grid container spacing={6}>
           <Grid item xs={12}>
             <Card>
-              <div id="printable-content" style={{ display: "none" }}>
+              {/* <div id="printable-content" style={{ display: "none" }}>
                 <PrintAbleKartuStok kartuStok={kartuStok} />
-              </div>
+              </div> */}
               <MDBox
                 mx={2}
                 mt={-3}
@@ -158,7 +174,7 @@ function KartuStok() {
                 coloredShadow="info"
               >
                 <MDTypography variant="h6" color="white">
-                  Table Kartu Stok
+                  Table Pergerakan Barang
                 </MDTypography>
               </MDBox>
               <Grid container>
@@ -225,7 +241,7 @@ function KartuStok() {
                   noEndBorder
                 />
                 <Grid item xs={12} px={2} pb={3} pt={5}>
-                  <MDButton variant="gradient" color="success" onClick={handlePrint}>
+                  <MDButton variant="gradient" color="success" onClick={handleSubmit}>
                     Print
                   </MDButton>
                 </Grid>
@@ -265,4 +281,4 @@ function KartuStok() {
   );
 }
 
-export default KartuStok;
+export default PergerakanBarang;

@@ -55,6 +55,10 @@ import ListBarangKeluar from "layouts/barang-keluar/ListBarangKeluar";
 import ListSuratJalan from "layouts/surat-jalan/list-surat-jalan";
 import ListMutasiBarang from "layouts/mutasi-barang/ListMutasiBarang";
 import KartuStok from "layouts/report/kartu-stok";
+import PergerakanBarang from "layouts/report/mutasi-barang";
+import MasterBarang from "layouts/master/master-barang";
+import MasterGudang from "layouts/master/master-gudang";
+import MasterPengguna from "layouts/master/master-pengguna";
 import SignUp from "layouts/authentication/sign-up";
 
 // @mui iconsππ
@@ -222,6 +226,42 @@ const routes = [
     route: "/kartu-stok",
     component: <KartuStok />,
     roles: ["2"],
+  },
+  {
+    type: "collapse",
+    name: "Lacak Pergerakan Barang",
+    key: "pergerakan-barang",
+    icon: <Icon fontSize="small">warehouse</Icon>,
+    route: "/pergerakan-barang",
+    component: <PergerakanBarang />,
+    roles: ["2"],
+  },
+  {
+    type: "collapse",
+    name: "Master Barang",
+    key: "master-barang",
+    icon: <Icon fontSize="small">warehouse</Icon>,
+    route: "/master-barang",
+    component: <MasterBarang />,
+    roles: ["3"],
+  },
+  {
+    type: "collapse",
+    name: "Master Gudang",
+    key: "master-gudang",
+    icon: <Icon fontSize="small">warehouse</Icon>,
+    route: "/master-Gudang",
+    component: <MasterGudang />,
+    roles: ["3"],
+  },
+  {
+    type: "collapse",
+    name: "Master Pengguna",
+    key: "master-pengguna",
+    icon: <Icon fontSize="small">warehouse</Icon>,
+    route: "/master-pengguna",
+    component: <MasterPengguna />,
+    roles: ["3"],
   },
   {
     type: "collapse",

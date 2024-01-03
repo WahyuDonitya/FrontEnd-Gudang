@@ -35,9 +35,32 @@ import reportsLineChartData from "layouts/dashboard/data/reportsLineChartData";
 import Projects from "layouts/dashboard/components/Projects";
 import OrdersOverview from "layouts/dashboard/components/OrdersOverview";
 import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import Header from "layouts/barang-keluar/components/Header";
 
 function Dashboard() {
+  const accessToken = localStorage.getItem("access_token");
+  const [countHkeluar, setCountHkeluar] = useState(0);
+  // api
+  const getCountHkeluar = async () => {
+    try {
+      const response = await axios.get(
+        `http://127.0.0.1:8000/api/transaksi-barang/get-count-hkeluar-approval`,
+        { headers: { Authorization: `Bearer ${accessToken}` } }
+      );
+      setCountHkeluar(response.data);
+    } catch (error) {
+      console.error("Terjadi kesalahan saat mengambil input data Barang keluar:", error);
+    }
+  };
+
+  useEffect(() => {
+    getCountHkeluar();
+  }, []);
+  // end api
+
+  // code dibawah untuk melakukan pengecekan token
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -47,7 +70,7 @@ function Dashboard() {
     }
   }, [navigate]);
 
-  const { sales, tasks } = reportsLineChartData;
+  // const { sales, tasks } = reportsLineChartData;
   return (
     <DashboardLayout>
       <DashboardNavbar />
@@ -58,12 +81,12 @@ function Dashboard() {
               <ComplexStatisticsCard
                 color="dark"
                 icon="weekend"
-                title="Bookings"
-                count={281}
+                title="Jumlah approval barang keluar"
+                count={countHkeluar}
                 percentage={{
                   color: "success",
-                  amount: "+55%",
-                  label: "than lask week",
+                  amount: "",
+                  label: "Just updated",
                 }}
               />
             </MDBox>
@@ -113,7 +136,7 @@ function Dashboard() {
             </MDBox>
           </Grid>
         </Grid>
-        <MDBox mt={4.5}>
+        {/* <MDBox mt={4.5}>
           <Grid container spacing={3}>
             <Grid item xs={12} md={6} lg={4}>
               <MDBox mb={3}>
@@ -153,7 +176,7 @@ function Dashboard() {
               </MDBox>
             </Grid>
           </Grid>
-        </MDBox>
+        </MDBox> */}
         <MDBox>
           <Grid container spacing={3}>
             <Grid item xs={12} md={6} lg={8}>
@@ -165,7 +188,6 @@ function Dashboard() {
           </Grid>
         </MDBox>
       </MDBox>
-      <Footer />
     </DashboardLayout>
   );
 }
