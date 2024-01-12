@@ -353,6 +353,7 @@ function GenerateSuratJalan() {
         error={isInputInvalid[item.dkeluar_id]}
         helperText={isInputInvalid[item.dkeluar_id] ? "Jumlah melebihi stok yang tersedia" : ""}
         sx={{ "& .MuiInput-root": { borderColor: isInputInvalid[item.dkeluar_id] ? "red" : "" } }}
+        inputProps={{ min: 0 }}
       />
     ),
     dkeluar_status:
@@ -401,6 +402,7 @@ function GenerateSuratJalan() {
             borderColor: isInputInvalid[item.dtransfer_barang_id] ? "red" : "",
           },
         }}
+        inputProps={{ min: 0 }}
       />
     ),
     dtransfer_barang_status:

@@ -349,6 +349,7 @@ function BarangKeluar() {
                 error={isInputInvalid}
                 helperText={isInputInvalid ? "Jumlah melebihi stok yang tersedia" : ""}
                 sx={{ "& .MuiInput-root": { borderColor: isInputInvalid ? "red" : "" } }}
+                inputProps={{ min: 0 }}
               />
             </Grid>
             <Grid item xs={12}>

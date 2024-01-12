@@ -1,12 +1,15 @@
 import React from "react";
 import PropTypes from "prop-types";
+import { format } from "date-fns";
 
-const PrintableformSJ = ({ detailSuratJalan, headerSuratJalan }) => {
+const PrintableFormBarangKeluar = ({ detailKeluar, headerKeluar }) => {
+  const createdAtDate = headerKeluar?.created_at ? new Date(headerKeluar.created_at) : null;
+  const formattedDate = createdAtDate ? format(createdAtDate, "dd-MM-yyyy") : "";
   return (
     <div style={{ padding: "20px", border: "1px solid #ccc", borderRadius: "10px" }}>
       <div style={{ display: "flex", alignItems: "center", marginBottom: "10px" }}>
         <img
-          src={require("../../../../assets/images/logos/LOGO EAB ok 1.png")}
+          src={require("../../../../../assets/images/logos/LOGO EAB ok 1.png")}
           style={{ width: "150px", height: "auto" }}
         />
         <div style={{ marginLeft: "20px" }}>
@@ -19,36 +22,31 @@ const PrintableformSJ = ({ detailSuratJalan, headerSuratJalan }) => {
         </div>
       </div>
       <hr></hr>
-      {/* Your printable content goes here */}
 
+      {/* Your printable content goes here */}
       <div style={{ display: "flex", justifyContent: "space-between" }}>
         <div style={{ textAlign: "left", width: "50%" }}>
           <p>
-            <strong>Surat Jalan Nota : </strong> {headerSuratJalan?.suratjalan_nota}
+            <strong>Nota:</strong> {headerKeluar?.hkeluar_nota}
           </p>
           <p>
-            <strong>Tanggal Kirim : </strong> {headerSuratJalan?.suratjalan_tanggalkirim}
+            <strong>Customer:</strong> {headerKeluar?.customer?.customer_nama}
           </p>
           <p>
-            <strong>Gudang Asal : </strong> {headerSuratJalan.h_keluar?.gudang?.gudang_nama}
+            <strong>Alamat:</strong> {headerKeluar?.customer?.customer_alamat}
           </p>
         </div>
         <div style={{ textAlign: "left", width: "50%" }}>
           <p>
-            <strong>Customer : </strong> {headerSuratJalan.h_keluar?.customer?.customer_nama}
+            <strong>Tanggal Dibuat:</strong> {formattedDate}
           </p>
           <p>
-            <strong>Customer Alamat : </strong>{" "}
-            {headerSuratJalan.h_keluar?.customer?.customer_alamat}
-          </p>
-          <p>
-            <strong>Customer Telepon : </strong>{" "}
-            {headerSuratJalan.h_keluar?.customer?.customer_telepon}
+            <strong>Gudang Asal:</strong> {headerKeluar?.gudang?.gudang_nama}
           </p>
         </div>
       </div>
 
-      <h2>Detail Surat Jalan</h2>
+      <h2>List Barang </h2>
       <table style={{ width: "100%", borderCollapse: "collapse", marginTop: "20px" }}>
         <thead>
           <tr>
@@ -65,19 +63,19 @@ const PrintableformSJ = ({ detailSuratJalan, headerSuratJalan }) => {
           </tr>
         </thead>
         <tbody>
-          {detailSuratJalan.map((item, index) => (
+          {detailKeluar.map((item, index) => (
             <tr key={item.dtransfer_barang_id}>
               <td style={{ border: "1px solid #ddd", padding: "8px", textAlign: "center" }}>
                 {index + 1}.
               </td>
               <td style={{ border: "1px solid #ddd", padding: "8px", textAlign: "center" }}>
-                {item.d_keluar.barang.barang_nama}
+                {item.barang.barang_nama}
               </td>
               <td style={{ border: "1px solid #ddd", padding: "8px", textAlign: "center" }}>
-                {item.d_keluar.d_barang.detailbarang_batch}
+                {item.d_barang.detailbarang_batch}
               </td>
               <td style={{ border: "1px solid #ddd", padding: "8px", textAlign: "center" }}>
-                {item.dsuratjalan_jumlah}
+                {item.dkeluar_jumlah}
               </td>
             </tr>
           ))}
@@ -89,6 +87,9 @@ const PrintableformSJ = ({ detailSuratJalan, headerSuratJalan }) => {
         {`
         @media print {
           /* Your print styles go here */
+          body {
+            font-size: 12px;
+          }
         }
       `}
       </style>
@@ -96,8 +97,9 @@ const PrintableformSJ = ({ detailSuratJalan, headerSuratJalan }) => {
   );
 };
 
-PrintableformSJ.propTypes = {
-  detailSuratJalan: PropTypes.array.isRequired,
-  headerSuratJalan: PropTypes.object.isRequired,
+PrintableFormBarangKeluar.propTypes = {
+  detailKeluar: PropTypes.array.isRequired,
+  headerKeluar: PropTypes.object.isRequired,
 };
-export default PrintableformSJ;
+
+export default PrintableFormBarangKeluar;

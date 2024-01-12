@@ -476,6 +476,7 @@ function GenerateMutasi() {
                 sx={{
                   "& .MuiInput-root": { borderColor: isInputInvalid ? "red" : "" },
                 }}
+                inputProps={{ min: 0 }}
               />
             </Grid>
 

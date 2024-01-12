@@ -344,6 +344,7 @@ function BarangMasuk() {
                 type="number"
                 value={inputMasukJumlah}
                 onChange={(e) => setinputMasukJumlah(e.target.value)}
+                inputProps={{ min: 0 }}
               />
             </Grid>
             <Grid item xs={6}>

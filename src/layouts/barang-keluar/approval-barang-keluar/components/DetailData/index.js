@@ -30,7 +30,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import MDButton from "components/MDButton";
 import MDSnackbar from "components/MDSnackbar";
-import PrintableFormBarangKeluar from "./PrintableFormSJTrans";
+import PrintableFormBarangKeluar from "./PrintableFormBarangKeluar";
 // import projectsTableData from "layouts/tables/data/projectsTableData";
 
 function DetailData() {

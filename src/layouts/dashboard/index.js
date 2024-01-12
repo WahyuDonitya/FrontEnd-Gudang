@@ -42,6 +42,9 @@ import Header from "layouts/barang-keluar/components/Header";
 function Dashboard() {
   const accessToken = localStorage.getItem("access_token");
   const [countHkeluar, setCountHkeluar] = useState(0);
+  const [countSuratJalan, setCountSuratJalan] = useState(0);
+  const [countBarangMasuk, setCountBarangMasuk] = useState(0);
+  const [countMutasiBarang, setMutasiBarang] = useState(0);
   // api
   const getCountHkeluar = async () => {
     try {
@@ -55,8 +58,57 @@ function Dashboard() {
     }
   };
 
+  const getCountSuratJalan = async () => {
+    try {
+      const response = await axios.get(
+        "http://127.0.0.1:8000/api/suratjalan/suratjalan-needapproval-count",
+        {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        }
+      );
+      setCountSuratJalan(response.data);
+    } catch (error) {
+      console.error("Terjadi kesalahan saat mengambil data surat jalan :", error);
+    }
+  };
+
+  const getCountBarangMasuk = async () => {
+    try {
+      const response = await axios.get(
+        "http://127.0.0.1:8000/api/detailbarang/get-count-barang-masuk",
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      setCountBarangMasuk(response.data);
+    } catch (error) {
+      console.error("Terjadi kesalahan saat mengambil data barang masuk :", error);
+    }
+  };
+
+  const getCountMutasiBarang = async () => {
+    try {
+      const response = await axios.get(
+        "http://127.0.0.1:8000/api/detailbarang/get-count-mutasi-barang-approval",
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      setMutasiBarang(response.data);
+    } catch (error) {
+      console.error("Terjadi kesalahan saat mengambil data mutasi barang :", error);
+    }
+  };
+
   useEffect(() => {
     getCountHkeluar();
+    getCountSuratJalan();
+    getCountBarangMasuk();
+    getCountMutasiBarang();
   }, []);
   // end api
 
@@ -95,12 +147,12 @@ function Dashboard() {
             <MDBox mb={1.5}>
               <ComplexStatisticsCard
                 icon="leaderboard"
-                title="Today's Users"
-                count="2,300"
+                title="Jumlah approval surat jalan"
+                count={countSuratJalan}
                 percentage={{
                   color: "success",
-                  amount: "+3%",
-                  label: "than last month",
+                  amount: "",
+                  label: "Just updated",
                 }}
               />
             </MDBox>
@@ -110,12 +162,12 @@ function Dashboard() {
               <ComplexStatisticsCard
                 color="success"
                 icon="store"
-                title="Revenue"
-                count="34k"
+                title="Jumlah approval barang masuk"
+                count={countBarangMasuk}
                 percentage={{
                   color: "success",
-                  amount: "+1%",
-                  label: "than yesterday",
+                  amount: "",
+                  label: "Just updated",
                 }}
               />
             </MDBox>
@@ -125,8 +177,8 @@ function Dashboard() {
               <ComplexStatisticsCard
                 color="primary"
                 icon="person_add"
-                title="Followers"
-                count="+91"
+                title="Jumlah approval mutasi barang"
+                count={countMutasiBarang}
                 percentage={{
                   color: "success",
                   amount: "",
