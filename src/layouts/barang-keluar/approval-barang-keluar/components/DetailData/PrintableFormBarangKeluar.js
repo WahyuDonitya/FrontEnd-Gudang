@@ -60,6 +60,15 @@ const PrintableFormBarangKeluar = ({ detailKeluar, headerKeluar }) => {
             <th style={{ border: "1px solid #ddd", padding: "8px", textAlign: "center" }}>
               Jumlah Barang
             </th>
+            <th style={{ border: "1px solid #ddd", padding: "8px", textAlign: "center" }}>
+              Jumlah Terkirim
+            </th>
+            <th style={{ border: "1px solid #ddd", padding: "8px", textAlign: "center" }}>
+              Jumlah Sisa
+            </th>
+            <th style={{ border: "1px solid #ddd", padding: "8px", textAlign: "center" }}>
+              Proses Approve
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -76,6 +85,15 @@ const PrintableFormBarangKeluar = ({ detailKeluar, headerKeluar }) => {
               </td>
               <td style={{ border: "1px solid #ddd", padding: "8px", textAlign: "center" }}>
                 {item.dkeluar_jumlah}
+              </td>
+              <td style={{ border: "1px solid #ddd", padding: "8px", textAlign: "center" }}>
+                {item.dkeluar_terkirim}
+              </td>
+              <td style={{ border: "1px solid #ddd", padding: "8px", textAlign: "center" }}>
+                {item.dkeluar_sisa}
+              </td>
+              <td style={{ border: "1px solid #ddd", padding: "8px", textAlign: "center" }}>
+                {item.dkeluar_needapprovekirim}
               </td>
             </tr>
           ))}

@@ -155,6 +155,9 @@ function DetailData() {
     { Header: "Nama Barang", accessor: "barang", width: "10%", align: "left" },
     { Header: "Batch Barang", accessor: "d_barang", align: "center" },
     { Header: "Jumlah Barang", accessor: "dkeluar_jumlah", align: "center" },
+    { Header: "Jumlah Terkirim", accessor: "dkeluar_terkirim", align: "center" },
+    { Header: "Jumlah Sisa", accessor: "dkeluar_sisa", align: "center" },
+    { Header: "Proses Approve", accessor: "dkeluar_needapprovekirim", align: "center" },
     { Header: "Harga", accessor: "dkeluar_harga", align: "center" },
   ];
 
@@ -162,6 +165,9 @@ function DetailData() {
     barang: item.barang.barang_nama,
     d_barang: item.d_barang.detailbarang_batch,
     dkeluar_jumlah: item.dkeluar_jumlah,
+    dkeluar_terkirim: item.dkeluar_terkirim,
+    dkeluar_sisa: item.dkeluar_sisa,
+    dkeluar_needapprovekirim: item.dkeluar_needapprovekirim,
     dkeluar_harga: item.dkeluar_harga !== null ? item.dkeluar_harga : "Tidak ada harga",
   }));
 
@@ -295,7 +301,7 @@ function DetailData() {
                 </Grid>
               )}
 
-              {headerKeluar.hkeluar_status === 2 && (
+              {(headerKeluar.hkeluar_status === 2 || headerKeluar.hkeluar_status === 1) && (
                 <Grid container pt={5} spacing={7} px={3} mb={4}>
                   <Grid item xs={12}>
                     <MDButton variant="gradient" color="info" fullWidth onClick={handlePrint}>

@@ -223,6 +223,7 @@ function KartuStok() {
                   entriesPerPage={true}
                   showTotalEntries={true}
                   noEndBorder
+                  canSearch
                 />
                 <Grid item xs={12} px={2} pb={3} pt={5}>
                   <MDButton variant="gradient" color="success" onClick={handlePrint}>

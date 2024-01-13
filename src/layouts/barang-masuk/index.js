@@ -83,19 +83,19 @@ function BarangMasuk() {
 
   // API
 
-  const getGudang = async () => {
-    try {
-      const response = await axios.get("http://127.0.0.1:8000/api/gudang/", {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
-      // console.log("Data Customer:", response.data);
-      setGudangs(response.data);
-    } catch (error) {
-      console.error("Terjadi kesalahan saat mengambil data Gudang:", error);
-    }
-  };
+  // const getGudang = async () => {
+  //   try {
+  //     const response = await axios.get("http://127.0.0.1:8000/api/gudang/", {
+  //       headers: {
+  //         Authorization: `Bearer ${accessToken}`,
+  //       },
+  //     });
+  //     // console.log("Data Customer:", response.data);
+  //     setGudangs(response.data);
+  //   } catch (error) {
+  //     console.error("Terjadi kesalahan saat mengambil data Gudang:", error);
+  //   }
+  // };
 
   const getSupplier = async () => {
     try {
@@ -154,7 +154,7 @@ function BarangMasuk() {
     const barangId = parseInt(inputBarangId);
 
     const newBarangMasuk = {
-      gudang_id: parseInt(gudangPick),
+      gudang_id: parseInt(gudang_id),
       barang_id: parseInt(barangId),
       detailbarang_stok: parseInt(inputMasukJumlah),
       detailbarang_batch: batch,
@@ -207,7 +207,7 @@ function BarangMasuk() {
   };
 
   useEffect(() => {
-    getGudang();
+    // getGudang();
     getBarang();
     getSupplier();
   }, []);
@@ -265,7 +265,7 @@ function BarangMasuk() {
             Barang Masuk Form
           </MDTypography>
           <Grid container pt={3} spacing={7}>
-            <Grid item xs={6}>
+            {/* <Grid item xs={6}>
               {Array.isArray(gudangs) && gudangs.length > 0 ? (
                 <Autocomplete
                   disablePortal
@@ -284,8 +284,8 @@ function BarangMasuk() {
               ) : (
                 <p>Loading customer data...</p>
               )}
-            </Grid>
-            <Grid item xs={6}>
+            </Grid> */}
+            <Grid item xs={12}>
               {gudang_id === 1 &&
                 (Array.isArray(suppliers) && suppliers.length > 0 ? (
                   <Autocomplete
@@ -294,8 +294,11 @@ function BarangMasuk() {
                     options={suppliers}
                     getOptionLabel={(option) => option.supplier_name}
                     onChange={(event, newValue) => {
-                      // console.log(newValue);
-                      setSupplierPick(newValue.supplier_id);
+                      if (newValue) {
+                        setSupplierPick(newValue.supplier_id);
+                      } else {
+                        setSupplierPick(null);
+                      }
                     }}
                     fullWidth
                     renderInput={(params) => <TextField {...params} label="Supplier" />}
@@ -325,9 +328,16 @@ function BarangMasuk() {
                   options={barangs}
                   getOptionLabel={(option) => `${option.barang_nama}`}
                   onChange={(event, newValue) => {
-                    setInputBarangId(newValue.barang_id);
-                    setInputBarangNama(newValue.barang_nama);
-                    setInputBarangStok(newValue.barang_stok);
+                    if (newValue) {
+                      setInputBarangId(newValue.barang_id);
+                      setInputBarangNama(newValue.barang_nama);
+                      setInputBarangStok(newValue.barang_stok);
+                    } else {
+                      setInputBarangId(null);
+                      setInputBarangNama(null);
+                      setInputBarangStok(null);
+                    }
+
                     // console.log(inputBarangStok);
                   }}
                   fullWidth
