@@ -31,6 +31,7 @@ function KartuStok() {
   const [datePickerAwal, setdatePickerAwal] = useState(null);
   const [datePickerAkhir, setdatePickerAkhir] = useState(null);
   const [kartuStok, setKartuStok] = useState([]);
+  const [stokAwal, setStokAwal] = useState(0);
 
   const accessToken = localStorage.getItem("access_token");
 
@@ -71,8 +72,16 @@ function KartuStok() {
         }
       );
 
-      setKartuStok(response.data);
-      console.log(response.data);
+      setKartuStok(response.data.data);
+      // setStokAwal(response.data.data_sebelumnya);
+      if (response.data.data_sebelumnya != null) {
+        setStokAwal(response.data.data_sebelumnya["logbarang_stoksekarang"]);
+      }
+      // console.log(
+      //   "ini data sebelumnya : ",
+      //   response.data.data_sebelumnya["logbarang_stoksekarang"]
+      // );
+      // console.log(response.data);
     } catch (error) {
       console.error("Terjadi kesalahan saat mengambil data kartu Stok:", error);
     }
@@ -145,7 +154,12 @@ function KartuStok() {
           <Grid item xs={12}>
             <Card>
               <div id="printable-content" style={{ display: "none" }}>
-                <PrintAbleKartuStok kartuStok={kartuStok} />
+                <PrintAbleKartuStok
+                  kartuStok={kartuStok}
+                  stokAwal={stokAwal}
+                  datePickerAwal={datePickerAwal}
+                  datePickerAkhir={datePickerAkhir}
+                />
               </div>
               <MDBox
                 mx={2}
@@ -215,6 +229,9 @@ function KartuStok() {
                 <MDButton variant="gradient" color="success" fullWidth onClick={handleSubmit}>
                   Tampilkan
                 </MDButton>
+              </Grid>
+              <Grid item xs={12} px={2} pb={3} pt={5}>
+                <MDTypography>Stok Awal : {stokAwal ?? 0}</MDTypography>
               </Grid>
               <MDBox pt={3}>
                 <DataTable

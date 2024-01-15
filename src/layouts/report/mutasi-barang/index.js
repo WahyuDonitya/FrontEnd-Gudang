@@ -240,11 +240,11 @@ function PergerakanBarang() {
                   showTotalEntries={true}
                   noEndBorder
                 />
-                <Grid item xs={12} px={2} pb={3} pt={5}>
+                {/* <Grid item xs={12} px={2} pb={3} pt={5}>
                   <MDButton variant="gradient" color="success" onClick={handleSubmit}>
                     Print
                   </MDButton>
-                </Grid>
+                </Grid> */}
               </MDBox>
             </Card>
           </Grid>

@@ -269,6 +269,7 @@ function BarangKeluar() {
             Barang Keluar Form
           </MDTypography>
           <Grid container pt={3} spacing={7}>
+            {/* Customer */}
             <Grid item xs={6}>
               {Array.isArray(customer) && customer.length > 0 ? (
                 <Autocomplete
@@ -284,6 +285,8 @@ function BarangKeluar() {
                 <p>Loading customer data...</p>
               )}
             </Grid>
+
+            {/* TAnggal keluar */}
             <Grid item xs={6}>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DatePicker
@@ -298,6 +301,8 @@ function BarangKeluar() {
                 />
               </LocalizationProvider>
             </Grid>
+
+            {/* Gudang */}
             <Grid item xs={12}>
               {!localStorage.getItem("gudang_id") ? (
                 Array.isArray(gudangs) && gudangs.length > 0 ? (
@@ -318,6 +323,8 @@ function BarangKeluar() {
                 )
               ) : null}
             </Grid>
+
+            {/* Barang */}
             <Grid item xs={12}>
               {Array.isArray(barangs) && barangs.length > 0 ? (
                 <Autocomplete
@@ -327,10 +334,17 @@ function BarangKeluar() {
                   options={barangs}
                   getOptionLabel={(option) => `${option.barang_nama}`}
                   onChange={(event, newValue) => {
-                    setInputBarangId(newValue.barang_id);
-                    setInputBarangNama(newValue.barang_nama);
-                    setInputBarangStok(newValue.barang_stok);
-                    console.log(inputBarangStok);
+                    if (newValue) {
+                      setInputBarangId(newValue.barang_id);
+                      setInputBarangNama(newValue.barang_nama);
+                      setInputBarangStok(newValue.barang_stok);
+                    } else {
+                      setInputBarangId(null);
+                      setInputBarangNama(null);
+                      setInputBarangStok(null);
+                    }
+
+                    console.log(barangs);
                   }}
                   fullWidth
                   renderInput={(params) => <TextField {...params} label="Nama Barang" />}
@@ -339,6 +353,8 @@ function BarangKeluar() {
                 <p>Data Customer tidak ditemukan...</p>
               )}
             </Grid>
+
+            {/* Jumlah barang keluar */}
             <Grid item xs={12}>
               <TextField
                 label="Jumlah barang keluar"
@@ -352,6 +368,8 @@ function BarangKeluar() {
                 inputProps={{ min: 0 }}
               />
             </Grid>
+
+            {/* Harga */}
             <Grid item xs={12}>
               <TextField
                 label="Harga Barang Keluar (Tidak Wajib)"
@@ -360,6 +378,7 @@ function BarangKeluar() {
                 onChange={(e) => setHargaKeluar(e.target.value)}
               />
             </Grid>
+
             <Grid item xs={12}>
               <MDButton variant="gradient" color="info" fullWidth onClick={handleAdd}>
                 Add Row

@@ -138,7 +138,8 @@ function DetailMB() {
   }, []);
 
   const columns = [
-    { Header: "Nama Barang", accessor: "barang.barang_nama", width: "10%", align: "left" },
+    { Header: "Nama Barang", accessor: "barang.barang_nama", width: "10%", align: "center" },
+    { Header: "Exp. Barang", accessor: "barang_detail.detailbarang_expdate", align: "center" },
     { Header: "Batch Barang", accessor: "barang_detail.detailbarang_batch", align: "center" },
     { Header: "Jumlah Dikirim", accessor: "dtransfer_barang_jumlah", align: "center" },
   ];
@@ -146,6 +147,7 @@ function DetailMB() {
   const rows = detailMutasiBarang.map((item) => ({
     barang: { barang_nama: item?.barang?.barang_nama || "N/A" },
     barang_detail: {
+      detailbarang_expdate: item?.barang_detail?.detailbarang_expdate || "N/A",
       detailbarang_batch: item?.barang_detail?.detailbarang_batch || "N/A",
     },
     dtransfer_barang_jumlah: item.dtransfer_barang_jumlah,
