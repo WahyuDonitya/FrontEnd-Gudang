@@ -61,6 +61,7 @@ export default function data() {
       { Header: "Gudang Asal", accessor: "htransfer.gudang_asal.gudang_nama", align: "center" },
       { Header: "Gudang Tujuan", accessor: "htransfer.gudang_tujuan.gudang_nama", align: "center" },
       { Header: "Tanggal Kirim", accessor: "suratjalantransfer_tanggalkirim", align: "center" },
+      { Header: "Pembuat", accessor: "pengguna_generate.pengguna_nama", align: "center" },
       { Header: "Action", accessor: "action", align: "center" },
     ],
 
@@ -72,6 +73,7 @@ export default function data() {
         gudang_tujuan: { gudang_nama: item.htransfer.gudang_tujuan.gudang_nama },
       },
       suratjalantransfer_tanggalkirim: item.suratjalantransfer_tanggalkirim,
+      pengguna_generate: { pengguna_nama: item.pengguna_generate.pengguna_nama },
       action: (
         <Link to={`/detailsurat-jalan/transferbarang/${item.suratjalantransfer_nota}`}>
           <MDTypography variant="caption" color="text" fontWeight="medium">

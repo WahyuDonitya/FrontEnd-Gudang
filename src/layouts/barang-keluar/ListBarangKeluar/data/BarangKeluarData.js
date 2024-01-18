@@ -64,6 +64,8 @@ export default function data() {
       { Header: "Gudang", accessor: "gudang.gudang_nama", align: "center" },
       { Header: "Tanggal Keluar", accessor: "hkeluar_tanggal", align: "center" },
       { Header: "Status", accessor: "status", align: "center" },
+      { Header: "Pembuat", accessor: "pengguna_generate.pengguna_nama", align: "center" },
+      { Header: "Diputus Oleh", accessor: "pengguna_action.pengguna_nama", align: "center" },
       { Header: "Action", accessor: "action", align: "center" },
     ],
 
@@ -72,6 +74,8 @@ export default function data() {
       customer: { customer_nama: item.customer?.customer_nama },
       gudang: { gudang_nama: item.gudang?.gudang_nama },
       hkeluar_tanggal: item.hkeluar_tanggal,
+      pengguna_generate: { pengguna_nama: item.pengguna_generate?.pengguna_nama || "-" },
+      pengguna_action: { pengguna_nama: item.pengguna_action?.pengguna_nama || "-" },
       status:
         item.hkeluar_status === 0
           ? "Sudah Tuntas Terkirim"

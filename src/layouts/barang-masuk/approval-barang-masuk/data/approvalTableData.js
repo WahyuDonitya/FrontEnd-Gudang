@@ -53,6 +53,7 @@ export default function data() {
       { Header: "Supplier PIC", accessor: "supplier.supplier_pic", align: "center" },
       { Header: "Supplier PIC Number", accessor: "supplier.supplier_pic_number", align: "center" },
       { Header: "Status", accessor: "status", align: "center" },
+      { Header: "Pembuat", accessor: "pengguna_generate.pengguna_nama", align: "center" },
       { Header: "Action", accessor: "action", align: "center" },
       //   { Header: "Print Surat Jalan", accessor: "action_print", align: "center" },
     ],
@@ -65,6 +66,7 @@ export default function data() {
         supplier_pic: item.supplier?.supplier_pic,
         supplier_pic_number: item.supplier?.supplier_pic_number,
       },
+      pengguna_generate: { pengguna_nama: item.pengguna_generate.pengguna_nama },
       status:
         item.hmasuk_status === 2
           ? "Menunggu Approval"

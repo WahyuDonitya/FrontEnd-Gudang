@@ -89,6 +89,8 @@ export default function data() {
       { Header: "Tanggal Kirim", accessor: "htransfer_barang_tanggal_dikirim", align: "center" },
       { Header: "Catatan Transfer", accessor: "htransfer_barang_catatan", align: "center" },
       { Header: "status", accessor: "status", align: "center" },
+      { Header: "Pembuat", accessor: "pengguna_generate.pengguna_nama", align: "center" },
+      { Header: "Diputus Oleh", accessor: "pengguna_action.pengguna_nama", align: "center" },
       { Header: "Action", accessor: "action", align: "center" },
       //   { Header: "Print Surat Jalan", accessor: "action_print", align: "center" },
     ],
@@ -99,6 +101,8 @@ export default function data() {
       gudang_tujuan: { gudang_nama: item.gudang_tujuan.gudang_nama },
       htransfer_barang_tanggal_dikirim: item.htransfer_barang_tanggal_dikirim,
       htransfer_barang_catatan: item.htransfer_barang_catatan,
+      pengguna_generate: { pengguna_nama: item.pengguna_generate?.pengguna_nama || "-" },
+      pengguna_action: { pengguna_nama: item.pengguna_action?.pengguna_nama || "-" },
       status:
         item.htransfer_barang_status === 1
           ? "Menunggu Persetujuan"

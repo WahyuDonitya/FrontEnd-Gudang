@@ -96,7 +96,7 @@ function Basic() {
         >
           <Grid container justifyContent="center" sx={{ mt: 1, mb: 2 }}>
             <img
-              src={require("../../../assets/images/logos/LOGO EAB ok 1.png")}
+              src={require("../../../assets/images/logos/nyonya-poo.png")}
               style={{ width: "150px", height: "auto" }}
             />
           </Grid>

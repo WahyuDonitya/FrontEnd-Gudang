@@ -63,6 +63,7 @@ export default function data() {
       { Header: "Customer Alamat", accessor: "customer.customer_alamat", align: "center" },
       { Header: "Dari Gudang", accessor: "gudang.gudang_nama", align: "center" },
       { Header: "Tanggal Kirim", accessor: "suratjalan_tanggalkirim", align: "center" },
+      { Header: "Pembuat", accessor: "pengguna_generate.pengguna_nama", align: "center" },
       { Header: "Action", accessor: "action", align: "center" },
     ],
 
@@ -73,6 +74,7 @@ export default function data() {
         customer_nama: item.h_keluar.customer.customer_nama,
         customer_alamat: item.h_keluar.customer.customer_alamat,
       },
+      pengguna_generate: { pengguna_nama: item.pengguna_generate.pengguna_nama },
       gudang: {
         gudang_nama: item.h_keluar.gudang.gudang_nama,
       },

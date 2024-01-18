@@ -58,6 +58,7 @@ export default function data() {
       { Header: "Nama Customer", accessor: "customer.customer_nama", align: "center" },
       { Header: "Gudang", accessor: "gudang.gudang_nama", align: "center" },
       { Header: "Tanggal Keluar", accessor: "hkeluar_tanggal", align: "center" },
+      { Header: "Pembuat", accessor: "pengguna_generate.pengguna_nama", align: "center" },
       { Header: "Action", accessor: "action", align: "center" },
     ],
 
@@ -66,6 +67,7 @@ export default function data() {
       customer: { customer_nama: item.customer?.customer_nama },
       gudang: { gudang_nama: item.gudang?.gudang_nama },
       hkeluar_tanggal: item.hkeluar_tanggal,
+      pengguna_generate: { pengguna_nama: item.pengguna_generate.pengguna_nama },
       action: (
         <Link to={`/detail/${item.hkeluar_nota}`}>
           <MDTypography variant="caption" color="text" fontWeight="medium">

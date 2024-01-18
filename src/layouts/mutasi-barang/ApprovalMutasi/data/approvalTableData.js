@@ -88,6 +88,7 @@ export default function data() {
       { Header: "Gudang Tujuan", accessor: "gudang_tujuan.gudang_nama", align: "center" },
       { Header: "Tanggal Kirim", accessor: "htransfer_barang_tanggal_dikirim", align: "center" },
       { Header: "Catatan Transfer", accessor: "htransfer_barang_catatan", align: "center" },
+      { Header: "Pembuat", accessor: "pengguna_generate.pengguna_nama", align: "center" },
       { Header: "Action", accessor: "action", align: "center" },
       //   { Header: "Print Surat Jalan", accessor: "action_print", align: "center" },
     ],
@@ -97,6 +98,7 @@ export default function data() {
       gudang_asal: { gudang_nama: item.gudang_asal.gudang_nama },
       gudang_tujuan: { gudang_nama: item.gudang_tujuan.gudang_nama },
       htransfer_barang_tanggal_dikirim: item.htransfer_barang_tanggal_dikirim,
+      pengguna_generate: { pengguna_nama: item.pengguna_generate?.pengguna_nama || "-" },
       htransfer_barang_catatan: item.htransfer_barang_catatan,
       action: (
         <Link to={`/detailmutasi-barang/${item.htransfer_barang_id}`}>

@@ -58,6 +58,8 @@ export default function data() {
       { Header: "Dari Gudang", accessor: "gudang.gudang_nama", align: "center" },
       { Header: "Tanggal Kirim", accessor: "suratjalan_tanggalkirim", align: "center" },
       { Header: "Status", accessor: "status", align: "center" },
+      { Header: "Pembuat", accessor: "pengguna_generate.pengguna_nama", align: "center" },
+      { Header: "Diputus Oleh", accessor: "pengguna_action.pengguna_nama", align: "center" },
       { Header: "Action", accessor: "action", align: "center" },
     ],
 
@@ -80,6 +82,8 @@ export default function data() {
           : item.suratjalan_status === 3
           ? "Proses Pengiriman"
           : "Terkirim",
+      pengguna_generate: { pengguna_nama: item.pengguna_generate?.pengguna_nama || "-" },
+      pengguna_action: { pengguna_nama: item.pengguna_action?.pengguna_nama || "-" },
       action: (
         <Link to={`/detailsurat-jalan/${item.suratjalan_nota}`}>
           <MDTypography variant="caption" color="text" fontWeight="medium">

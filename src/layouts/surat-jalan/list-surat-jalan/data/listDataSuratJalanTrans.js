@@ -62,6 +62,8 @@ export default function data() {
       { Header: "Gudang Tujuan", accessor: "htransfer.gudang_tujuan.gudang_nama", align: "center" },
       { Header: "Tanggal Kirim", accessor: "suratjalantransfer_tanggalkirim", align: "center" },
       { Header: "Status", accessor: "status", align: "center" },
+      { Header: "Pembuat", accessor: "pengguna_generate.pengguna_nama", align: "center" },
+      { Header: "Diputus Oleh", accessor: "pengguna_action.pengguna_nama", align: "center" },
       { Header: "Action", accessor: "action", align: "center" },
     ],
     rows2: approvalList.map((item) => ({
@@ -72,6 +74,8 @@ export default function data() {
         gudang_tujuan: { gudang_nama: item.htransfer?.gudang_tujuan?.gudang_nama },
       },
       suratjalantransfer_tanggalkirim: item.suratjalantransfer_tanggalkirim,
+      pengguna_generate: { pengguna_nama: item.pengguna_generate?.pengguna_nama || "-" },
+      pengguna_action: { pengguna_nama: item.pengguna_action?.pengguna_nama || "-" },
       status:
         item.suratjalantransfer_status === 0
           ? "Sudah selesai"
