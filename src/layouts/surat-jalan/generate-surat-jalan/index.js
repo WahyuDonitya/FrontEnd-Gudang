@@ -187,41 +187,42 @@ function GenerateSuratJalan() {
 
   // Function
   const addSuratJalan = async () => {
-    try {
-      if (!selectedNota || !datePicker) {
-        alert("Pastikan nomor nota dan tanggal telah ditentukan");
-        return;
+    if (window.confirm("Apakah data yang dimasukkan sudah benar?")) {
+      try {
+        if (!selectedNota || !datePicker) {
+          alert("Pastikan nomor nota dan tanggal telah ditentukan");
+          return;
+        }
+        const selectedBarang = listBarang
+          .filter((item) => jumlahKirimByItem[item.dkeluar_id] > 0)
+          .map((item) => ({
+            dkeluar_id: item.dkeluar_id,
+            barang_nama: item.barang.barang_nama,
+            detailbarang_batch: item.d_barang.detailbarang_batch,
+            dkeluar_jumlah: item.dkeluar_jumlah,
+            dkeluar_harga: item.dkeluar_harga !== null ? item.dkeluar_harga : "Tidak ada harga",
+            jumlah_kirim: jumlahKirimByItem[item.dkeluar_id],
+          }));
+
+        setDetailSuratJalan(selectedBarang);
+        const dataToSend = {
+          suratjalan_tanggalkirim: datePicker,
+          hkeluar_id: selectedHkeluar.hkeluar_id,
+          detail_suratjalan: selectedBarang,
+        };
+
+        const response = await axios.post(
+          "http://127.0.0.1:8000/api/suratjalan/generate-surat-jalan",
+          dataToSend,
+          { headers: { Authorization: `Bearer ${accessToken}` } }
+        );
+
+        console.log("data to send: ", dataToSend);
+        openSuccessSB();
+      } catch (error) {
+        openErrorSB();
+        console.error("Terjadi kesalahan saat menambahkan data Surat Jalan:", error);
       }
-
-      const selectedBarang = listBarang
-        .filter((item) => jumlahKirimByItem[item.dkeluar_id] > 0)
-        .map((item) => ({
-          dkeluar_id: item.dkeluar_id,
-          barang_nama: item.barang.barang_nama,
-          detailbarang_batch: item.d_barang.detailbarang_batch,
-          dkeluar_jumlah: item.dkeluar_jumlah,
-          dkeluar_harga: item.dkeluar_harga !== null ? item.dkeluar_harga : "Tidak ada harga",
-          jumlah_kirim: jumlahKirimByItem[item.dkeluar_id],
-        }));
-
-      setDetailSuratJalan(selectedBarang);
-      const dataToSend = {
-        suratjalan_tanggalkirim: datePicker,
-        hkeluar_id: selectedHkeluar.hkeluar_id,
-        detail_suratjalan: selectedBarang,
-      };
-
-      const response = await axios.post(
-        "http://127.0.0.1:8000/api/suratjalan/generate-surat-jalan",
-        dataToSend,
-        { headers: { Authorization: `Bearer ${accessToken}` } }
-      );
-
-      console.log("data to send: ", dataToSend);
-      openSuccessSB();
-    } catch (error) {
-      openErrorSB();
-      console.error("Terjadi kesalahan saat menambahkan data Surat Jalan:", error);
     }
   };
 
@@ -536,7 +537,7 @@ function GenerateSuratJalan() {
                 <DataTable
                   table={{ columns, rows }}
                   isSorted={false}
-                  entriesPerPage={false}
+                  entriesPerPage={true}
                   showTotalEntries={false}
                   noEndBorder
                 />
@@ -625,7 +626,7 @@ function GenerateSuratJalan() {
                 <DataTable
                   table={{ columns: columnstransfer, rows: rowstransfer }}
                   isSorted={false}
-                  entriesPerPage={false}
+                  entriesPerPage={true}
                   showTotalEntries={false}
                   noEndBorder
                 />

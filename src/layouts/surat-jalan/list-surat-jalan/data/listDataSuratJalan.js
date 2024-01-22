@@ -1,21 +1,3 @@
-/* eslint-disable react/prop-types */
-/* eslint-disable react/function-component-definition */
-/**
-=========================================================
-* Material Dashboard 2 React - v2.2.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/material-dashboard-react
-* Copyright 2023 Creative Tim (https://www.creative-tim.com)
-
-Coded by www.creative-tim.com
-
- =========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
-
-// Material Dashboard 2 React components
 import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
 import MDAvatar from "components/MDAvatar";
@@ -60,6 +42,7 @@ export default function data() {
       { Header: "Status", accessor: "status", align: "center" },
       { Header: "Pembuat", accessor: "pengguna_generate.pengguna_nama", align: "center" },
       { Header: "Diputus Oleh", accessor: "pengguna_action.pengguna_nama", align: "center" },
+      { Header: "Comment", accessor: "suratjalan_comment", align: "center" },
       { Header: "Action", accessor: "action", align: "center" },
     ],
 
@@ -74,6 +57,7 @@ export default function data() {
         gudang_nama: item.h_keluar?.gudang?.gudang_nama,
       },
       suratjalan_tanggalkirim: item.suratjalan_tanggalkirim,
+      suratjalan_comment: item.suratjalan_comment || "-",
       status:
         item.suratjalan_status === 1
           ? "Ditolak"

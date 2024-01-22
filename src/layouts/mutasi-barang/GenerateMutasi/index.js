@@ -122,31 +122,40 @@ function GenerateMutasi() {
   };
 
   const addMutasiBarang = async () => {
-    try {
-      // console.log("nota supplier", notaSupplier);
-      const dataKirim = {
-        htransfer_barang_tanggal_dikirim: datePicker,
-        gudang_id_asal: parseInt(gudangAwal),
-        gudang_id_tujuan: parseInt(gudangTujuan),
-        htransfer_barang_catatan: catatan,
-        detail_transfer: dataToSubmit,
-      };
+    if (window.confirm("Apakah data yang anda masukkan sudah benar?")) {
+      try {
+        // console.log("nota supplier", notaSupplier);
+        const dataKirim = {
+          htransfer_barang_tanggal_dikirim: datePicker,
+          gudang_id_asal: parseInt(gudangAwal),
+          gudang_id_tujuan: parseInt(gudangTujuan),
+          htransfer_barang_catatan: catatan,
+          detail_transfer: dataToSubmit,
+        };
 
-      console.log("hasil data kirim ", dataKirim);
-      const response = await axios.post(
-        "http://127.0.0.1:8000/api/gudang/transaksi-transfer-barang",
-        dataKirim,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
-      openSuccessSB();
-      console.log("berhasil input");
-    } catch (error) {
-      openErrorSB();
-      console.error("Terjadi kesalahan saat mengambil input data Barang keluar:", error);
+        console.log("hasil data kirim ", dataKirim);
+        const response = await axios.post(
+          "http://127.0.0.1:8000/api/gudang/transaksi-transfer-barang",
+          dataKirim,
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
+        openSuccessSB();
+        console.log("berhasil input");
+        setData([]);
+        setCatatan("");
+        setGudangAwal(null);
+        setGudangTujuan(null);
+        setBarangs([]);
+        setinputMasukJumlah("");
+        setBatch("");
+      } catch (error) {
+        openErrorSB();
+        console.error("Terjadi kesalahan saat mengambil input data Barang keluar:", error);
+      }
     }
   };
 
@@ -176,7 +185,7 @@ function GenerateMutasi() {
           },
         }
       );
-      // console.log("Data Detail barang:", response.data.detailbarang_stok);
+      console.log("Data Detail barang:", response.data.detailbarang_stok);
       setDetailBarangStok(response.data.detailbarang_stok);
       setDetailBarangByBatch(response.data);
     } catch (error) {

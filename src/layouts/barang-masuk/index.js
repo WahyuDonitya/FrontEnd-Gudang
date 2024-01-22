@@ -127,24 +127,29 @@ function BarangMasuk() {
   };
 
   const addBarangMasuk = async () => {
-    try {
-      // console.log("nota supplier", notaSupplier);
-      const dataKirim = {
-        hmasuk_notasupplier: notaSupplier,
-        supplier_id: parseInt(supplierPick),
-        barang_masuk: dataToSubmit,
-      };
+    if (window.confirm("Apakah data yang anda masukkan sudah benar?")) {
+      try {
+        // console.log("nota supplier", notaSupplier);
+        const dataKirim = {
+          hmasuk_notasupplier: notaSupplier,
+          supplier_id: parseInt(supplierPick),
+          barang_masuk: dataToSubmit,
+        };
 
-      const response = await axios.post("http://127.0.0.1:8000/api/detailbarang/add", dataKirim, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
-      openSuccessSB();
-      console.log("berhasil input");
-    } catch (error) {
-      openErrorSB();
-      console.error("Terjadi kesalahan saat mengambil input data Barang keluar:", error);
+        const response = await axios.post("http://127.0.0.1:8000/api/detailbarang/add", dataKirim, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+        openSuccessSB();
+        console.log("berhasil input");
+        setData([]);
+        setDataToSubmit([]);
+        setNotaSupplier("");
+      } catch (error) {
+        openErrorSB();
+        console.error("Terjadi kesalahan saat mengambil input data Barang keluar:", error);
+      }
     }
   };
 
@@ -285,7 +290,7 @@ function BarangMasuk() {
                 <p>Loading customer data...</p>
               )}
             </Grid> */}
-            <Grid item xs={12}>
+            {/* <Grid item xs={12}>
               {gudang_id === 1 &&
                 (Array.isArray(suppliers) && suppliers.length > 0 ? (
                   <Autocomplete
@@ -306,11 +311,11 @@ function BarangMasuk() {
                 ) : (
                   <p>Loading customer data...</p>
                 ))}
-            </Grid>
+            </Grid> */}
 
             <Grid item xs={12}>
               <TextField
-                label="Nota Supplier"
+                label="Nota Kediri"
                 fullWidth
                 value={notaSupplier}
                 onChange={(e) => setNotaSupplier(e.target.value)}
@@ -337,8 +342,6 @@ function BarangMasuk() {
                       setInputBarangNama(null);
                       setInputBarangStok(null);
                     }
-
-                    // console.log(inputBarangStok);
                   }}
                   fullWidth
                   renderInput={(params) => <TextField {...params} label="Nama Barang" />}
@@ -367,7 +370,7 @@ function BarangMasuk() {
                     // Menggunakan format dayjs untuk mengonversi ke "YYYY-MM-DD"
                     const formattedDate = newValue ? dayjs(newValue).format("YYYY-MM-DD") : "";
                     setdatePicker(formattedDate);
-                    const formattedDate2 = newValue ? dayjs(newValue).format("YYYYMMDD") : "";
+                    const formattedDate2 = newValue ? dayjs(newValue).format("DDMMYYYY") : "";
                     setBatch(formattedDate2);
                   }}
                 />
@@ -421,7 +424,6 @@ function BarangMasuk() {
           </Grid>
         </MDBox>
       </Header>
-      <Footer />
     </DashboardLayout>
   );
 }

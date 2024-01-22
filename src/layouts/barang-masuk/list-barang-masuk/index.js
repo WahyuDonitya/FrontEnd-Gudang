@@ -43,8 +43,9 @@ function ListBarangMasuk() {
                 <DataTable
                   table={{ columns, rows }}
                   isSorted={false}
-                  entriesPerPage={false}
-                  showTotalEntries={false}
+                  entriesPerPage={true}
+                  showTotalEntries={true}
+                  canSearch
                   noEndBorder
                 />
               </MDBox>
@@ -79,7 +80,6 @@ function ListBarangMasuk() {
           </Grid> */}
         </Grid>
       </MDBox>
-      <Footer />
     </DashboardLayout>
   );
 }

@@ -59,6 +59,7 @@ import PergerakanBarang from "layouts/report/mutasi-barang";
 import MasterBarang from "layouts/master/master-barang";
 import MasterGudang from "layouts/master/master-gudang";
 import MasterPengguna from "layouts/master/master-pengguna";
+import MasterCustomer from "layouts/master/master-customer";
 import SignUp from "layouts/authentication/sign-up";
 
 // @mui iconsππ
@@ -263,6 +264,17 @@ const routes = [
     component: <MasterPengguna />,
     roles: ["3"],
   },
+
+  {
+    type: "collapse",
+    name: "Master Customer",
+    key: "master-pengguna",
+    icon: <Icon fontSize="small">warehouse</Icon>,
+    route: "/master-customer",
+    component: <MasterCustomer />,
+    roles: ["3"],
+  },
+
   {
     type: "collapse",
     name: "Sign In",

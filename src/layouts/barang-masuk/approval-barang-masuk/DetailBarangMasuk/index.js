@@ -1,19 +1,3 @@
-/**
-=========================================================
-* Material Dashboard 2 React - v2.2.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/material-dashboard-react
-* Copyright 2023 Creative Tim (https://www.creative-tim.com)
-
-Coded by www.creative-tim.com
-
- =========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
-
-// @mui material components
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
 
@@ -30,6 +14,9 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import MDButton from "components/MDButton";
 import MDSnackbar from "components/MDSnackbar";
+import dayjs from "dayjs";
+import { Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
+import MDInput from "components/MDInput";
 // import projectsTableData from "layouts/tables/data/projectsTableData";
 
 function DetailBarangMasuk() {
@@ -53,6 +40,20 @@ function DetailBarangMasuk() {
   const [errorRejectSB, setErrorRejectSB] = useState(false);
   const openErrorRejectSB = () => setErrorRejectSB(true);
   const closeErrorRejectSB = () => setErrorRejectSB(false);
+
+  // Handle modal
+  const [openRejectModal, setOpenRejectModal] = useState(false);
+  const [rejectReason, setRejectReason] = useState("");
+
+  const openRejectModalHandler = () => {
+    setOpenRejectModal(true);
+  };
+
+  const closeRejectModalHandler = () => {
+    setOpenRejectModal(false);
+    setRejectReason(""); // Clear reject reason when modal is closed
+  };
+  // end Handle modal
 
   const accessToken = localStorage.getItem("access_token");
 
@@ -87,47 +88,59 @@ function DetailBarangMasuk() {
   };
 
   const handleApprove = async () => {
-    try {
-      const datatosend = {
-        dataId: dataId,
-      };
-      console.log(datatosend);
-      const response = await axios.post(
-        "http://127.0.0.1:8000/api/detailbarang/approval-barang-masuk",
-        datatosend,
-        {
-          headers: { Authorization: `Bearer ${accessToken}` },
-        }
-      );
-      openSuccessSB();
-      console.log(response);
-    } catch (error) {
-      openErrorSB();
-      console.error("Terjadi kesalahan saat melakukan approval surat jalan : ", error);
+    if (window.confirm("Apakah anda ingin melakukan proses Approve?")) {
+      try {
+        const datatosend = {
+          dataId: dataId,
+        };
+        console.log(datatosend);
+        const response = await axios.post(
+          "http://127.0.0.1:8000/api/detailbarang/approval-barang-masuk",
+          datatosend,
+          {
+            headers: { Authorization: `Bearer ${accessToken}` },
+          }
+        );
+        openSuccessSB();
+        getId();
+      } catch (error) {
+        openErrorSB();
+        console.error("Terjadi kesalahan saat melakukan approval surat jalan : ", error);
+      }
     }
   };
 
   const handleReject = async () => {
-    try {
-      const datatosend = {
-        dataId: dataId,
-      };
-      console.log(datatosend);
-      const response = await axios.post(
-        "http://127.0.0.1:8000/api/detailbarang/reject-barang-masuk",
-        datatosend,
-        {
-          headers: { Authorization: `Bearer ${accessToken}` },
-        }
-      );
-      openSuccessRejectSB();
-      console.log(response);
-    } catch (error) {
-      openErrorRejectSB();
-      console.error(
-        "Terjadi kesalahan saat melakukan reject barang keluar : ",
-        error.response.data
-      );
+    if (window.confirm("Apakah anda yakin ingin melakukan Reject?")) {
+      if (!rejectReason.trim()) {
+        alert("Box Alasan harus diisi");
+        return;
+      }
+      try {
+        const datatosend = {
+          dataId: dataId,
+          hmasuk_comment: rejectReason,
+        };
+        console.log(datatosend);
+        const response = await axios.post(
+          "http://127.0.0.1:8000/api/detailbarang/reject-barang-masuk",
+          datatosend,
+          {
+            headers: { Authorization: `Bearer ${accessToken}` },
+          }
+        );
+
+        // console.log(response);
+        closeRejectModalHandler();
+        openSuccessRejectSB();
+        getId();
+      } catch (error) {
+        openErrorRejectSB();
+        console.error(
+          "Terjadi kesalahan saat melakukan reject barang keluar : ",
+          error.response.data
+        );
+      }
     }
   };
 
@@ -146,7 +159,7 @@ function DetailBarangMasuk() {
 
   const rows = detailBarangMasuk.map((item) => ({
     barang: { barang_nama: item.barang.barang_nama },
-    detailbarang_expdate: item.detailbarang_expdate,
+    detailbarang_expdate: dayjs(item.detailbarang_expdate).format("DD-MM-YYYY"),
     detailbarang_batch: item.detailbarang_batch,
     detailbarang_stok: item.detailbarang_stok,
   }));
@@ -228,7 +241,12 @@ function DetailBarangMasuk() {
               {headerBarangMasuk.hmasuk_status === 2 && (
                 <Grid container pt={5} spacing={7} px={3} mb={4}>
                   <Grid item xs={6}>
-                    <MDButton variant="gradient" color="error" fullWidth onClick={handleReject}>
+                    <MDButton
+                      variant="gradient"
+                      color="error"
+                      fullWidth
+                      onClick={openRejectModalHandler}
+                    >
                       Reject
                     </MDButton>
                   </Grid>
@@ -251,6 +269,29 @@ function DetailBarangMasuk() {
           {renderRejectErrorSB}
         </Grid>
       </MDBox>
+
+      <Dialog open={openRejectModal} onClose={closeRejectModalHandler}>
+        <DialogTitle>Reason for Rejection</DialogTitle>
+        <DialogContent>
+          <MDInput
+            fullWidth
+            multiline
+            rows={4}
+            variant="outlined"
+            label="Enter reason for rejection"
+            value={rejectReason}
+            onChange={(e) => setRejectReason(e.target.value)}
+          />
+        </DialogContent>
+        <DialogActions>
+          <MDButton color="error" onClick={closeRejectModalHandler}>
+            Cancel
+          </MDButton>
+          <MDButton color="success" onClick={handleReject}>
+            Reject
+          </MDButton>
+        </DialogActions>
+      </Dialog>
     </DashboardLayout>
   );
 }

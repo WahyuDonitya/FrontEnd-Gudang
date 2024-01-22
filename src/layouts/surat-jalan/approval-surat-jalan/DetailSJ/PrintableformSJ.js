@@ -6,7 +6,7 @@ const PrintableformSJ = ({ detailSuratJalan, headerSuratJalan }) => {
     <div style={{ padding: "20px", border: "1px solid #ccc", borderRadius: "10px" }}>
       <div style={{ display: "flex", alignItems: "center", marginBottom: "10px" }}>
         <img
-          src={require("../../../../assets/images/logos/LOGO EAB ok 1.png")}
+          src={require("../../../../assets/images/logos/nyonya-poo.png")}
           style={{ width: "150px", height: "auto" }}
         />
         <div style={{ marginLeft: "20px" }}>

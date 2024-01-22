@@ -31,6 +31,8 @@ import { useEffect, useState } from "react";
 import MDButton from "components/MDButton";
 import MDSnackbar from "components/MDSnackbar";
 import PrintableformSJ from "./PrintableformSJ";
+import { Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
+import MDInput from "components/MDInput";
 // import projectsTableData from "layouts/tables/data/projectsTableData";
 
 function DetailSJ() {
@@ -54,6 +56,22 @@ function DetailSJ() {
   const [errorRejectSB, setErrorRejectSB] = useState(false);
   const openErrorRejectSB = () => setErrorRejectSB(true);
   const closeErrorRejectSB = () => setErrorRejectSB(false);
+
+  // end state untuk notification
+
+  // Handle modal
+  const [openRejectModal, setOpenRejectModal] = useState(false);
+  const [rejectReason, setRejectReason] = useState("");
+
+  const openRejectModalHandler = () => {
+    setOpenRejectModal(true);
+  };
+
+  const closeRejectModalHandler = () => {
+    setOpenRejectModal(false);
+    setRejectReason(""); // Clear reject reason when modal is closed
+  };
+  // End Handle modal
 
   const accessToken = localStorage.getItem("access_token");
 
@@ -84,50 +102,62 @@ function DetailSJ() {
   };
 
   const handleApprove = async () => {
-    try {
-      const datatosend = {
-        dataId: dataId,
-      };
-      console.log(datatosend);
-      const response = await axios.post(
-        "http://127.0.0.1:8000/api/suratjalan/suratjalan-approval",
-        datatosend,
-        {
-          headers: { Authorization: `Bearer ${accessToken}` },
-        }
-      );
-      openSuccessSB();
-      // console.log(response);`
-      setTimeout(() => {
-        window.location.reload();
-      }, 2000);
-    } catch (error) {
-      openErrorSB();
-      console.error("Terjadi kesalahan saat melakukan approval surat jalan : ", error);
+    if (window.confirm("Apakah yakin ingin melakukan Approve Surat jalan?")) {
+      try {
+        const datatosend = {
+          dataId: dataId,
+        };
+        console.log(datatosend);
+        const response = await axios.post(
+          "http://127.0.0.1:8000/api/suratjalan/suratjalan-approval",
+          datatosend,
+          {
+            headers: { Authorization: `Bearer ${accessToken}` },
+          }
+        );
+        openSuccessSB();
+        // console.log(response);`
+        // setTimeout(() => {
+        //   window.location.reload();
+        // }, 2000);
+        getId();
+      } catch (error) {
+        openErrorSB();
+        console.error("Terjadi kesalahan saat melakukan approval surat jalan : ", error);
+      }
     }
   };
 
   const handleReject = async () => {
-    try {
-      const datatosend = {
-        dataId: dataId,
-      };
-      console.log(datatosend);
-      const response = await axios.post(
-        "http://127.0.0.1:8000/api/suratjalan/suratjalan-reject",
-        datatosend,
-        {
-          headers: { Authorization: `Bearer ${accessToken}` },
-        }
-      );
-      openSuccessRejectSB();
-      console.log(response);
-    } catch (error) {
-      openErrorRejectSB();
-      console.error(
-        "Terjadi kesalahan saat melakukan reject barang keluar : ",
-        error.response.data
-      );
+    if (window.confirm("Apakah yakin ingin melakukan reject surat jalan?")) {
+      if (!rejectReason.trim()) {
+        alert("Box Alasan harus diisi");
+        return;
+      }
+      try {
+        const datatosend = {
+          dataId: dataId,
+          suratjalan_comment: rejectReason,
+        };
+        console.log(datatosend);
+        const response = await axios.post(
+          "http://127.0.0.1:8000/api/suratjalan/suratjalan-reject",
+          datatosend,
+          {
+            headers: { Authorization: `Bearer ${accessToken}` },
+          }
+        );
+        closeRejectModalHandler();
+        openSuccessRejectSB();
+        console.log(response);
+        getId();
+      } catch (error) {
+        openErrorRejectSB();
+        console.error(
+          "Terjadi kesalahan saat melakukan reject barang keluar : ",
+          error.response.data
+        );
+      }
     }
   };
 
@@ -252,7 +282,12 @@ function DetailSJ() {
               {headerSuratJalan.suratjalan_status === 2 && (
                 <Grid container pt={5} spacing={7} px={3} mb={4}>
                   <Grid item xs={6}>
-                    <MDButton variant="gradient" color="error" fullWidth onClick={handleReject}>
+                    <MDButton
+                      variant="gradient"
+                      color="error"
+                      fullWidth
+                      onClick={openRejectModalHandler}
+                    >
                       Reject
                     </MDButton>
                   </Grid>
@@ -285,6 +320,28 @@ function DetailSJ() {
           {renderRejectErrorSB}
         </Grid>
       </MDBox>
+      <Dialog open={openRejectModal} onClose={closeRejectModalHandler}>
+        <DialogTitle>Reason for Rejection</DialogTitle>
+        <DialogContent>
+          <MDInput
+            fullWidth
+            multiline
+            rows={4}
+            variant="outlined"
+            label="Enter reason for rejection"
+            value={rejectReason}
+            onChange={(e) => setRejectReason(e.target.value)}
+          />
+        </DialogContent>
+        <DialogActions>
+          <MDButton color="error" onClick={closeRejectModalHandler}>
+            Cancel
+          </MDButton>
+          <MDButton color="success" onClick={handleReject}>
+            Reject
+          </MDButton>
+        </DialogActions>
+      </Dialog>
     </DashboardLayout>
   );
 }

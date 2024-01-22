@@ -117,32 +117,37 @@ function BarangKeluar() {
   };
 
   const addBarangKeluar = async () => {
-    try {
-      const customerId = parseInt(customerPick);
+    if (window.confirm("Apakah data yang anda masukkan sudah benar?")) {
+      try {
+        const customerId = parseInt(customerPick);
 
-      const dataToSend = {
-        gudang_id: gudangPick,
-        customer_id: customerId,
-        hkeluar_tanggal: datePicker,
-        detail_transaksi: dataToSubmit,
-      };
+        const dataToSend = {
+          gudang_id: gudangPick,
+          customer_id: customerId,
+          hkeluar_tanggal: datePicker,
+          detail_transaksi: dataToSubmit,
+        };
 
-      console.log("value data to send: ", dataToSend);
+        console.log("value data to send: ", dataToSend);
 
-      const response = await axios.post(
-        "http://127.0.0.1:8000/api/transaksi-barang-keluar",
-        dataToSend,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
-      console.log("berhasil input");
-      openSuccessSB();
-    } catch (error) {
-      openErrorSB();
-      console.error("Terjadi kesalahan saat mengambil input data Barang keluar:", error);
+        const response = await axios.post(
+          "http://127.0.0.1:8000/api/transaksi-barang-keluar",
+          dataToSend,
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
+        console.log("berhasil input");
+        openSuccessSB();
+        setData([]);
+        setDataToSubmit([]);
+        setdatePicker(null);
+      } catch (error) {
+        openErrorSB();
+        console.error("Terjadi kesalahan saat mengambil input data Barang keluar:", error);
+      }
     }
   };
 
@@ -426,7 +431,6 @@ function BarangKeluar() {
           </Grid>
         </MDBox>
       </Header>
-      <Footer />
     </DashboardLayout>
   );
 }

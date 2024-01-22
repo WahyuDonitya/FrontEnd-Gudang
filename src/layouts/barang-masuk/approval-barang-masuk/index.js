@@ -60,15 +60,15 @@ function ApprovalBarangMasuk() {
                 <DataTable
                   table={{ columns, rows }}
                   isSorted={true}
-                  entriesPerPage={false}
-                  showTotalEntries={false}
+                  entriesPerPage={true}
+                  showTotalEntries={true}
                   noEndBorder
                   canSearch
                 />
               </MDBox>
             </Card>
           </Grid>
-          <Grid item xs={12}>
+          {/* <Grid item xs={12}>
             <Card>
               <MDBox
                 mx={2}
@@ -85,16 +85,16 @@ function ApprovalBarangMasuk() {
                 </MDTypography>
               </MDBox>
               <MDBox pt={3}>
-                {/* <DataTable
+                <DataTable
                   table={{ columns: columnsreject, rows: rowsreject }}
                   isSorted={true}
                   entriesPerPage={false}
                   showTotalEntries={false}
                   noEndBorder
-                /> */}
+                />
               </MDBox>
             </Card>
-          </Grid>
+          </Grid> */}
         </Grid>
       </MDBox>
     </DashboardLayout>

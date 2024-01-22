@@ -66,6 +66,7 @@ export default function data() {
       { Header: "Status", accessor: "status", align: "center" },
       { Header: "Pembuat", accessor: "pengguna_generate.pengguna_nama", align: "center" },
       { Header: "Diputus Oleh", accessor: "pengguna_action.pengguna_nama", align: "center" },
+      { Header: "Comment", accessor: "hkeluar_comment", align: "center" },
       { Header: "Action", accessor: "action", align: "center" },
     ],
 
@@ -76,6 +77,7 @@ export default function data() {
       hkeluar_tanggal: item.hkeluar_tanggal,
       pengguna_generate: { pengguna_nama: item.pengguna_generate?.pengguna_nama || "-" },
       pengguna_action: { pengguna_nama: item.pengguna_action?.pengguna_nama || "-" },
+      hkeluar_comment: item.hkeluar_comment || "-",
       status:
         item.hkeluar_status === 0
           ? "Sudah Tuntas Terkirim"

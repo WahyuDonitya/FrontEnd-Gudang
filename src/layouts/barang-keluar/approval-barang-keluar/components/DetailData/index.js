@@ -30,6 +30,8 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import MDButton from "components/MDButton";
 import MDSnackbar from "components/MDSnackbar";
+import { Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
+import MDInput from "components/MDInput";
 import PrintableFormBarangKeluar from "./PrintableFormBarangKeluar";
 // import projectsTableData from "layouts/tables/data/projectsTableData";
 
@@ -55,6 +57,21 @@ function DetailData() {
   const [errorRejectSB, setErrorRejectSB] = useState(false);
   const openErrorRejectSB = () => setErrorRejectSB(true);
   const closeErrorRejectSB = () => setErrorRejectSB(false);
+  // End state notification
+
+  // Handle modal
+  const [openRejectModal, setOpenRejectModal] = useState(false);
+  const [rejectReason, setRejectReason] = useState("");
+
+  const openRejectModalHandler = () => {
+    setOpenRejectModal(true);
+  };
+
+  const closeRejectModalHandler = () => {
+    setOpenRejectModal(false);
+    setRejectReason(""); // Clear reject reason when modal is closed
+  };
+  // End Handle modal
 
   // API
 
@@ -86,44 +103,56 @@ function DetailData() {
   };
 
   const handleApprove = async () => {
-    try {
-      const datatosend = {
-        dataId: dataId,
-      };
-      // console.log("tes");
-      const response = await axios.post(
-        "http://127.0.0.1:8000/api/transaksi-barang/approve-keluar",
-        datatosend,
-        {
-          headers: { Authorization: `Bearer ${accessToken}` },
-        }
-      );
-      console.log(response);
-      openSuccessSB();
-    } catch (error) {
-      openErrorSB();
-      console.error("Terjadi kesalahan saat melakukan approval barang keluar : ", error);
+    if (window.confirm("Apakah anda yakin ingin melakukan proses Approve?")) {
+      try {
+        const datatosend = {
+          dataId: dataId,
+        };
+        // console.log("tes");
+        const response = await axios.post(
+          "http://127.0.0.1:8000/api/transaksi-barang/approve-keluar",
+          datatosend,
+          {
+            headers: { Authorization: `Bearer ${accessToken}` },
+          }
+        );
+        console.log(response);
+        openSuccessSB();
+        getId();
+      } catch (error) {
+        openErrorSB();
+        console.error("Terjadi kesalahan saat melakukan approval barang keluar : ", error);
+      }
     }
   };
 
   const handleReject = async () => {
-    try {
-      const datatosend = {
-        dataId: dataId,
-      };
-      console.log("tes");
-      const response = await axios.post(
-        "http://127.0.0.1:8000/api/transaksi-barang/reject-keluar",
-        datatosend,
-        {
-          headers: { Authorization: `Bearer ${accessToken}` },
-        }
-      );
-      console.log(response);
-      openSuccessRejectSB();
-    } catch (error) {
-      openErrorRejectSB();
-      console.error("Terjadi kesalahan saat melakukan reject barang keluar : ", error);
+    if (window.confirm("Apakah anda yakin ingin melakukan proses Reject?")) {
+      if (!rejectReason.trim()) {
+        alert("Box Alasan harus diisi");
+        return;
+      }
+      try {
+        const datatosend = {
+          dataId: dataId,
+          hkeluar_comment: rejectReason,
+        };
+        console.log("tes");
+        const response = await axios.post(
+          "http://127.0.0.1:8000/api/transaksi-barang/reject-keluar",
+          datatosend,
+          {
+            headers: { Authorization: `Bearer ${accessToken}` },
+          }
+        );
+        console.log(response);
+        getId();
+        closeRejectModalHandler();
+        openSuccessRejectSB();
+      } catch (error) {
+        openErrorRejectSB();
+        console.error("Terjadi kesalahan saat melakukan reject barang keluar : ", error);
+      }
     }
   };
 
@@ -289,7 +318,12 @@ function DetailData() {
               {headerKeluar.hkeluar_status === 3 && (
                 <Grid container pt={5} spacing={7} px={3} mb={4}>
                   <Grid item xs={6}>
-                    <MDButton variant="gradient" color="error" fullWidth onClick={handleReject}>
+                    <MDButton
+                      variant="gradient"
+                      color="error"
+                      fullWidth
+                      onClick={openRejectModalHandler}
+                    >
                       Reject
                     </MDButton>
                   </Grid>
@@ -322,6 +356,28 @@ function DetailData() {
           {renderRejectErrorSB}
         </Grid>
       </MDBox>
+      <Dialog open={openRejectModal} onClose={closeRejectModalHandler}>
+        <DialogTitle>Reason for Rejection</DialogTitle>
+        <DialogContent>
+          <MDInput
+            fullWidth
+            multiline
+            rows={4}
+            variant="outlined"
+            label="Enter reason for rejection"
+            value={rejectReason}
+            onChange={(e) => setRejectReason(e.target.value)}
+          />
+        </DialogContent>
+        <DialogActions>
+          <MDButton color="error" onClick={closeRejectModalHandler}>
+            Cancel
+          </MDButton>
+          <MDButton color="success" onClick={handleReject}>
+            Reject
+          </MDButton>
+        </DialogActions>
+      </Dialog>
     </DashboardLayout>
   );
 }

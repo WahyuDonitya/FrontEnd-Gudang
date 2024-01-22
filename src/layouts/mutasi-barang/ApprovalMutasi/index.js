@@ -28,12 +28,12 @@ import DataTable from "examples/Tables/DataTable";
 
 // Data
 import approvalBarangMasuk from "./data/approvalTableData";
-import rejectedSJ from "./data/listRejectedData";
+// import rejectedSJ from "./data/listRejectedData";
 // import projectsTableData from "layouts/tables/data/projectsTableData";
 
 function ApprovalMutasi() {
   const { columns, rows } = approvalBarangMasuk();
-  const { columnsreject, rowsreject } = rejectedSJ();
+  // const { columnsreject, rowsreject } = rejectedSJ();
 
   return (
     <DashboardLayout>
@@ -68,7 +68,7 @@ function ApprovalMutasi() {
               </MDBox>
             </Card>
           </Grid>
-          <Grid item xs={12}>
+          {/* <Grid item xs={12}>
             <Card>
               <MDBox
                 mx={2}
@@ -95,7 +95,7 @@ function ApprovalMutasi() {
                 />
               </MDBox>
             </Card>
-          </Grid>
+          </Grid> */}
         </Grid>
       </MDBox>
     </DashboardLayout>
