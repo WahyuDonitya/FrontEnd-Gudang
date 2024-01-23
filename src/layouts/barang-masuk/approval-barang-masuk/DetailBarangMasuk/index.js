@@ -15,7 +15,15 @@ import { useEffect, useState } from "react";
 import MDButton from "components/MDButton";
 import MDSnackbar from "components/MDSnackbar";
 import dayjs from "dayjs";
-import { Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
+import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  FormControlLabel,
+  Radio,
+  RadioGroup,
+} from "@mui/material";
 import MDInput from "components/MDInput";
 // import projectsTableData from "layouts/tables/data/projectsTableData";
 
@@ -53,9 +61,22 @@ function DetailBarangMasuk() {
     setOpenRejectModal(false);
     setRejectReason(""); // Clear reject reason when modal is closed
   };
+
+  const [openTahuModal, setOpenTahuModal] = useState(false);
+  const [isPackaging, setIsPackaging] = useState(null);
+
+  const openTahuModalHandler = () => {
+    setOpenTahuModal(true);
+  };
+
+  const closeTahuModalHandler = () => {
+    setOpenTahuModal(false);
+    setIsPackaging(null);
+  };
   // end Handle modal
 
   const accessToken = localStorage.getItem("access_token");
+  let tahupolos = false;
 
   // API
 
@@ -92,6 +113,7 @@ function DetailBarangMasuk() {
       try {
         const datatosend = {
           dataId: dataId,
+          hmasuk_statuspackaging: isPackaging,
         };
         console.log(datatosend);
         const response = await axios.post(
@@ -103,6 +125,7 @@ function DetailBarangMasuk() {
         );
         openSuccessSB();
         getId();
+        closeTahuModalHandler();
       } catch (error) {
         openErrorSB();
         console.error("Terjadi kesalahan saat melakukan approval surat jalan : ", error);
@@ -157,12 +180,18 @@ function DetailBarangMasuk() {
     { Header: "Jumlah Barang", accessor: "detailbarang_stok", align: "center" },
   ];
 
-  const rows = detailBarangMasuk.map((item) => ({
-    barang: { barang_nama: item.barang.barang_nama },
-    detailbarang_expdate: dayjs(item.detailbarang_expdate).format("DD-MM-YYYY"),
-    detailbarang_batch: item.detailbarang_batch,
-    detailbarang_stok: item.detailbarang_stok,
-  }));
+  const rows = detailBarangMasuk.map((item) => {
+    // Check if barang_nama is "Tahu POO polos"
+    if (item.barang.barang_nama === "Tahu POO polos") {
+      tahupolos = true;
+    }
+    return {
+      barang: { barang_nama: item.barang.barang_nama },
+      detailbarang_expdate: dayjs(item.detailbarang_expdate).format("DD-MM-YYYY"),
+      detailbarang_batch: item.detailbarang_batch,
+      detailbarang_stok: item.detailbarang_stok,
+    };
+  });
 
   const renderSuccessSB = (
     <MDSnackbar
@@ -251,8 +280,13 @@ function DetailBarangMasuk() {
                     </MDButton>
                   </Grid>
                   <Grid item xs={6}>
-                    <MDButton variant="gradient" color="success" fullWidth onClick={handleApprove}>
-                      Approve
+                    <MDButton
+                      variant="gradient"
+                      color="success"
+                      fullWidth
+                      onClick={tahupolos ? openTahuModalHandler : handleApprove}
+                    >
+                      {tahupolos ? "Open Tahu Modal" : "Approve"}
                     </MDButton>
                   </Grid>
                 </Grid>
@@ -289,6 +323,29 @@ function DetailBarangMasuk() {
           </MDButton>
           <MDButton color="success" onClick={handleReject}>
             Reject
+          </MDButton>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog open={openTahuModal} onClose={closeTahuModalHandler}>
+        <DialogTitle>Apakah Terdapat proses Packaging untuk tahu polos?</DialogTitle>
+        <DialogContent>
+          <RadioGroup
+            aria-label="tahu-polos-option"
+            name="tahu-polos-option"
+            value={isPackaging}
+            onChange={(e) => setIsPackaging(e.target.value)}
+          >
+            <FormControlLabel value={1} control={<Radio />} label="Ya" />
+            <FormControlLabel value={0} control={<Radio />} label="Tidak" />
+          </RadioGroup>
+        </DialogContent>
+        <DialogActions>
+          <MDButton color="error" onClick={closeTahuModalHandler}>
+            Cancel
+          </MDButton>
+          <MDButton color="success" onClick={handleApprove}>
+            Approve
           </MDButton>
         </DialogActions>
       </Dialog>

@@ -256,8 +256,9 @@ function GenerateMutasi() {
 
   const handleStokChange = (newValue) => {
     const numericValue = parseInt(newValue);
-    console.log(detailBarangStok);
+    // console.log(detailBarangStok);
     if (numericValue > detailBarangStok) {
+      alert(`Barang yang anda pilih hanya memiliki stok : ${detailBarangStok}`);
       setIsInputInvalid(true);
     } else {
       setIsInputInvalid(false);

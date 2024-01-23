@@ -76,11 +76,11 @@ function KartuStok() {
       // setStokAwal(response.data.data_sebelumnya);
       if (response.data.data_sebelumnya != null) {
         setStokAwal(response.data.data_sebelumnya["logbarang_stoksekarang"]);
+      } else {
+        setStokAwal[0];
       }
-      // console.log(
-      //   "ini data sebelumnya : ",
-      //   response.data.data_sebelumnya["logbarang_stoksekarang"]
-      // );
+
+      // console.log("ini data sebelumnya : ", response.data);
       // console.log(response.data);
     } catch (error) {
       console.error("Terjadi kesalahan saat mengambil data kartu Stok:", error);

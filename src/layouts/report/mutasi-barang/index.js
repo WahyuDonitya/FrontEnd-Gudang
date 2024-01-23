@@ -238,6 +238,7 @@ function PergerakanBarang() {
                   isSorted={false}
                   entriesPerPage={true}
                   showTotalEntries={true}
+                  canSearch
                   noEndBorder
                 />
                 {/* <Grid item xs={12} px={2} pb={3} pt={5}>

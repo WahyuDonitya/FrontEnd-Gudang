@@ -183,6 +183,7 @@ function BarangKeluar() {
   const handleInputChange = (e) => {
     const value = parseInt(e.target.value);
     if (value > inputBarangStok) {
+      alert(`Barang yang anda pilih hanya memiliki stok : ${inputBarangStok}`);
       setIsInputInvalid(true);
     } else {
       setIsInputInvalid(false);
@@ -212,6 +213,27 @@ function BarangKeluar() {
       // Mengambil ID yang ada di dalam tanda kurung tutup
       const id = parts[1].replace(")", "");
       setCustomerPick(id);
+    }
+  };
+
+  const handleInputChangeBarang = async (barangId) => {
+    try {
+      const response = await axios.get(
+        `http://127.0.0.1:8000/api/detailbarang/get-detail-barang-stok-by-gudang/${barangId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      // console.log(response.data[0].total_stok);
+      if (response.data.length > 0) {
+        setInputBarangStok(response.data[0].total_stok);
+      } else {
+        alert("Barang yang anda pilih stok nya kosong.");
+      }
+    } catch (error) {
+      console.log("Terdapat kesalahan saat mengambil stok barang : ", error);
     }
   };
 
@@ -342,7 +364,8 @@ function BarangKeluar() {
                     if (newValue) {
                       setInputBarangId(newValue.barang_id);
                       setInputBarangNama(newValue.barang_nama);
-                      setInputBarangStok(newValue.barang_stok);
+                      handleInputChangeBarang(newValue.barang_id);
+                      // setInputBarangStok(newValue.barang_stok);
                     } else {
                       setInputBarangId(null);
                       setInputBarangNama(null);

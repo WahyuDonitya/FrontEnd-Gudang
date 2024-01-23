@@ -60,6 +60,7 @@ import MasterBarang from "layouts/master/master-barang";
 import MasterGudang from "layouts/master/master-gudang";
 import MasterPengguna from "layouts/master/master-pengguna";
 import MasterCustomer from "layouts/master/master-customer";
+import GeneratePackaging from "layouts/packaging";
 import SignUp from "layouts/authentication/sign-up";
 
 // @mui iconsππ
@@ -136,6 +137,15 @@ const routes = [
     icon: <Icon fontSize="small">warehouse</Icon>,
     route: "/mutasi-barang",
     component: <GenerateMutasi />,
+    roles: ["2", "1"],
+  },
+  {
+    type: "collapse",
+    name: "Packaging",
+    key: "packaging-barang",
+    icon: <Icon fontSize="small">warehouse</Icon>,
+    route: "/packaging-barang",
+    component: <GeneratePackaging />,
     roles: ["2", "1"],
   },
   {

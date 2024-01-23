@@ -45,8 +45,9 @@ function ListSuratJalan() {
                 <DataTable
                   table={{ columns, rows }}
                   isSorted={false}
-                  entriesPerPage={false}
-                  showTotalEntries={false}
+                  entriesPerPage={true}
+                  showTotalEntries={true}
+                  canSearch
                   noEndBorder
                 />
               </MDBox>
@@ -72,8 +73,9 @@ function ListSuratJalan() {
                 <DataTable
                   table={{ columns: columns2, rows: rows2 }}
                   isSorted={false}
-                  entriesPerPage={false}
-                  showTotalEntries={false}
+                  entriesPerPage={true}
+                  showTotalEntries={true}
+                  canSearch
                   noEndBorder
                 />
               </MDBox>
@@ -81,7 +83,6 @@ function ListSuratJalan() {
           </Grid>
         </Grid>
       </MDBox>
-      <Footer />
     </DashboardLayout>
   );
 }
