@@ -219,6 +219,8 @@ function GenerateSuratJalan() {
 
         console.log("data to send: ", dataToSend);
         openSuccessSB();
+        setSelectedHkeluar(null);
+        setListBarang([]);
       } catch (error) {
         openErrorSB();
         console.error("Terjadi kesalahan saat menambahkan data Surat Jalan:", error);

@@ -55,7 +55,7 @@ export default function data() {
           ? "Sudah Disetujui"
           : "Ditolak",
       action: (
-        <Link to={`/detailbarang-masuk/${item.hmasuk_nota}`}>
+        <Link to={`/list-detailbarang-masuk/${item.hmasuk_nota}`}>
           <MDTypography variant="caption" color="text" fontWeight="medium">
             Detail
           </MDTypography>

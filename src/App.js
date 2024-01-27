@@ -53,6 +53,7 @@ import DetailSJ from "layouts/surat-jalan/approval-surat-jalan/DetailSJ";
 import DetailBarangMasuk from "layouts/barang-masuk/approval-barang-masuk/DetailBarangMasuk";
 import DetailMB from "layouts/mutasi-barang/ApprovalMutasi/detailMB";
 import DetailSJTrans from "layouts/surat-jalan/approval-surat-jalan/DetailSJTrans";
+import ListDetailBarangMasuk from "layouts/barang-masuk/list-barang-masuk/DetailBarangMasuk";
 
 import BillingInformation from "layouts/billing/components/BillingInformation";
 
@@ -180,6 +181,7 @@ export default function App() {
           <Route path="/detailbarang-masuk/:dataId" element={<DetailBarangMasuk />} />
           <Route path="/detailmutasi-barang/:dataId" element={<DetailMB />} />
           <Route path="/detailsurat-jalan/transferbarang/:dataId" element={<DetailSJTrans />} />
+          <Route path="/list-detailbarang-masuk/:dataId" element={<ListDetailBarangMasuk />} />
         </Routes>
       </ThemeProvider>
     </LocalizationProvider>

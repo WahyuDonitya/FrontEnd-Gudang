@@ -30,6 +30,10 @@ import {
   Paper,
   IconButton,
   Icon,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
 } from "@mui/material";
 import axios from "axios";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
@@ -41,7 +45,7 @@ import DataTable from "examples/Tables/DataTable";
 
 function GeneratePackaging() {
   const [hmasuk, setHmasuk] = useState([]);
-  const [selectedHmasuk, setSelectedHMasuk] = useState([]);
+  const [selectedHmasuk, setSelectedHMasuk] = useState(null);
   const [detailBarang, setDetailBarang] = useState([]);
   const [stokBarang, setStokBarang] = useState(0);
 
@@ -102,6 +106,12 @@ function GeneratePackaging() {
     }
   };
 
+  const handleAdd = async () => {
+    if (window.confirm("Apakah data yang anda masukkan sudah benar?")) {
+      alert("masuk");
+    }
+  };
+
   // End API
 
   useEffect(() => {
@@ -118,7 +128,7 @@ function GeneratePackaging() {
   const handleChangeJumlah = (value) => {
     const numericValue = parseInt(value);
     if (numericValue > stokBarang) {
-      alert(`Barang yang anda pilih hanya memiliki stok : ${stokBarang}`);
+      alert(`Barang yang dapat dipacking hanya : ${stokBarang}`);
       setIsInputInvalid(true);
     } else {
       setIsInputInvalid(false);
@@ -126,6 +136,24 @@ function GeneratePackaging() {
     }
   };
   //  End Function
+
+  // Handle modal
+  const [openRusakModal, setOpenRusakModal] = useState(false);
+  const [jumlahRusak, setJumlahRusak] = useState(0);
+
+  const openRusakModalHandler = () => {
+    if (!selectedHmasuk) {
+      alert("Harus memilih Nota barang masuk terlebih dahulu");
+    } else {
+      setOpenRusakModal(true);
+    }
+  };
+
+  const closeRusakModalHandler = () => {
+    setOpenRusakModal(false);
+    setJumlahRusak(0); // Clear reject reason when modal is closed
+  };
+  // End Handle modal
 
   // render Notificartion
   const renderSuccessSB = (
@@ -162,6 +190,7 @@ function GeneratePackaging() {
     { Header: "Jumlah Barang yang Bisa dipack", accessor: "detailbarang_stok", align: "center" },
     { Header: "Expired Date", accessor: "detailbarang_expdate", align: "center" },
     { Header: "Jumlah Packing", accessor: "jumlah_kirim", align: "center" },
+    // { Header: "Jumlah Rusak Saat Packing", accessor: "jumlah_rusak", align: "center" },
   ];
 
   const rows = detailBarang.map((item) => ({
@@ -184,6 +213,22 @@ function GeneratePackaging() {
         }}
       />
     ),
+    // jumlah_rusak: (
+    //   <MDInput
+    //     type="number"
+    //     inputProps={{ min: 0 }}
+    //     value={inputJumlahPacking}
+    //     onChange={(e) => {
+    //       //   setInputJumlahPacking(e.target.value);
+    //       handleChangeJumlah(e.target.value);
+    //     }}
+    //     error={isInputInvalid}
+    //     helperText={isInputInvalid ? "Jumlah melebihi stok yang tersedia" : ""}
+    //     sx={{
+    //       "& .MuiInput-root": { borderColor: isInputInvalid ? "red" : "" },
+    //     }}
+    //   />
+    // ),
   }));
 
   return (
@@ -242,7 +287,12 @@ function GeneratePackaging() {
             </Grid>
 
             <Grid item xs={12}>
-              <MDButton variant="gradient" color="success" fullWidth>
+              <MDButton
+                variant="gradient"
+                color="success"
+                fullWidth
+                onClick={openRusakModalHandler}
+              >
                 Add data
               </MDButton>
             </Grid>
@@ -257,6 +307,28 @@ function GeneratePackaging() {
           </Grid>
         </MDBox>
       </Header>
+      <Dialog open={openRusakModal} onClose={closeRusakModalHandler}>
+        <DialogTitle>Input Jumlah barang Rusak</DialogTitle>
+        <DialogContent>
+          <MDInput
+            fullWidth
+            multiline
+            rows={4}
+            variant="outlined"
+            label="Jumlah barang yang rusak"
+            value={jumlahRusak}
+            onChange={(e) => setJumlahRusak(e.target.value)}
+          />
+        </DialogContent>
+        <DialogActions>
+          <MDButton color="error" onClick={closeRusakModalHandler}>
+            Cancel
+          </MDButton>
+          <MDButton color="success" onClick={handleAdd}>
+            Save
+          </MDButton>
+        </DialogActions>
+      </Dialog>
     </DashboardLayout>
   );
 }

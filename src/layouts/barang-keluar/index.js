@@ -330,7 +330,7 @@ function BarangKeluar() {
             </Grid>
 
             {/* Gudang */}
-            <Grid item xs={12}>
+            {/* <Grid item xs={12}>
               {!localStorage.getItem("gudang_id") ? (
                 Array.isArray(gudangs) && gudangs.length > 0 ? (
                   <Autocomplete
@@ -340,7 +340,7 @@ function BarangKeluar() {
                     getOptionLabel={(option) => `${option.gudang_nama}`}
                     onChange={(event, newValue) => {
                       setGudangPick(newValue.gudang_id);
-                      // console.log(newValue);
+                      console.log(localStorage.getItem("gudang_id"));
                     }}
                     fullWidth
                     renderInput={(params) => <TextField {...params} label="Gudang" />}
@@ -349,7 +349,7 @@ function BarangKeluar() {
                   <p>Loading gudang data...</p>
                 )
               ) : null}
-            </Grid>
+            </Grid> */}
 
             {/* Barang */}
             <Grid item xs={12}>

@@ -24,7 +24,6 @@ import {
   TableBody,
   TableCell,
   TableContainer,
-  TableHead,
   TableRow,
   TextField,
   Paper,
@@ -262,13 +261,14 @@ function GenerateMutasi() {
       setIsInputInvalid(true);
     } else {
       setIsInputInvalid(false);
+      setinputMasukJumlah(numericValue);
     }
 
-    if (isInputInvalid == true) {
-      setinputMasukJumlah((prev) => {
-        prev;
-      });
-    }
+    // if (isInputInvalid == true) {
+    //   setinputMasukJumlah((prev) => {
+    //     prev;
+    //   });
+    // }
   };
 
   useEffect(() => {
@@ -479,7 +479,7 @@ function GenerateMutasi() {
                 value={inputMasukJumlah}
                 onChange={(e) => {
                   handleStokChange(e.target.value);
-                  setinputMasukJumlah(e.target.value);
+                  // setinputMasukJumlah(e.target.value);
                 }}
                 error={isInputInvalid}
                 helperText={isInputInvalid ? "Jumlah melebihi stok yang tersedia" : ""}
