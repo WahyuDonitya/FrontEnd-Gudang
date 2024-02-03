@@ -115,7 +115,7 @@ function DetailBarangMasuk() {
           dataId: dataId,
           hmasuk_statuspackaging: isPackaging,
         };
-        console.log(datatosend);
+        // console.log(datatosend);
         const response = await axios.post(
           "http://127.0.0.1:8000/api/detailbarang/approval-barang-masuk",
           datatosend,
@@ -177,7 +177,7 @@ function DetailBarangMasuk() {
     { Header: "Nama Barang", accessor: "barang.barang_nama", width: "10%", align: "left" },
     { Header: "Exp Barang", accessor: "detailbarang_expdate", align: "center" },
     { Header: "Batch Barang", accessor: "detailbarang_batch", align: "center" },
-    { Header: "Jumlah Barang", accessor: "detailbarang_stok", align: "center" },
+    { Header: "Jumlah Barang Masuk", accessor: "detailbarang_stok", align: "center" },
   ];
 
   const rows = detailBarangMasuk.map((item) => {

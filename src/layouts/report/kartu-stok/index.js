@@ -112,6 +112,7 @@ function KartuStok() {
     { Header: "Barang Keluar", accessor: "logbarang_keluar", align: "center" },
     { Header: "Stok Tersedia", accessor: "logbarang_stoksekarang", align: "center" },
     { Header: "Jenis Transaksi", accessor: "jenistransaksi", align: "center" },
+    { Header: "Keterangan", accessor: "logbarang_keterangan", align: "left" },
     { Header: "Action", accessor: "action", align: "center" },
   ];
 
@@ -121,6 +122,7 @@ function KartuStok() {
     logbarang_masuk: item.logbarang_masuk ? item.logbarang_masuk : "-",
     logbarang_keluar: item.logbarang_keluar ? item.logbarang_keluar : "-",
     logbarang_stoksekarang: item.logbarang_stoksekarang,
+    logbarang_keterangan: item.logbarang_keterangan,
     jenistransaksi:
       item.hkeluar_id !== null
         ? "Barang Keluar"

@@ -47,7 +47,11 @@ function GeneratePackaging() {
   const [hmasuk, setHmasuk] = useState([]);
   const [selectedHmasuk, setSelectedHMasuk] = useState(null);
   const [detailBarang, setDetailBarang] = useState([]);
+  const [detailBarangId, setDetailBarangId] = useState(null);
+  const [detailBarangExp, setDetailBarangExp] = useState(null);
+  const [detailBarangBatch, setDetailBarangBatch] = useState(null);
   const [stokBarang, setStokBarang] = useState(0);
+  const [jumlahRusak, setJumlahRusak] = useState(null);
 
   // ini untuk inputan dynamic table
   const [inputBarangId, setInputBarangId] = useState(null);
@@ -69,6 +73,7 @@ function GeneratePackaging() {
 
   // ini untuk handlechange input stok
   const [isInputInvalid, setIsInputInvalid] = useState(false);
+  const [isInputRusakInvalid, setIsInputRusakInvalid] = useState(false);
 
   const accessToken = localStorage.getItem("access_token");
 
@@ -100,6 +105,10 @@ function GeneratePackaging() {
         }
       );
       setDetailBarang(response.data);
+      setDetailBarangId(response.data[0].detailbarang_id);
+      setDetailBarangBatch(response.data[0].detailbarang_batch);
+      setDetailBarangExp(response.data[0].detailbarang_expdate);
+      // console.log(response.data);
       setStokBarang(response.data[0].detailbarang_stok);
     } catch (error) {
       console.log("Terjadi kesalah saat mengambil data barang masuk ", error);
@@ -107,8 +116,34 @@ function GeneratePackaging() {
   };
 
   const handleAdd = async () => {
-    if (window.confirm("Apakah data yang anda masukkan sudah benar?")) {
-      alert("masuk");
+    if (isInputRusakInvalid) {
+      alert("Barang Yang anda kelebihan");
+    } else {
+      if (window.confirm("Apakah data yang anda masukkan sudah benar?")) {
+        try {
+          const datatosend = {
+            hmasuk_nota: selectedHmasuk,
+            detailbarang_id: detailBarangId,
+            jumlah_packing: parseInt(inputJumlahPacking),
+            jumlah_rusak: parseInt(jumlahRusak),
+          };
+          console.log(datatosend);
+
+          const response = await axios.post(
+            "http://127.0.0.1:8000/api/packaging/add-packaging",
+            datatosend,
+            { headers: { Authorization: `Bearer ${accessToken}` } }
+          );
+          setDetailBarang([]);
+          setSelectedHMasuk(null);
+          setStokBarang(0);
+          openSuccessSB();
+          closeRusakModalHandler();
+        } catch (error) {
+          openErrorSB();
+          console.log("Terjadi Kesalahan saat menambahkan data packaging : ", error);
+        }
+      }
     }
   };
 
@@ -135,17 +170,32 @@ function GeneratePackaging() {
       setInputJumlahPacking(numericValue);
     }
   };
+
+  const handleChangeRusak = (value) => {
+    const numericValue = parseInt(value);
+
+    if (numericValue > inputJumlahPacking) {
+      alert("Angka yang anda masukkan melebihi jumlah yang ingin di packing");
+      setIsInputRusakInvalid(true);
+    } else {
+      setIsInputRusakInvalid(false);
+      setJumlahRusak(numericValue);
+    }
+  };
   //  End Function
 
   // Handle modal
   const [openRusakModal, setOpenRusakModal] = useState(false);
-  const [jumlahRusak, setJumlahRusak] = useState(0);
 
   const openRusakModalHandler = () => {
-    if (!selectedHmasuk) {
-      alert("Harus memilih Nota barang masuk terlebih dahulu");
+    if (isInputInvalid) {
+      alert("Tidak boleh melebihi stok barang");
     } else {
-      setOpenRusakModal(true);
+      if (!selectedHmasuk) {
+        alert("Harus memilih Nota barang masuk terlebih dahulu");
+      } else {
+        setOpenRusakModal(true);
+      }
     }
   };
 
@@ -312,12 +362,20 @@ function GeneratePackaging() {
         <DialogContent>
           <MDInput
             fullWidth
-            multiline
+            type="number"
+            inputProps={{ min: 0 }}
             rows={4}
             variant="outlined"
             label="Jumlah barang yang rusak"
             value={jumlahRusak}
-            onChange={(e) => setJumlahRusak(e.target.value)}
+            onChange={(e) => {
+              handleChangeRusak(e.target.value);
+            }}
+            error={isInputRusakInvalid}
+            helperText={isInputRusakInvalid ? "Jumlah melebihi stok yang tersedia" : ""}
+            sx={{
+              "& .MuiInput-root": { borderColor: isInputRusakInvalid ? "red" : "" },
+            }}
           />
         </DialogContent>
         <DialogActions>

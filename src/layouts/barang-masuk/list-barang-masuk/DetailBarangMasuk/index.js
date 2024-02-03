@@ -177,11 +177,27 @@ function ListDetailBarangMasuk() {
     { Header: "Nama Barang", accessor: "barang.barang_nama", width: "10%", align: "left" },
     { Header: "Exp Barang", accessor: "detailbarang_expdate", align: "center" },
     { Header: "Batch Barang", accessor: "detailbarang_batch", align: "center" },
-    { Header: "Jumlah Barang", accessor: "detailbarang_stokmasuk", align: "center" },
+    { Header: "Jumlah Barang Masuk", accessor: "detailbarang_stokmasuk", align: "center" },
+    { Header: "Jumlah Barang Dibungkus", accessor: "detailbarang_jumlahpack", align: "center" },
+    {
+      Header: "Jumlah Barang Rusak Saat Dibungkus",
+      accessor: "detailbarang_jumlahrusakpack",
+      align: "center",
+    },
+    {
+      Header: "Jumlah Barang yang berhasil di bungkus",
+      accessor: "jumlah_bungkus",
+      align: "center",
+    },
+    { Header: "Jumlah Barang Saat ini", accessor: "detailbarang_stok", align: "center" },
   ];
 
   const rows = detailBarangMasuk.map((item) => {
     // Check if barang_nama is "Tahu POO polos"
+    const jumlahPackValue = item.detailbarang_jumlahpack === 0 ? "-" : item.detailbarang_jumlahpack;
+    const jumlahRusak =
+      item.detailbarang_jumlahrusakpack === 0 ? "-" : item.detailbarang_jumlahrusakpack;
+    const jumlahBerhasil = jumlahPackValue - jumlahRusak;
     if (item.barang.barang_nama === "Tahu POO polos") {
       tahupolos = true;
     }
@@ -190,6 +206,10 @@ function ListDetailBarangMasuk() {
       detailbarang_expdate: dayjs(item.detailbarang_expdate).format("DD-MM-YYYY"),
       detailbarang_batch: item.detailbarang_batch,
       detailbarang_stokmasuk: item.detailbarang_stokmasuk,
+      detailbarang_jumlahpack: jumlahPackValue,
+      detailbarang_jumlahrusakpack: jumlahRusak,
+      jumlah_bungkus: jumlahBerhasil || "-",
+      detailbarang_stok: item.detailbarang_stok,
     };
   });
 
