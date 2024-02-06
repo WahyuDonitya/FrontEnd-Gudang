@@ -62,7 +62,7 @@ const PrintAbleKartuStok = ({ kartuStok, stokAwal, datePickerAwal, datePickerAkh
               Stok Tersedia
             </th>
             <th style={{ border: "1px solid #ddd", padding: "8px", textAlign: "center" }}>
-              Jenis Transaksi
+              Keterangan Transaksi
             </th>
           </tr>
         </thead>
@@ -87,14 +87,8 @@ const PrintAbleKartuStok = ({ kartuStok, stokAwal, datePickerAwal, datePickerAkh
               <td style={{ border: "1px solid #ddd", padding: "8px", textAlign: "center" }}>
                 {item.logbarang_stoksekarang}
               </td>
-              <td style={{ border: "1px solid #ddd", padding: "8px", textAlign: "center" }}>
-                {item.hkeluar_id !== null
-                  ? "Barang Keluar"
-                  : item.hmasuk_id !== null
-                  ? "Barang Masuk"
-                  : item.htransfer_barang_id !== null
-                  ? "Transfer internal"
-                  : "Belum ada"}
+              <td style={{ border: "1px solid #ddd", padding: "8px", textAlign: "left" }}>
+                {item.logbarang_keterangan}
               </td>
             </tr>
           ))}

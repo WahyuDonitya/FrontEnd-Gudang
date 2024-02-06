@@ -68,6 +68,7 @@ export default function data() {
       { Header: "Diputus Oleh", accessor: "pengguna_action.pengguna_nama", align: "center" },
       { Header: "Comment", accessor: "hkeluar_comment", align: "center" },
       { Header: "Action", accessor: "action", align: "center" },
+      { Header: "List surat jalan", accessor: "list_jalan", align: "center" },
     ],
 
     rows: approvalList.map((item) => ({
@@ -92,6 +93,13 @@ export default function data() {
         <Link to={`/detail/${item.hkeluar_nota}`}>
           <MDTypography variant="caption" color="text" fontWeight="medium">
             {item.hkeluar_status === 2 ? "Print" : "Detail"}
+          </MDTypography>
+        </Link>
+      ),
+      list_jalan: (
+        <Link to={`/list-suratjalan-by-hkeluar/${item.hkeluar_nota}`}>
+          <MDTypography variant="caption" color="text" fontWeight="medium">
+            Show
           </MDTypography>
         </Link>
       ),

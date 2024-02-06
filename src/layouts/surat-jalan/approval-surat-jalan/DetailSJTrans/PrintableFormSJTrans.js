@@ -1,5 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
+import dayjs from "dayjs";
 
 const PrintableFormSJTrans = ({ detailSuratJalan, headerSuratJalan }) => {
   return (
@@ -11,7 +12,7 @@ const PrintableFormSJTrans = ({ detailSuratJalan, headerSuratJalan }) => {
         />
         <div style={{ marginLeft: "20px" }}>
           <p style={{ fontSize: "24px", fontWeight: "bold", marginBottom: "2px" }}>
-            PT. Eka Artha Buana
+            Tahu POO Kediri
           </p>
           <p style={{ fontSize: "14px", color: "#555" }}>
             Alamat: Jl. Raya Ampeldento No.17, Pakis, Malang, Jawa Timur 65154, Indonesia
@@ -29,7 +30,8 @@ const PrintableFormSJTrans = ({ detailSuratJalan, headerSuratJalan }) => {
             <strong>Surat Jalan Nota : </strong> {headerSuratJalan?.suratjalantransfer_nota}
           </p>
           <p>
-            <strong>Tanggal Kirim : </strong> {headerSuratJalan?.suratjalantransfer_tanggalkirim}
+            <strong>Tanggal Kirim : </strong>{" "}
+            {dayjs(headerSuratJalan?.suratjalantransfer_tanggalkirim).format("DD-MM-YYYY")}
           </p>
         </div>
         <div style={{ textAlign: "left", width: "50%" }}>
@@ -52,6 +54,9 @@ const PrintableFormSJTrans = ({ detailSuratJalan, headerSuratJalan }) => {
               Nama Barang
             </th>
             <th style={{ border: "1px solid #ddd", padding: "8px", textAlign: "center" }}>
+              Expired Barang
+            </th>
+            <th style={{ border: "1px solid #ddd", padding: "8px", textAlign: "center" }}>
               Batch Barang
             </th>
             <th style={{ border: "1px solid #ddd", padding: "8px", textAlign: "center" }}>
@@ -67,6 +72,11 @@ const PrintableFormSJTrans = ({ detailSuratJalan, headerSuratJalan }) => {
               </td>
               <td style={{ border: "1px solid #ddd", padding: "8px", textAlign: "center" }}>
                 {item.detail_barang_transfer.barang.barang_nama}
+              </td>
+              <td style={{ border: "1px solid #ddd", padding: "8px", textAlign: "center" }}>
+                {dayjs(item.detail_barang_transfer.barang_detail.detailbarang_expdate).format(
+                  "DD-MM-YYYY"
+                )}
               </td>
               <td style={{ border: "1px solid #ddd", padding: "8px", textAlign: "center" }}>
                 {item.detail_barang_transfer.barang_detail.detailbarang_batch}

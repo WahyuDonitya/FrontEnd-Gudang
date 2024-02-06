@@ -230,42 +230,47 @@ function GenerateSuratJalan() {
   };
 
   const addSuratJalantransfer = async () => {
-    try {
-      if (!selectedTransferNota || !datePickerTransfer) {
-        alert("Pastikan nomor nota dan tanggal telah ditentukan");
-        return;
+    if (window.confirm("Apakah data yang dibuat sudah benar?")) {
+      try {
+        if (!selectedTransferNota || !datePickerTransfer) {
+          alert("Pastikan nomor nota dan tanggal telah ditentukan");
+          return;
+        }
+
+        const selectedBarang = listBarangTransfer
+          .filter((item) => jumlahKirimTransByItem[item.dtransfer_barang_id] > 0)
+          .map((item) => ({
+            dtransfer_barang_id: item.dtransfer_barang_id,
+            barang_nama: item.barang.barang_nama,
+            detailbarang_batch: item.barang_detail.detailbarang_batch,
+            dtransfer_barang_jumlah: item.dtransfer_barang_jumlah,
+            jumlah_kirim: jumlahKirimTransByItem[item.dtransfer_barang_id],
+          }));
+
+        setDetailSuratJalan(selectedBarang);
+        const dataToSend = {
+          suratjalantransfer_tanggalkirim: datePickerTransfer,
+          htransfer_barang_id: selectedHtransfer.htransfer_barang_id,
+          detail_suratjalantransfer: selectedBarang,
+        };
+
+        // console.log(dataToSend);
+
+        const response = await axios.post(
+          "http://127.0.0.1:8000/api/suratjalan/generate-transfer-surat-jalan",
+          dataToSend,
+          { headers: { Authorization: `Bearer ${accessToken}` } }
+        );
+
+        // console.log("data to send: ", dataToSend);
+        openSuccessSB();
+        setSelectedHtransfer(null);
+        setListBarangTransfer([]);
+        setJumlahKirimTransByItem({});
+      } catch (error) {
+        openErrorSB();
+        console.error("Terjadi kesalahan saat menambahkan data Surat Jalan:", error);
       }
-
-      const selectedBarang = listBarangTransfer
-        .filter((item) => jumlahKirimTransByItem[item.dtransfer_barang_id] > 0)
-        .map((item) => ({
-          dtransfer_barang_id: item.dtransfer_barang_id,
-          barang_nama: item.barang.barang_nama,
-          detailbarang_batch: item.barang_detail.detailbarang_batch,
-          dtransfer_barang_jumlah: item.dtransfer_barang_jumlah,
-          jumlah_kirim: jumlahKirimTransByItem[item.dtransfer_barang_id],
-        }));
-
-      setDetailSuratJalan(selectedBarang);
-      const dataToSend = {
-        suratjalantransfer_tanggalkirim: datePickerTransfer,
-        htransfer_barang_id: selectedHtransfer.htransfer_barang_id,
-        detail_suratjalantransfer: selectedBarang,
-      };
-
-      console.log(dataToSend);
-
-      const response = await axios.post(
-        "http://127.0.0.1:8000/api/suratjalan/generate-transfer-surat-jalan",
-        dataToSend,
-        { headers: { Authorization: `Bearer ${accessToken}` } }
-      );
-
-      console.log("data to send: ", dataToSend);
-      openSuccessSB();
-    } catch (error) {
-      openErrorSB();
-      console.error("Terjadi kesalahan saat menambahkan data Surat Jalan:", error);
     }
   };
   //   // Dapatkan item yang sesuai dengan itemId

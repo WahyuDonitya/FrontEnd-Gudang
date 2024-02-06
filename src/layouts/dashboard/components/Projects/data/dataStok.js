@@ -58,11 +58,19 @@ export default function data() {
         align: "left",
       },
       { Header: "Jumlah Stok", accessor: "total_stok", align: "center" },
+      { Header: "Detail", accessor: "detail", align: "center" },
     ],
 
     rows: stok.map((item) => ({
       barang: { barang_nama: item.barang.barang_nama },
       total_stok: item.total_stok,
+      detail: (
+        <Link to={`/detail-barang/${item.barang.barang_id}`}>
+          <MDTypography variant="caption" color="text" fontWeight="medium">
+            Detail
+          </MDTypography>
+        </Link>
+      ),
     })),
   };
 }

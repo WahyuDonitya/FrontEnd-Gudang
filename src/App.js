@@ -54,6 +54,8 @@ import DetailBarangMasuk from "layouts/barang-masuk/approval-barang-masuk/Detail
 import DetailMB from "layouts/mutasi-barang/ApprovalMutasi/detailMB";
 import DetailSJTrans from "layouts/surat-jalan/approval-surat-jalan/DetailSJTrans";
 import ListDetailBarangMasuk from "layouts/barang-masuk/list-barang-masuk/DetailBarangMasuk";
+import DetailBarang from "layouts/dashboard/detail-barang";
+import ListSuratJalanByHkeluar from "layouts/surat-jalan/list-surat-jalan-by-hkeluar";
 
 import BillingInformation from "layouts/billing/components/BillingInformation";
 
@@ -165,7 +167,7 @@ export default function App() {
             <Sidenav
               color={sidenavColor}
               brand={(transparentSidenav && !darkMode) || whiteSidenav ? brandDark : brandWhite}
-              brandName="PT. Eka Artha Buana"
+              brandName="Tahu POO Kediri"
               routes={getFilteredRoutes(routes, localStorage.getItem("role_id"))}
               onMouseEnter={handleOnMouseEnter}
               onMouseLeave={handleOnMouseLeave}
@@ -176,12 +178,14 @@ export default function App() {
         <Routes>
           {getRoutes(routes)}
           <Route path="/" element={<Navigate to="/authentication/sign-in" />} />
+          <Route path="/detail-barang/:dataId" element={<DetailBarang />} />
           <Route path="/detail/:dataId" element={<DetailData />} />
           <Route path="/detailsurat-jalan/:dataId" element={<DetailSJ />} />
           <Route path="/detailbarang-masuk/:dataId" element={<DetailBarangMasuk />} />
           <Route path="/detailmutasi-barang/:dataId" element={<DetailMB />} />
           <Route path="/detailsurat-jalan/transferbarang/:dataId" element={<DetailSJTrans />} />
           <Route path="/list-detailbarang-masuk/:dataId" element={<ListDetailBarangMasuk />} />
+          <Route path="/list-suratjalan-by-hkeluar/:dataId" element={<ListSuratJalanByHkeluar />} />
         </Routes>
       </ThemeProvider>
     </LocalizationProvider>

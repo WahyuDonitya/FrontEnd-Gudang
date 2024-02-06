@@ -14,7 +14,7 @@ const PrintableFormBarangKeluar = ({ detailKeluar, headerKeluar }) => {
         />
         <div style={{ marginLeft: "20px" }}>
           <p style={{ fontSize: "24px", fontWeight: "bold", marginBottom: "2px" }}>
-            PT. Eka Artha Buana
+            Tahu POO Kediri
           </p>
           <p style={{ fontSize: "14px", color: "#555" }}>
             Alamat: Jl. Raya Ampeldento No.17, Pakis, Malang, Jawa Timur 65154, Indonesia
