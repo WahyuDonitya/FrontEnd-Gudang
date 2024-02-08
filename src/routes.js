@@ -65,6 +65,7 @@ import SignUp from "layouts/authentication/sign-up";
 
 // @mui iconsππ
 import Icon from "@mui/material/Icon";
+import PemusnahanBarang from "layouts/pemusnahan-barang";
 
 const routes = [
   {
@@ -146,6 +147,15 @@ const routes = [
     icon: <Icon fontSize="small">warehouse</Icon>,
     route: "/packaging-barang",
     component: <GeneratePackaging />,
+    roles: ["2", "1"],
+  },
+  {
+    type: "collapse",
+    name: "Pemusnahan Barang",
+    key: "pemusnahan-barang",
+    icon: <Icon fontSize="small">warehouse</Icon>,
+    route: "/pemusnahan-barang",
+    component: <PemusnahanBarang />,
     roles: ["2", "1"],
   },
   {
