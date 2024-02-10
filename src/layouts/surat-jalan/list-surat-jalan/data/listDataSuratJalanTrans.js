@@ -22,6 +22,7 @@ import MDTypography from "components/MDTypography";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import dayjs from "dayjs";
 
 export default function data() {
   const accessToken = localStorage.getItem("access_token");
@@ -75,7 +76,9 @@ export default function data() {
         gudang_tujuan: { gudang_nama: item.htransfer?.gudang_tujuan?.gudang_nama },
       },
       suratjalantransfer_comment: item.suratjalantransfer_comment || "-",
-      suratjalantransfer_tanggalkirim: item.suratjalantransfer_tanggalkirim,
+      suratjalantransfer_tanggalkirim: dayjs(item.suratjalantransfer_tanggalkirim).format(
+        "DD-MM-YYYY"
+      ),
       pengguna_generate: { pengguna_nama: item.pengguna_generate?.pengguna_nama || "-" },
       pengguna_action: { pengguna_nama: item.pengguna_action?.pengguna_nama || "-" },
       status:

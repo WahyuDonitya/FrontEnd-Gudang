@@ -7,6 +7,7 @@ import MDBadge from "components/MDBadge";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import dayjs from "dayjs";
 
 export default function data() {
   const accessToken = localStorage.getItem("access_token");
@@ -56,7 +57,7 @@ export default function data() {
       gudang: {
         gudang_nama: item.h_keluar?.gudang?.gudang_nama,
       },
-      suratjalan_tanggalkirim: item.suratjalan_tanggalkirim,
+      suratjalan_tanggalkirim: dayjs(item.suratjalan_tanggalkirim).format("DD-MM-YYYY"),
       suratjalan_comment: item.suratjalan_comment || "-",
       status:
         item.suratjalan_status === 1

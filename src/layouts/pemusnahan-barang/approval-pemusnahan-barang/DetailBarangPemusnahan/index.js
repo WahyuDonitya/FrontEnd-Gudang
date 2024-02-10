@@ -1,19 +1,3 @@
-/**
-=========================================================
-* Material Dashboard 2 React - v2.2.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/material-dashboard-react
-* Copyright 2023 Creative Tim (https://www.creative-tim.com)
-
-Coded by www.creative-tim.com
-
- =========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
-
-// @mui material components
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
 
@@ -30,14 +14,24 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import MDButton from "components/MDButton";
 import MDSnackbar from "components/MDSnackbar";
-import PrintableformSJ from "./PrintableformSJ";
-import { Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
+import dayjs from "dayjs";
+import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  FormControlLabel,
+  Radio,
+  RadioGroup,
+} from "@mui/material";
 import MDInput from "components/MDInput";
 // import projectsTableData from "layouts/tables/data/projectsTableData";
 
-function DetailSJ() {
-  const [detailSuratJalan, setDetailSuratJalan] = useState([]);
-  const [headerSuratJalan, setHeaderlSuratJalan] = useState([]);
+function DetailBarangPemusnahan() {
+  const [detailBarangMasuk, setDetailBarangMasuk] = useState([]);
+  const [headerBarangMasuk, setHeaderlBarangMasuk] = useState([]);
+  const [headerPemusnahanBarang, setHeaderPemusnahanBarang] = useState([]);
+  const [detailPemusnahanBarang, setDetailPemusnahanBarang] = useState([]);
   const { dataId } = useParams();
 
   // state untuk notification
@@ -57,8 +51,6 @@ function DetailSJ() {
   const openErrorRejectSB = () => setErrorRejectSB(true);
   const closeErrorRejectSB = () => setErrorRejectSB(false);
 
-  // end state untuk notification
-
   // Handle modal
   const [openRejectModal, setOpenRejectModal] = useState(false);
   const [rejectReason, setRejectReason] = useState("");
@@ -71,56 +63,81 @@ function DetailSJ() {
     setOpenRejectModal(false);
     setRejectReason(""); // Clear reject reason when modal is closed
   };
-  // End Handle modal
+
+  const [openTahuModal, setOpenTahuModal] = useState(false);
+  const [isPackaging, setIsPackaging] = useState(null);
+
+  const openTahuModalHandler = () => {
+    setOpenTahuModal(true);
+  };
+
+  const closeTahuModalHandler = () => {
+    setOpenTahuModal(false);
+    setIsPackaging(null);
+  };
+  // end Handle modal
 
   const accessToken = localStorage.getItem("access_token");
+  let tahupolos = false;
 
   // API
 
   const getId = async () => {
     try {
-      const id = await axios.get(`http://127.0.0.1:8000/api/suratjalan/get-sj-id/${dataId}`, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
-
-      const response = await axios.get(
-        `http://127.0.0.1:8000/api/suratjalan/get-dsj/${id.data.suratjalan_id}`,
+      const id = await axios.get(
+        `http://127.0.0.1:8000/api/pemusnahan-barang/get-detail-pemusnahan-barang/${dataId}`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
         }
       );
-      // console.log(response.data);
-      setDetailSuratJalan(response.data);
-      setHeaderlSuratJalan(id.data);
+
+      const header = await axios.get(
+        `http://127.0.0.1:8000/api/pemusnahan-barang/get-header-pemusnahan-barang/${dataId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+
+      //   const response = await axios.get(
+      //     `http://127.0.0.1:8000/api/detailbarang/get-dbarang-masuk/${id.data.hmasuk_id}`,
+      //     {
+      //       headers: {
+      //         Authorization: `Bearer ${accessToken}`,
+      //       },
+      //     }
+      //   );
+      //   console.log("hasil get id", response.data);
+      //   console.log(id.data.hmasuk_id);
+      //   setDetailBarangMasuk(response.data);
+      //   setHeaderlBarangMasuk(id.data);
+      setDetailPemusnahanBarang(id.data);
+      setHeaderPemusnahanBarang(header.data);
     } catch (error) {
       console.error("Terjadi kesalahan saat mengambil input data Barang keluar:", error);
     }
   };
 
   const handleApprove = async () => {
-    if (window.confirm("Apakah yakin ingin melakukan Approve Surat jalan?")) {
+    if (window.confirm("Apakah anda ingin melakukan proses Approve?")) {
       try {
         const datatosend = {
           dataId: dataId,
         };
-        console.log(datatosend);
+        // console.log(datatosend);
         const response = await axios.post(
-          "http://127.0.0.1:8000/api/suratjalan/suratjalan-approval",
+          "http://127.0.0.1:8000/api/pemusnahan-barang/approval-pemusnahan-barang",
           datatosend,
           {
             headers: { Authorization: `Bearer ${accessToken}` },
           }
         );
         openSuccessSB();
-        // console.log(response);`
-        // setTimeout(() => {
-        //   window.location.reload();
-        // }, 2000);
         getId();
+        closeTahuModalHandler();
       } catch (error) {
         openErrorSB();
         console.error("Terjadi kesalahan saat melakukan approval surat jalan : ", error);
@@ -129,7 +146,7 @@ function DetailSJ() {
   };
 
   const handleReject = async () => {
-    if (window.confirm("Apakah yakin ingin melakukan reject surat jalan?")) {
+    if (window.confirm("Apakah anda yakin ingin melakukan Reject?")) {
       if (!rejectReason.trim()) {
         alert("Box Alasan harus diisi");
         return;
@@ -137,19 +154,20 @@ function DetailSJ() {
       try {
         const datatosend = {
           dataId: dataId,
-          suratjalan_comment: rejectReason,
+          hpemusnahan_rejectreason: rejectReason,
         };
         console.log(datatosend);
         const response = await axios.post(
-          "http://127.0.0.1:8000/api/suratjalan/suratjalan-reject",
+          "http://127.0.0.1:8000/api/pemusnahan-barang/rejected-pemusnahan-barang",
           datatosend,
           {
             headers: { Authorization: `Bearer ${accessToken}` },
           }
         );
+
+        // console.log(response);
         closeRejectModalHandler();
         openSuccessRejectSB();
-        console.log(response);
         getId();
       } catch (error) {
         openErrorRejectSB();
@@ -161,33 +179,6 @@ function DetailSJ() {
     }
   };
 
-  const handlePrint = async () => {
-    try {
-      const response = await axios.post(
-        `http://127.0.0.1:8000/api/suratjalan/kirim-suratjalan`,
-        {
-          suratjalan_nota: headerSuratJalan.suratjalan_nota,
-        },
-        { headers: { Authorization: `Bearer ${accessToken}` } }
-      );
-      const printableContent = document.getElementById("printable-content");
-      const printWindow = window.open("", "_blank");
-      printWindow.document.write(`
-      <html>
-        <head>
-          <title>Print</title>
-        </head>
-        <body>${printableContent.innerHTML}</body>
-      </html>
-    `);
-      printWindow.document.close();
-      printWindow.print();
-      printWindow.onafterprint = () => printWindow.close();
-    } catch (error) {
-      console.log("Terdapat kesalahan saat melakukan print dan kirim surat jalan : ", error);
-    }
-  };
-
   // END API
 
   useEffect(() => {
@@ -195,18 +186,33 @@ function DetailSJ() {
   }, []);
 
   const columns = [
-    { Header: "Nama Barang", accessor: "barang.barang_nama", width: "10%", align: "left" },
-    { Header: "Batch Barang", accessor: "d_barang.detailbarang_batch", align: "center" },
-    { Header: "Jumlah Dikirim", accessor: "dsuratjalan_jumlah", align: "center" },
-    { Header: "Jumlah Barang", accessor: "jumlah", align: "center" },
+    {
+      Header: "Nama Barang",
+      accessor: "detail_barang.barang.barang_nama",
+      width: "10%",
+      align: "left",
+    },
+    { Header: "Jumlah Barang", accessor: "dpemusnahan_jumlahbarang", align: "center" },
+    { Header: "Exp Date", accessor: "detail_barang.detailbarang_expdate", align: "center" },
+    { Header: "Batch Barang", accessor: "detail_barang.detailbarang_batch", align: "center" },
   ];
 
-  const rows = detailSuratJalan.map((item) => ({
-    barang: { barang_nama: item.d_keluar.barang.barang_nama },
-    d_barang: { detailbarang_batch: item.d_keluar.d_barang.detailbarang_batch },
-    dsuratjalan_jumlah: item.dsuratjalan_jumlah,
-    jumlah: item.d_keluar.dkeluar_jumlah,
-  }));
+  const rows = detailPemusnahanBarang.map((item) => {
+    // Check if barang_nama is "Tahu POO polos"
+    // if (item.barang.barang_nama === "Tahu POO polos") {
+    //   tahupolos = true;
+    // }
+    return {
+      detail_barang: {
+        detailbarang_batch: item.detail_barang.detailbarang_batch,
+        detailbarang_expdate: dayjs(item.detail_barang.detailbarang_expdate).format("DD-MM-YYYY"),
+        barang: { barang_nama: item.detail_barang.barang.barang_nama },
+      },
+      dpemusnahan_jumlahbarang: item.dpemusnahan_jumlahbarang,
+      //   detailbarang_batch: item.detailbarang_batch,
+      //   detailbarang_stok: item.detailbarang_stok,
+    };
+  });
 
   const renderSuccessSB = (
     <MDSnackbar
@@ -271,13 +277,6 @@ function DetailSJ() {
         <Grid container spacing={6}>
           <Grid item xs={12}>
             <Card>
-              <div id="printable-content" style={{ display: "none" }}>
-                {/* Include PrintableForm component */}
-                <PrintableformSJ
-                  detailSuratJalan={detailSuratJalan}
-                  headerSuratJalan={headerSuratJalan}
-                />
-              </div>
               <Grid container pt={4}>
                 <Grid item xs={12}>
                   <DataTable
@@ -289,7 +288,7 @@ function DetailSJ() {
                   />
                 </Grid>
               </Grid>
-              {headerSuratJalan.suratjalan_status === 2 && (
+              {headerPemusnahanBarang.hpemusnahan_status === 0 && (
                 <Grid container pt={5} spacing={7} px={3} mb={4}>
                   <Grid item xs={6}>
                     <MDButton
@@ -308,16 +307,6 @@ function DetailSJ() {
                   </Grid>
                 </Grid>
               )}
-
-              {headerSuratJalan.suratjalan_status !== 2 && (
-                <Grid container pt={5} spacing={7} px={3} mb={4}>
-                  <Grid item xs={12}>
-                    <MDButton variant="gradient" color="info" fullWidth onClick={handlePrint}>
-                      Kirim dan Print Nota
-                    </MDButton>
-                  </Grid>
-                </Grid>
-              )}
             </Card>
           </Grid>
         </Grid>
@@ -330,6 +319,7 @@ function DetailSJ() {
           {renderRejectErrorSB}
         </Grid>
       </MDBox>
+
       <Dialog open={openRejectModal} onClose={closeRejectModalHandler}>
         <DialogTitle>Reason for Rejection</DialogTitle>
         <DialogContent>
@@ -352,8 +342,31 @@ function DetailSJ() {
           </MDButton>
         </DialogActions>
       </Dialog>
+
+      {/* <Dialog open={openTahuModal} onClose={closeTahuModalHandler}>
+        <DialogTitle>Apakah Terdapat proses Packaging untuk tahu polos?</DialogTitle>
+        <DialogContent>
+          <RadioGroup
+            aria-label="tahu-polos-option"
+            name="tahu-polos-option"
+            value={isPackaging}
+            onChange={(e) => setIsPackaging(e.target.value)}
+          >
+            <FormControlLabel value={1} control={<Radio />} label="Ya" />
+            <FormControlLabel value={0} control={<Radio />} label="Tidak" />
+          </RadioGroup>
+        </DialogContent>
+        <DialogActions>
+          <MDButton color="error" onClick={closeTahuModalHandler}>
+            Cancel
+          </MDButton>
+          <MDButton color="success" onClick={handleApprove}>
+            Approve
+          </MDButton>
+        </DialogActions>
+      </Dialog> */}
     </DashboardLayout>
   );
 }
 
-export default DetailSJ;
+export default DetailBarangPemusnahan;

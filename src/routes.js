@@ -61,6 +61,7 @@ import MasterGudang from "layouts/master/master-gudang";
 import MasterPengguna from "layouts/master/master-pengguna";
 import MasterCustomer from "layouts/master/master-customer";
 import GeneratePackaging from "layouts/packaging";
+import ApprovalPemusnahanBarang from "layouts/pemusnahan-barang/approval-pemusnahan-barang";
 import SignUp from "layouts/authentication/sign-up";
 
 // @mui iconsππ
@@ -201,6 +202,15 @@ const routes = [
     icon: <Icon fontSize="small">warehouse</Icon>,
     route: "/approval-mutasi-barang",
     component: <ApprovalMutasi />,
+    roles: ["2"],
+  },
+  {
+    type: "collapse",
+    name: "Approval Pemusnahan",
+    key: "approval-pemusnahan-barang",
+    icon: <Icon fontSize="small">warehouse</Icon>,
+    route: "/approval-pemusnahan-barang",
+    component: <ApprovalPemusnahanBarang />,
     roles: ["2"],
   },
   {
