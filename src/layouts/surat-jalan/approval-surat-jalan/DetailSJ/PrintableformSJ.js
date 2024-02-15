@@ -14,7 +14,7 @@ const PrintableformSJ = ({ detailSuratJalan, headerSuratJalan }) => {
             PT. Eka Artha Buana
           </p>
           <p style={{ fontSize: "14px", color: "#555" }}>
-            Alamat: Jl. Raya Ampeldento No.17, Pakis, Malang, Jawa Timur 65154, Indonesia
+            Alamat: Perumahan Nginden Intan Barat Blok C1-24
           </p>
         </div>
       </div>

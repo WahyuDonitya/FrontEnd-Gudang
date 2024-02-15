@@ -313,7 +313,9 @@ function DetailSJ() {
                 <Grid container pt={5} spacing={7} px={3} mb={4}>
                   <Grid item xs={12}>
                     <MDButton variant="gradient" color="info" fullWidth onClick={handlePrint}>
-                      Kirim dan Print Nota
+                      {headerSuratJalan.suratjalan_status === 0
+                        ? "Print Nota"
+                        : "Kirim dan Print Nota"}
                     </MDButton>
                   </Grid>
                 </Grid>
