@@ -183,6 +183,7 @@ function DetailSJ() {
       printWindow.document.close();
       printWindow.print();
       printWindow.onafterprint = () => printWindow.close();
+      getId();
     } catch (error) {
       console.log("Terdapat kesalahan saat melakukan print dan kirim surat jalan : ", error);
     }

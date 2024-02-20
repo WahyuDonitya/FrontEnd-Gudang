@@ -158,12 +158,20 @@ function DetailSJTrans() {
     }
   };
 
-  const handlePrint = () => {
-    console.log(detailSuratJalan);
-    const printableContent = document.getElementById("printable-content");
+  const handlePrint = async () => {
+    console.log(headerSuratJalan.suratjalantransfer_nota);
+    try {
+      const response = await axios.post(
+        `http://127.0.0.1:8000/api/suratjalan/kirim-suratjalan-transfer`,
+        {
+          suratjalantransfer_nota: headerSuratJalan.suratjalantransfer_nota,
+        },
+        { headers: { Authorization: `Bearer ${accessToken}` } }
+      );
+      const printableContent = document.getElementById("printable-content");
 
-    const printWindow = window.open("", "_blank");
-    printWindow.document.write(`
+      const printWindow = window.open("", "_blank");
+      printWindow.document.write(`
       <html>
         <head>
           <title>Print</title>
@@ -171,9 +179,13 @@ function DetailSJTrans() {
         <body>${printableContent.innerHTML}</body>
       </html>
     `);
-    printWindow.document.close();
-    printWindow.print();
-    printWindow.onafterprint = () => printWindow.close();
+      printWindow.document.close();
+      printWindow.print();
+      printWindow.onafterprint = () => printWindow.close();
+      getId();
+    } catch (error) {
+      console.log("terdapat kesalahan saat mengirim surat jalan");
+    }
   };
 
   // END API
@@ -318,7 +330,9 @@ function DetailSJTrans() {
                 <Grid container pt={5} spacing={7} px={3} mb={4}>
                   <Grid item xs={12}>
                     <MDButton variant="gradient" color="info" fullWidth onClick={handlePrint}>
-                      Print Nota
+                      {headerSuratJalan.suratjalantransfer_status === 0
+                        ? "Print Nota"
+                        : "Kirim dan Print Nota"}
                     </MDButton>
                   </Grid>
                 </Grid>

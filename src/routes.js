@@ -62,6 +62,7 @@ import MasterPengguna from "layouts/master/master-pengguna";
 import MasterCustomer from "layouts/master/master-customer";
 import GeneratePackaging from "layouts/packaging";
 import ApprovalPemusnahanBarang from "layouts/pemusnahan-barang/approval-pemusnahan-barang";
+import MasterPositioning from "layouts/master/master-positioning";
 import SignUp from "layouts/authentication/sign-up";
 
 // @mui iconsππ
@@ -247,6 +248,15 @@ const routes = [
     icon: <Icon fontSize="small">warehouse</Icon>,
     route: "/list-mustasi-barang",
     component: <ListMutasiBarang />,
+    roles: ["1", "2"],
+  },
+  {
+    type: "collapse",
+    name: "Rak Penyimpanan Barang",
+    key: "rak-penyimpanan-barang",
+    icon: <Icon fontSize="small">warehouse</Icon>,
+    route: "/rak-penyimpanan-barang",
+    component: <MasterPositioning />,
     roles: ["1", "2"],
   },
   {
