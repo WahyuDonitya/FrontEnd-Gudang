@@ -2,14 +2,14 @@ import React from "react";
 import PropTypes from "prop-types";
 import { format } from "date-fns";
 
-const PrintableFormBarangKeluar = ({ detailKeluar, headerKeluar }) => {
+const PrintableFormMutasiBarang = ({ detailKeluar, headerKeluar }) => {
   const createdAtDate = headerKeluar?.created_at ? new Date(headerKeluar.created_at) : null;
   const formattedDate = createdAtDate ? format(createdAtDate, "dd-MM-yyyy") : "";
   return (
     <div style={{ padding: "20px", border: "1px solid #ccc", borderRadius: "10px" }}>
       <div style={{ display: "flex", alignItems: "center", marginBottom: "10px" }}>
         <img
-          src={require("../../../../../assets/images/logos/nyonya-poo.png")}
+          src={require("../../../../assets/images/logos/nyonya-poo.png")}
           style={{ width: "150px", height: "auto" }}
         />
         <div style={{ marginLeft: "20px" }}>
@@ -27,13 +27,13 @@ const PrintableFormBarangKeluar = ({ detailKeluar, headerKeluar }) => {
       <div style={{ display: "flex", justifyContent: "space-between" }}>
         <div style={{ textAlign: "left", width: "50%" }}>
           <p>
-            <strong>Nota:</strong> {headerKeluar?.hkeluar_nota}
+            <strong>Nota:</strong> {headerKeluar?.htransfer_barang_nota}
           </p>
           <p>
-            <strong>Customer:</strong> {headerKeluar?.customer?.customer_nama}
+            <strong>Gudang Tujuan :</strong> {headerKeluar?.gudang_tujuan?.gudang_nama}
           </p>
           <p>
-            <strong>Alamat:</strong> {headerKeluar?.customer?.customer_alamat}
+            <strong>Alamat Gudang Tujuan:</strong> {headerKeluar?.gudang_tujuan?.gudang_alamat}
           </p>
         </div>
         <div style={{ textAlign: "left", width: "50%" }}>
@@ -41,7 +41,7 @@ const PrintableFormBarangKeluar = ({ detailKeluar, headerKeluar }) => {
             <strong>Tanggal Dibuat:</strong> {formattedDate}
           </p>
           <p>
-            <strong>Gudang Asal:</strong> {headerKeluar?.gudang?.gudang_nama}
+            <strong>Gudang Asal:</strong> {headerKeluar?.gudang_asal?.gudang_nama}
           </p>
         </div>
       </div>
@@ -76,7 +76,7 @@ const PrintableFormBarangKeluar = ({ detailKeluar, headerKeluar }) => {
         </thead>
         <tbody>
           {detailKeluar.map((item, index) => (
-            <tr key={item.dkeluar_id}>
+            <tr key={item.dtransfer_barang_id}>
               <td style={{ border: "1px solid #ddd", padding: "8px", textAlign: "center" }}>
                 {index + 1}.
               </td>
@@ -84,20 +84,17 @@ const PrintableFormBarangKeluar = ({ detailKeluar, headerKeluar }) => {
                 {item.barang.barang_nama}
               </td>
               <td style={{ border: "1px solid #ddd", padding: "8px", textAlign: "center" }}>
-                {item.d_barang.detailbarang_batch}
+                {item.barang_detail.detailbarang_batch}
               </td>
               <td style={{ border: "1px solid #ddd", padding: "8px", textAlign: "center" }}>
-                {item.dkeluar_jumlah}
+                {item.dtransfer_barang_jumlah}
               </td>
               <td style={{ border: "1px solid #ddd", padding: "8px", textAlign: "center" }}>
-                {item.dkeluar_terkirim}
+                {item.dtransfer_barang_jumlah_terkirim}
               </td>
               <td style={{ border: "1px solid #ddd", padding: "8px", textAlign: "center" }}>
-                {item.dkeluar_sisa}
+                {item.dtransfer_barang_jumlah_belum_terkirim}
               </td>
-              {/* <td style={{ border: "1px solid #ddd", padding: "8px", textAlign: "center" }}>
-                {item.dkeluar_needapprovekirim}
-              </td> */}
               <td style={{ border: "1px solid #ddd", padding: "8px", textAlign: "center" }}>
                 {item.get_penempatan_trans.map((penempatanTrans, index) => {
                   console.log("penempatanTrans", penempatanTrans);
@@ -123,7 +120,7 @@ const PrintableFormBarangKeluar = ({ detailKeluar, headerKeluar }) => {
                     console.log("get_penempatan is undefined");
                   }
 
-                  return "Ambil Dari Bulk";
+                  return "Ambil Dari `Bulk`";
                 })}
               </td>
             </tr>
@@ -146,12 +143,12 @@ const PrintableFormBarangKeluar = ({ detailKeluar, headerKeluar }) => {
   );
 };
 
-PrintableFormBarangKeluar.propTypes = {
+PrintableFormMutasiBarang.propTypes = {
   detailKeluar: PropTypes.array.isRequired,
   headerKeluar: PropTypes.object.isRequired,
 };
 
-export default PrintableFormBarangKeluar;
+export default PrintableFormMutasiBarang;
 
 // {
 //   detailKeluar.map((item, index) => (

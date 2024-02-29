@@ -94,7 +94,7 @@ function DetailData() {
           },
         }
       );
-      // console.log(id.data);
+      console.log(response.data);
       setDetailKeluar(response.data);
       setHeaderlKeluar(id.data);
     } catch (error) {
@@ -335,7 +335,7 @@ function DetailData() {
                 </Grid>
               )}
 
-              {(headerKeluar.hkeluar_status === 2 || headerKeluar.hkeluar_status === 1) && (
+              {headerKeluar.hkeluar_status !== 3 && (
                 <Grid container pt={5} spacing={7} px={3} mb={4}>
                   <Grid item xs={12}>
                     <MDButton variant="gradient" color="info" fullWidth onClick={handlePrint}>

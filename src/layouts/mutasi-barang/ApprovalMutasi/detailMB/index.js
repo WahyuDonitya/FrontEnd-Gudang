@@ -32,6 +32,7 @@ import MDButton from "components/MDButton";
 import MDSnackbar from "components/MDSnackbar";
 import { Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
 import MDInput from "components/MDInput";
+import PrintableFormMutasiBarang from "./PrintableFormMutasiBarang";
 // import projectsTableData from "layouts/tables/data/projectsTableData";
 
 function DetailMB() {
@@ -160,6 +161,24 @@ function DetailMB() {
     }
   };
 
+  const handlePrint = () => {
+    // console.log(headerKeluar);
+    const printableContent = document.getElementById("printable-content");
+
+    const printWindow = window.open("", "_blank");
+    printWindow.document.write(`
+      <html>
+        <head>
+          <title>Print</title>
+        </head>
+        <body>${printableContent.innerHTML}</body>
+      </html>
+    `);
+    printWindow.document.close();
+    printWindow.print();
+    printWindow.onafterprint = () => printWindow.close();
+  };
+
   // END API
 
   useEffect(() => {
@@ -245,6 +264,12 @@ function DetailMB() {
         <Grid container spacing={6}>
           <Grid item xs={12}>
             <Card>
+              <div id="printable-content" style={{ display: "none" }}>
+                <PrintableFormMutasiBarang
+                  detailKeluar={detailMutasiBarang}
+                  headerKeluar={headerMutasiBarang}
+                />
+              </div>
               <Grid container pt={4}>
                 <Grid item xs={12}>
                   <DataTable
@@ -271,6 +296,15 @@ function DetailMB() {
                   <Grid item xs={6}>
                     <MDButton variant="gradient" color="success" fullWidth onClick={handleApprove}>
                       Approve
+                    </MDButton>
+                  </Grid>
+                </Grid>
+              )}
+              {headerMutasiBarang.htransfer_barang_status !== 1 && (
+                <Grid container pt={5} spacing={7} px={3} mb={4}>
+                  <Grid item xs={12}>
+                    <MDButton variant="gradient" color="info" fullWidth onClick={handlePrint}>
+                      Print Nota
                     </MDButton>
                   </Grid>
                 </Grid>
