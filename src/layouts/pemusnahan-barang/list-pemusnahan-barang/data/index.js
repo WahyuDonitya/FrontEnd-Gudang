@@ -76,7 +76,7 @@ export default function data() {
           ? "Sudah Disetujui"
           : item.hpemusnahan_status === 2
           ? "Ditolak"
-          : "Selesai",
+          : "Sudah Dimusnahkan",
       hpemusnahan_rejectreason: item.hpemusnahan_rejectreason || "-",
       // gudang: {
       //   gudang_nama: item.h_keluar.gudang.gudang_nama,

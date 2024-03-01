@@ -25,11 +25,10 @@ import {
   RadioGroup,
 } from "@mui/material";
 import MDInput from "components/MDInput";
+import PrintableFormPemusnahanBarang from "./PrintableFormPemusnahanBarang";
 // import projectsTableData from "layouts/tables/data/projectsTableData";
 
 function DetailBarangPemusnahan() {
-  const [detailBarangMasuk, setDetailBarangMasuk] = useState([]);
-  const [headerBarangMasuk, setHeaderlBarangMasuk] = useState([]);
   const [headerPemusnahanBarang, setHeaderPemusnahanBarang] = useState([]);
   const [detailPemusnahanBarang, setDetailPemusnahanBarang] = useState([]);
   const { dataId } = useParams();
@@ -181,6 +180,32 @@ function DetailBarangPemusnahan() {
 
   // END API
 
+  const handlePrint = async () => {
+    // console.log(headerKeluar);
+    try {
+      const response = await axios.post(
+        `http://127.0.0.1:8000/api/pemusnahan-barang/do-pemusnahan-barang`,
+        { hpemusnahan_id: headerPemusnahanBarang.hpemusnahan_id },
+        { headers: { Authorization: `Bearer ${accessToken}` } }
+      );
+      getId();
+      const printableContent = document.getElementById("printable-content");
+
+      const printWindow = window.open("", "_blank");
+      printWindow.document.write(`
+      <html>
+        <head>
+          <title>Print</title>
+        </head>
+        <body>${printableContent.innerHTML}</body>
+      </html>
+    `);
+      printWindow.document.close();
+      printWindow.print();
+      printWindow.onafterprint = () => printWindow.close();
+    } catch (error) {}
+  };
+
   useEffect(() => {
     getId();
   }, []);
@@ -277,6 +302,12 @@ function DetailBarangPemusnahan() {
         <Grid container spacing={6}>
           <Grid item xs={12}>
             <Card>
+              <div id="printable-content" style={{ display: "none" }}>
+                <PrintableFormPemusnahanBarang
+                  detailKeluar={detailPemusnahanBarang}
+                  headerKeluar={headerPemusnahanBarang}
+                />
+              </div>
               <Grid container pt={4}>
                 <Grid item xs={12}>
                   <DataTable
@@ -303,6 +334,18 @@ function DetailBarangPemusnahan() {
                   <Grid item xs={6}>
                     <MDButton variant="gradient" color="success" fullWidth onClick={handleApprove}>
                       Approve
+                    </MDButton>
+                  </Grid>
+                </Grid>
+              )}
+
+              {headerPemusnahanBarang.hpemusnahan_status !== 0 && (
+                <Grid container pt={5} spacing={7} px={3} mb={4}>
+                  <Grid item xs={12}>
+                    <MDButton variant="gradient" color="info" fullWidth onClick={handlePrint}>
+                      {headerPemusnahanBarang.hpemusnahan_status === 1
+                        ? "Musnahkan dan Print Nota"
+                        : "Print Nota"}
                     </MDButton>
                   </Grid>
                 </Grid>
