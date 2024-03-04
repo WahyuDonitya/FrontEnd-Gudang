@@ -222,6 +222,7 @@ function GenerateSuratJalan() {
         setSelectedHkeluar(null);
         setListBarang([]);
         setJumlahKirimByItem({});
+        getHkeluar();
       } catch (error) {
         openErrorSB();
         console.error("Terjadi kesalahan saat menambahkan data Surat Jalan:", error);
@@ -267,6 +268,7 @@ function GenerateSuratJalan() {
         setSelectedHtransfer(null);
         setListBarangTransfer([]);
         setJumlahKirimTransByItem({});
+        getHtransfer();
       } catch (error) {
         openErrorSB();
         console.error("Terjadi kesalahan saat menambahkan data Surat Jalan:", error);

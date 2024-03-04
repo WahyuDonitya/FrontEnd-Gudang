@@ -52,7 +52,7 @@ function DetailBarang() {
   const [jumlahDapatPlacement, setJumlahDapatPlacement] = useState(0);
   const [positionAvailable, setPositionAvailable] = useState([]);
   const [positionDipilih, setPositionDipilih] = useState(null);
-  const [detailBarangId, setDetailBarangId] = useState(SignalCellularNullTwoTone);
+  const [detailBarangId, setDetailBarangId] = useState(null);
   const dataId = useParams();
   const accessToken = localStorage.getItem("access_token");
 

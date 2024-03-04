@@ -183,12 +183,15 @@ function DetailBarangPemusnahan() {
   const handlePrint = async () => {
     // console.log(headerKeluar);
     try {
-      const response = await axios.post(
-        `http://127.0.0.1:8000/api/pemusnahan-barang/do-pemusnahan-barang`,
-        { hpemusnahan_id: headerPemusnahanBarang.hpemusnahan_id },
-        { headers: { Authorization: `Bearer ${accessToken}` } }
-      );
-      getId();
+      if (headerPemusnahanBarang.hpemusnahan_status == 1) {
+        const response = await axios.post(
+          `http://127.0.0.1:8000/api/pemusnahan-barang/do-pemusnahan-barang`,
+          { hpemusnahan_id: headerPemusnahanBarang.hpemusnahan_id },
+          { headers: { Authorization: `Bearer ${accessToken}` } }
+        );
+        getId();
+      }
+
       const printableContent = document.getElementById("printable-content");
 
       const printWindow = window.open("", "_blank");

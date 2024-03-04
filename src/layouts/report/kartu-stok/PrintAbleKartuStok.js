@@ -33,8 +33,6 @@ const PrintAbleKartuStok = ({ kartuStok, stokAwal, datePickerAwal, datePickerAkh
           </p>
         </div>
       </div>
-      {/* Your printable content goes here */}
-      <h1>Printable Content</h1>
       {/* <p>Nota : {headerKeluar?.hkeluar_nota}</p>
       <p>Customer : {headerKeluar?.customer?.customer_nama}</p>
       <p>Customer Alamat : {headerKeluar?.customer?.customer_alamat}</p>

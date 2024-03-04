@@ -30,6 +30,7 @@ import { useEffect, useState } from "react";
 function OrdersOverview() {
   const accessToken = localStorage.getItem("access_token");
   const [countSuratJalanSend, setCountSuratJalanSend] = useState([]);
+  const [countPemusnahanToday, setCountPemusnahanToday] = useState([]);
 
   // API
   const getCountSuratJalan = async () => {
@@ -43,10 +44,23 @@ function OrdersOverview() {
       console.log("Terdapat kesalahan saat mengambil data count surat jalan : ", error);
     }
   };
+
+  const getCountPemusnahan = async () => {
+    try {
+      const response = await axios.get(
+        `http://127.0.0.1:8000/api/pemusnahan-barang/get-pemusnahanbarang-today`,
+        { headers: { Authorization: `Bearer ${accessToken}` } }
+      );
+      setCountPemusnahanToday(response.data);
+    } catch (error) {
+      console.log("Terdapat kesalahan saat mengambil data count surat pemusnahan : ", error);
+    }
+  };
   // End API
 
   useEffect(() => {
     getCountSuratJalan();
+    getCountPemusnahan();
   }, []);
 
   const today = new Date();
@@ -73,14 +87,14 @@ function OrdersOverview() {
       <MDBox p={2}>
         <TimelineItem
           color="success"
-          icon="notifications"
+          icon={<Icon>local_shipping</Icon>}
           title={`${countSuratJalanSend} surat jalan harus dikirim`}
           dateTime={formattedDate}
         />
         <TimelineItem
           color="error"
-          icon="inventory_2"
-          title="New order #1832412"
+          icon={<Icon>delete</Icon>}
+          title={`${countPemusnahanToday} Harus dimusnahkan`}
           dateTime={formattedDate}
         />
         <TimelineItem
