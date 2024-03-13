@@ -255,8 +255,6 @@ function GenerateSuratJalan() {
           detail_suratjalantransfer: selectedBarang,
         };
 
-        // console.log(dataToSend);
-
         const response = await axios.post(
           "http://127.0.0.1:8000/api/suratjalan/generate-transfer-surat-jalan",
           dataToSend,

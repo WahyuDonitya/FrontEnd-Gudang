@@ -58,6 +58,7 @@ import DetailBarang from "layouts/dashboard/detail-barang";
 import ListSuratJalanByHkeluar from "layouts/surat-jalan/list-surat-jalan-by-hkeluar";
 import DetailBarangPemusnahan from "layouts/pemusnahan-barang/approval-pemusnahan-barang/DetailBarangPemusnahan";
 import ListTempatBarang from "layouts/penempatan-barang/list-tempat-barang";
+import DetailStokOpname from "layouts/stok-opname/detail-stok-opname";
 
 import BillingInformation from "layouts/billing/components/BillingInformation";
 
@@ -190,6 +191,7 @@ export default function App() {
           <Route path="/list-suratjalan-by-hkeluar/:dataId" element={<ListSuratJalanByHkeluar />} />
           <Route path="/detail-pemusnahan-barang/:dataId" element={<DetailBarangPemusnahan />} />
           <Route path="/list-tempat-barang/:dataId" element={<ListTempatBarang />} />
+          <Route path="/detail-stok-opname/:dataId" element={<DetailStokOpname />} />
         </Routes>
       </ThemeProvider>
     </LocalizationProvider>

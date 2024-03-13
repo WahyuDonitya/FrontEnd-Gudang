@@ -64,6 +64,7 @@ import GeneratePackaging from "layouts/packaging";
 import ApprovalPemusnahanBarang from "layouts/pemusnahan-barang/approval-pemusnahan-barang";
 import MasterPositioning from "layouts/master/master-positioning";
 import ListPemusnahanBarang from "layouts/pemusnahan-barang/list-pemusnahan-barang";
+import StokOpname from "layouts/stok-opname";
 import SignUp from "layouts/authentication/sign-up";
 
 // @mui iconsππ
@@ -168,6 +169,15 @@ const routes = [
     icon: <Icon fontSize="small">local_shipping</Icon>,
     route: "/generate-surat-jalan",
     component: <GenerateSuratJalan />,
+    roles: ["2", "1"],
+  },
+  {
+    type: "collapse",
+    name: "Stok Opname",
+    key: "stok-opname",
+    icon: <Icon fontSize="small">local_shipping</Icon>,
+    route: "/stok-opname",
+    component: <StokOpname />,
     roles: ["2", "1"],
   },
   {
