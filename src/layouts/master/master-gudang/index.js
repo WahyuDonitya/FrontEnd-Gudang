@@ -36,6 +36,7 @@ import DataTable from "examples/Tables/DataTable";
 
 // data
 import dataGudang from "./data/DataGudang";
+import { useNavigate } from "react-router-dom";
 
 function MasterGudang() {
   const [gudang_nama, setGudangNama] = useState("");
@@ -76,6 +77,15 @@ function MasterGudang() {
   useEffect(() => {
     getAllJenisGudang();
   }, []);
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const hasToken = !!localStorage.getItem("access_token");
+    if (!hasToken) {
+      navigate("/authentication/sign-in");
+    }
+  }, [navigate]);
   // End API
 
   const addBarang = async () => {

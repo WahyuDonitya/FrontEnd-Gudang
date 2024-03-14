@@ -40,6 +40,7 @@ import breakpoints from "assets/theme/base/breakpoints";
 
 // data
 import dataPositioning from "./data/DataPositioning";
+import { useNavigate } from "react-router-dom";
 
 function MasterPositioning() {
   const [tabsOrientation, setTabsOrientation] = useState("horizontal");
@@ -89,6 +90,15 @@ function MasterPositioning() {
   useEffect(() => {
     getRows();
   }, []);
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const hasToken = !!localStorage.getItem("access_token");
+    if (!hasToken) {
+      navigate("/authentication/sign-in");
+    }
+  }, [navigate]);
   // End API
 
   const addRows = async () => {

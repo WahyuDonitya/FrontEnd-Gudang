@@ -28,7 +28,7 @@ import DataTable from "examples/Tables/DataTable";
 
 // Data
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import dayjs from "dayjs";
 import MDBadge from "components/MDBadge";
@@ -127,6 +127,15 @@ function ListTempatBarang() {
     getTempatBarang();
     getPositionAvailable();
   }, []);
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const hasToken = !!localStorage.getItem("access_token");
+    if (!hasToken) {
+      navigate("/authentication/sign-in");
+    }
+  }, [navigate]);
 
   // Handle modal
   const [openRejectModal, setOpenRejectModal] = useState(false);

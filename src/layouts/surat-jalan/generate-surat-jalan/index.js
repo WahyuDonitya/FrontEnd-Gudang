@@ -34,6 +34,7 @@ import MDSnackbar from "components/MDSnackbar";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
+import { useNavigate } from "react-router-dom";
 
 // import projectsTableData from "layouts/tables/data/projectsTableData";
 
@@ -151,6 +152,15 @@ function GenerateSuratJalan() {
     getHkeluar();
     getHtransfer();
   }, []);
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const hasToken = !!localStorage.getItem("access_token");
+    if (!hasToken) {
+      navigate("/authentication/sign-in");
+    }
+  }, [navigate]);
 
   // ini pengganti web socket dengan melakukan pengambilan data ke API lagi setiap 10 detik sekali
   // useEffect(() => {

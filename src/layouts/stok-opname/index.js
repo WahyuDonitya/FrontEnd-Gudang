@@ -23,7 +23,7 @@ import dayjs from "dayjs";
 import MDInput from "components/MDInput";
 import breakpoints from "assets/theme/base/breakpoints";
 import DataTable from "examples/Tables/DataTable";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function StokOpname() {
   const [tabsOrientation, setTabsOrientation] = useState("horizontal");
@@ -223,6 +223,15 @@ function StokOpname() {
     getHeaderOpname();
   }, []);
 
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const hasToken = !!localStorage.getItem("access_token");
+    if (!hasToken) {
+      navigate("/authentication/sign-in");
+    }
+  }, [navigate]);
+
   useEffect(() => {
     function handleTabsOrientation() {
       return window.innerWidth < breakpoints.values.sm
@@ -257,14 +266,14 @@ function StokOpname() {
     pengguna_action: { pengguna_nama: item.pengguna_action?.pengguna_nama || "-" },
     opname_status:
       item.opname_status == 0
-        ? "Belum Di Approve"
+        ? "Belum Berlangsung"
         : item.opname_status == 1
         ? "Opname Berlangsung"
         : item.opname_status == 2
         ? "Opname Selesai"
         : item.opname_status == 3
         ? "Opname Ditolak"
-        : "tes",
+        : "Approved dan sudah dilakukan penyesuaian",
     action: (
       <Link to={`/detail-stok-opname/${item.opname_nota}`}>
         <MDTypography variant="caption" color="text" fontWeight="medium">

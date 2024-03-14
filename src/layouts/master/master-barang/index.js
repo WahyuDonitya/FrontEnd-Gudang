@@ -16,26 +16,14 @@ import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 
 import Header from "../components/Header";
-import {
-  Autocomplete,
-  Divider,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  TextField,
-  Paper,
-  IconButton,
-  Icon,
-} from "@mui/material";
+import { Divider } from "@mui/material";
 import axios from "axios";
 import MDInput from "components/MDInput";
 import DataTable from "examples/Tables/DataTable";
 
 // data
 import databarang from "./data/DataBarang";
+import { useNavigate } from "react-router-dom";
 
 function MasterBarang() {
   const [barang_nama, setNamaBarang] = useState("");
@@ -59,6 +47,15 @@ function MasterBarang() {
     // Ambil nilai gudang_id
     gudang_id = payload.gudang_id;
   }
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const hasToken = !!localStorage.getItem("access_token");
+    if (!hasToken) {
+      navigate("/authentication/sign-in");
+    }
+  }, [navigate]);
 
   // End API
 

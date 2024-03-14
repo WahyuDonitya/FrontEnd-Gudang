@@ -36,6 +36,7 @@ import DataTable from "examples/Tables/DataTable";
 
 // data
 import databarang from "./data/DataCustomer";
+import { useNavigate } from "react-router-dom";
 
 function MasterCustomer() {
   const [customer_nama, setCustomerNama] = useState("");
@@ -89,6 +90,15 @@ function MasterCustomer() {
       }
     }
   };
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const hasToken = !!localStorage.getItem("access_token");
+    if (!hasToken) {
+      navigate("/authentication/sign-in");
+    }
+  }, [navigate]);
 
   // render Notificartion
   const renderSuccessSB = (

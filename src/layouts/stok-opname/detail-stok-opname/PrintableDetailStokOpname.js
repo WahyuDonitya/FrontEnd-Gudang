@@ -202,9 +202,13 @@ const PrintableDetailStokOpname = ({ detailKeluar, headerKeluar, detailBarang })
                   : "ambil dari bulk"}
               </td>
 
-              <td style={{ border: "1px solid #ddd", padding: "8px", textAlign: "center" }}></td>
+              <td style={{ border: "1px solid #ddd", padding: "8px", textAlign: "center" }}>
+                {item.detailbarangopname_jumlahaktual || " "}
+              </td>
 
-              <td style={{ border: "1px solid #ddd", padding: "8px", textAlign: "center" }}></td>
+              <td style={{ border: "1px solid #ddd", padding: "8px", textAlign: "center" }}>
+                {item.detailbarangopname_jumlahdifference || ""}
+              </td>
             </tr>
           ))}
         </tbody>

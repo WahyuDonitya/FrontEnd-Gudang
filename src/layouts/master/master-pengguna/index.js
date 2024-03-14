@@ -33,6 +33,7 @@ import {
 import axios from "axios";
 import MDInput from "components/MDInput";
 import DataTable from "examples/Tables/DataTable";
+import { useNavigate } from "react-router-dom";
 
 // data
 // import dataGudang from "./data/DataGudang";
@@ -95,6 +96,15 @@ function MasterPengguna() {
     getAllGudang();
     getAllRole();
   }, []);
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const hasToken = !!localStorage.getItem("access_token");
+    if (!hasToken) {
+      navigate("/authentication/sign-in");
+    }
+  }, [navigate]);
   // End API
 
   const addBarang = async () => {

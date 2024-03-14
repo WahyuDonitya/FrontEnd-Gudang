@@ -9,12 +9,11 @@ import MDTypography from "components/MDTypography";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import DataTable from "examples/Tables/DataTable";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import MDButton from "components/MDButton";
 import MDSnackbar from "components/MDSnackbar";
-import dayjs from "dayjs";
 import { Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
 import MDInput from "components/MDInput";
 import PrintableDetailStokOpname from "./PrintableDetailStokOpname";
@@ -107,6 +106,12 @@ function DetailStokOpname() {
   const handleApprove = async () => {
     if (window.confirm("Apakah anda ingin melakukan proses Approve?")) {
       try {
+        const res = await axios.post(
+          `http://127.0.0.1:8000/api/stok-opname/approve-stok-opname`,
+          { opname_id: headerBarangMasuk.opname_id },
+          { headers: { Authorization: `Bearer ${accessToken}` } }
+        );
+        // alert(headerBarangMasuk.opname_id);
         openSuccessSB();
         getId();
       } catch (error) {
@@ -155,6 +160,15 @@ function DetailStokOpname() {
   useEffect(() => {
     getId();
   }, []);
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const hasToken = !!localStorage.getItem("access_token");
+    if (!hasToken) {
+      navigate("/authentication/sign-in");
+    }
+  }, [navigate]);
 
   const handlePrint = async () => {
     // console.log(headerBarangMasuk.opname_id);
@@ -307,7 +321,12 @@ function DetailStokOpname() {
                   </Grid>
                   <Grid item xs={6}>
                     <MDButton variant="gradient" color="success" fullWidth onClick={handleApprove}>
-                      Approve
+                      Approve dan Buat Penyesuaian Stok
+                    </MDButton>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <MDButton variant="gradient" color="info" fullWidth onClick={handlePrint}>
+                      Show Document
                     </MDButton>
                   </Grid>
                 </Grid>
@@ -318,6 +337,16 @@ function DetailStokOpname() {
                   <Grid item xs={12}>
                     <MDButton variant="gradient" color="info" fullWidth onClick={handlePrint}>
                       Print dan Jalankan Stok Opname
+                    </MDButton>
+                  </Grid>
+                </Grid>
+              )}
+
+              {headerBarangMasuk.opname_status === 4 && (
+                <Grid container pt={5} spacing={7} px={3} mb={4}>
+                  <Grid item xs={12}>
+                    <MDButton variant="gradient" color="info" fullWidth onClick={handlePrint}>
+                      Show Document
                     </MDButton>
                   </Grid>
                 </Grid>

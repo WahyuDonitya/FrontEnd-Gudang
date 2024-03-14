@@ -21,7 +21,7 @@ import { useEffect, useState } from "react";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 import MDButton from "components/MDButton";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { format } from "date-fns";
 
 function KartuStok() {
@@ -53,6 +53,15 @@ function KartuStok() {
   useEffect(() => {
     getBarang();
   }, []);
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const hasToken = !!localStorage.getItem("access_token");
+    if (!hasToken) {
+      navigate("/authentication/sign-in");
+    }
+  }, [navigate]);
 
   //   function
   const handleChange = async (newValue) => {
@@ -131,6 +140,8 @@ function KartuStok() {
         ? "Barang Masuk"
         : item.htransfer_barang_id !== null
         ? "Transfer internal"
+        : item.hpenyesuaian_id !== null
+        ? "Penyesuaian Barang"
         : "Belum ada",
     action: (
       <Link to={`/detailbarang-masuk/${item.hmasuk_nota}`}>
