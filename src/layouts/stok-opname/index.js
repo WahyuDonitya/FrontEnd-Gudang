@@ -128,6 +128,7 @@ function StokOpname() {
         setJumlahAktualByItem({});
         setJumlahDifferenceByItem({});
         setDetailBarangOpname([]);
+        setHeaderOpname([]);
         getHeaderOpname();
       } catch (error) {
         console.log("terdapat error saat menjalankan stok opname ", error);
@@ -183,17 +184,9 @@ function StokOpname() {
 
   const handleChangeJumlahAktual = (itemId, newValue, jumlahditempat) => {
     const currentItem = detaiBarangOpname.find((item) => item.detailbarangopname_id === itemId);
-
-    // Create a copy of the existing isInputInvalid state
     const updatedIsInputInvalid = { ...isInputInvalid };
 
-    // Update the validity for the current item
     updatedIsInputInvalid[itemId] = false;
-    // if (newValue > currentItem.dkeluar_sisa) {
-    //   updatedIsInputInvalid[itemId] = true;
-    // } else {
-    //   updatedIsInputInvalid[itemId] = false;
-    // }
 
     setIsInputInvalid(updatedIsInputInvalid);
 
@@ -212,7 +205,7 @@ function StokOpname() {
   const handleChangeKeterangan = (itemId, newValue) => {
     setKeteranganByItem((prev) => ({
       ...prev,
-      [itemId]: newValue,
+      [itemId]: newValue || "",
     }));
   };
 
@@ -223,14 +216,14 @@ function StokOpname() {
     getHeaderOpname();
   }, []);
 
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
-  useEffect(() => {
-    const hasToken = !!localStorage.getItem("access_token");
-    if (!hasToken) {
-      navigate("/authentication/sign-in");
-    }
-  }, [navigate]);
+  // useEffect(() => {
+  //   const hasToken = !!localStorage.getItem("access_token");
+  //   if (!hasToken) {
+  //     navigate("/authentication/sign-in");
+  //   }
+  // }, [navigate]);
 
   useEffect(() => {
     function handleTabsOrientation() {

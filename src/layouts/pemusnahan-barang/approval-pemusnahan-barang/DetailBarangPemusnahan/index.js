@@ -26,6 +26,7 @@ import {
 } from "@mui/material";
 import MDInput from "components/MDInput";
 import PrintableFormPemusnahanBarang from "./PrintableFormPemusnahanBarang";
+import { jwtDecode } from "jwt-decode";
 // import projectsTableData from "layouts/tables/data/projectsTableData";
 
 function DetailBarangPemusnahan() {
@@ -77,6 +78,7 @@ function DetailBarangPemusnahan() {
   // end Handle modal
 
   const accessToken = localStorage.getItem("access_token");
+  const decode = jwtDecode(accessToken);
   let tahupolos = false;
 
   // API
@@ -331,7 +333,7 @@ function DetailBarangPemusnahan() {
                   />
                 </Grid>
               </Grid>
-              {headerPemusnahanBarang.hpemusnahan_status === 0 && (
+              {headerPemusnahanBarang.hpemusnahan_status === 0 && decode.role_id === 2 && (
                 <Grid container pt={5} spacing={7} px={3} mb={4}>
                   <Grid item xs={6}>
                     <MDButton

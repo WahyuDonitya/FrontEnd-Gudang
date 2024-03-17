@@ -25,6 +25,7 @@ import {
   RadioGroup,
 } from "@mui/material";
 import MDInput from "components/MDInput";
+import { jwtDecode } from "jwt-decode";
 // import projectsTableData from "layouts/tables/data/projectsTableData";
 
 function DetailBarangMasuk() {
@@ -76,6 +77,7 @@ function DetailBarangMasuk() {
   // end Handle modal
 
   const accessToken = localStorage.getItem("access_token");
+  const decode = jwtDecode(accessToken);
   let tahupolos = false;
 
   // API
@@ -267,7 +269,7 @@ function DetailBarangMasuk() {
                   />
                 </Grid>
               </Grid>
-              {headerBarangMasuk.hmasuk_status === 2 && (
+              {headerBarangMasuk.hmasuk_status === 2 && decode.role_id === 2 && (
                 <Grid container pt={5} spacing={7} px={3} mb={4}>
                   <Grid item xs={6}>
                     <MDButton

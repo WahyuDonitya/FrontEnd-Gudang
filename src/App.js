@@ -59,6 +59,7 @@ import ListSuratJalanByHkeluar from "layouts/surat-jalan/list-surat-jalan-by-hke
 import DetailBarangPemusnahan from "layouts/pemusnahan-barang/approval-pemusnahan-barang/DetailBarangPemusnahan";
 import ListTempatBarang from "layouts/penempatan-barang/list-tempat-barang";
 import DetailStokOpname from "layouts/stok-opname/detail-stok-opname";
+import DetailReportPengirimanBarang from "layouts/report/pengiriman-barang/DetailReportPengiriman";
 
 import BillingInformation from "layouts/billing/components/BillingInformation";
 
@@ -192,6 +193,10 @@ export default function App() {
           <Route path="/detail-pemusnahan-barang/:dataId" element={<DetailBarangPemusnahan />} />
           <Route path="/list-tempat-barang/:dataId" element={<ListTempatBarang />} />
           <Route path="/detail-stok-opname/:dataId" element={<DetailStokOpname />} />
+          <Route
+            path="/detail-report-pengiriman-barang/:dataId/:dateAwal/:dateAkhir"
+            element={<DetailReportPengirimanBarang />}
+          />
         </Routes>
       </ThemeProvider>
     </LocalizationProvider>

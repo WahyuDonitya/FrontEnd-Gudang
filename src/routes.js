@@ -65,6 +65,9 @@ import ApprovalPemusnahanBarang from "layouts/pemusnahan-barang/approval-pemusna
 import MasterPositioning from "layouts/master/master-positioning";
 import ListPemusnahanBarang from "layouts/pemusnahan-barang/list-pemusnahan-barang";
 import StokOpname from "layouts/stok-opname";
+import InventoryAging from "layouts/report/inventory-aging";
+import PengirimanBarang from "layouts/report/pengiriman-barang";
+import PenerimaanBarang from "layouts/report/penerimaan-barang";
 import SignUp from "layouts/authentication/sign-up";
 
 // @mui iconsππ
@@ -296,6 +299,33 @@ const routes = [
     route: "/pergerakan-barang",
     component: <PergerakanBarang />,
     roles: ["2"],
+  },
+  {
+    type: "collapse",
+    name: "Inventory Aging",
+    key: "inventory-aging",
+    icon: <Icon fontSize="small">warehouse</Icon>,
+    route: "/inventory-aging",
+    component: <InventoryAging />,
+    roles: ["2", "1"],
+  },
+  {
+    type: "collapse",
+    name: "Pengiriman Barang",
+    key: "pengiriman-barang",
+    icon: <Icon fontSize="small">warehouse</Icon>,
+    route: "/pengiriman-barang",
+    component: <PengirimanBarang />,
+    roles: ["2", "1"],
+  },
+  {
+    type: "collapse",
+    name: "Penerimaan Barang",
+    key: "penerimaan-barang",
+    icon: <Icon fontSize="small">warehouse</Icon>,
+    route: "/penerimaan-barang",
+    component: <PenerimaanBarang />,
+    roles: ["2", "1"],
   },
   {
     type: "collapse",

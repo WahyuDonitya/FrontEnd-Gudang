@@ -36,6 +36,7 @@ import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { format as dateFnsFormat } from "date-fns";
 import dayjs from "dayjs";
+import { useNavigate } from "react-router-dom";
 
 function BarangKeluar() {
   // State
@@ -89,7 +90,7 @@ function BarangKeluar() {
 
   const getCustomer = async () => {
     try {
-      const response = await axios.get("http://127.0.0.1:8000/api/customer/", {
+      const response = await axios.get("http://127.0.0.1:8000/api/get-customer-by-gudang", {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
@@ -242,6 +243,15 @@ function BarangKeluar() {
     getBarang();
     getGudang();
   }, []);
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const hasToken = !!localStorage.getItem("access_token");
+    if (!hasToken) {
+      navigate("/authentication/sign-in");
+    }
+  }, [navigate]);
 
   // Untuk tes hasil dari picker
   // useEffect(() => {

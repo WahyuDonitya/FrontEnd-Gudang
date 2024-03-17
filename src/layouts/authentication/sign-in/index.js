@@ -41,6 +41,7 @@ import BasicLayout from "layouts/authentication/components/BasicLayout";
 
 // Images
 import bgImage from "assets/images/bg-sign-in-basic.jpeg";
+import { jwtDecode } from "jwt-decode";
 
 function Basic() {
   const [username, setUsername] = useState("");
@@ -77,7 +78,13 @@ function Basic() {
   };
 
   if (token) {
-    return <Navigate to="/dashboard" />;
+    const decode = jwtDecode(token);
+
+    if (decode.role_id != 3) {
+      return <Navigate to="/dashboard" />;
+    } else {
+      return <Navigate to="/master-barang" />;
+    }
   }
 
   return (

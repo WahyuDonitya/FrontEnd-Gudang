@@ -17,6 +17,7 @@ import MDSnackbar from "components/MDSnackbar";
 import { Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
 import MDInput from "components/MDInput";
 import PrintableDetailStokOpname from "./PrintableDetailStokOpname";
+import { jwtDecode } from "jwt-decode";
 // import projectsTableData from "layouts/tables/data/projectsTableData";
 
 function DetailStokOpname() {
@@ -58,6 +59,7 @@ function DetailStokOpname() {
   // end Handle modal
 
   const accessToken = localStorage.getItem("access_token");
+  const decode = jwtDecode(accessToken);
 
   // API
 
@@ -307,7 +309,7 @@ function DetailStokOpname() {
                   />
                 </Grid>
               </Grid>
-              {headerBarangMasuk.opname_status === 2 && (
+              {headerBarangMasuk.opname_status === 2 && decode.role_id === 2 && (
                 <Grid container pt={5} spacing={7} px={3} mb={4}>
                   <Grid item xs={6}>
                     <MDButton

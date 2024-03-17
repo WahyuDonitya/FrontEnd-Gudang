@@ -47,6 +47,7 @@ export default function data() {
       { Header: "Customer Nama", accessor: "customer_nama", align: "center" },
       { Header: "Customer Telepon", accessor: "customer_telepon", align: "center" },
       { Header: "Customer Alamat", accessor: "customer_alamat", align: "center" },
+      { Header: "Customer Gudang", accessor: "gudang", align: "center" },
       {
         Header: "Delete",
         accessor: "delete",
@@ -60,6 +61,7 @@ export default function data() {
       customer_nama: item.customer_nama,
       customer_telepon: item.customer_telepon,
       customer_alamat: item.customer_alamat,
+      gudang: item.gudang.gudang_nama,
       delete: (
         <IconButton onClick={() => handleDelete(item.customer_id)} aria-label="delete">
           <DeleteIcon />

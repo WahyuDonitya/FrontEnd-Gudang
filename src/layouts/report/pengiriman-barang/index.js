@@ -12,7 +12,7 @@ import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
 import DataTable from "examples/Tables/DataTable";
 import axios from "axios";
-import PrintAbleKartuStok from "./PrintAbleKartuStok";
+// import PrintAbleKartuStok from "./PrintAbleKartuStok";
 
 // Data
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
@@ -24,21 +24,19 @@ import MDButton from "components/MDButton";
 import { Link, useNavigate } from "react-router-dom";
 import { format } from "date-fns";
 
-function KartuStok() {
+function PengirimanBarang() {
   //   state
   const [barang, setBarang] = useState([]);
-  const [barangId, setBarangId] = useState(null);
   const [datePickerAwal, setdatePickerAwal] = useState(null);
   const [datePickerAkhir, setdatePickerAkhir] = useState(null);
-  const [kartuStok, setKartuStok] = useState([]);
-  const [stokAwal, setStokAwal] = useState(0);
+  const [laporanPengiriman, setLaporanPengiriman] = useState([]);
 
   const accessToken = localStorage.getItem("access_token");
 
   //   Pemanggilan API
   const getBarang = async () => {
     try {
-      const response = await axios.get("http://127.0.0.1:8000/api/barang", {
+      const response = await axios.get("http://127.0.0.1:8000/api/report/inventory-aging", {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
@@ -47,6 +45,22 @@ function KartuStok() {
       setBarang(response.data);
     } catch (error) {
       console.error("Terjadi kesalahan saat mengambil data Barang :", error);
+    }
+  };
+
+  const handleSubmit = async () => {
+    // console.log(datePickerAwal);
+    try {
+      const response = await axios.get(
+        `http://127.0.0.1:8000/api/report/get-report-pengiriman-barang/${datePickerAwal}/${datePickerAkhir}`,
+        {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        }
+      );
+
+      setLaporanPengiriman(response.data);
+    } catch (error) {
+      console.error("Terjadi kesalahan saat mengambil data kartu Stok:", error);
     }
   };
 
@@ -64,100 +78,45 @@ function KartuStok() {
   // }, [navigate]);
 
   //   function
-  const handleChange = async (newValue) => {
-    if (newValue) {
-      setBarangId(newValue.barang_id);
-    } else {
-      console.log("tidak ada new values");
-    }
-  };
 
-  const handleSubmit = async () => {
-    // console.log(datePickerAwal);
-    try {
-      const response = await axios.get(
-        `http://127.0.0.1:8000/api/report/get-kartu-stok/${barangId}/${datePickerAwal}/${datePickerAkhir}`,
-        {
-          headers: { Authorization: `Bearer ${accessToken}` },
-        }
-      );
+  //   const handlePrint = () => {
+  //     // console.log(headerKeluar);
+  //     const printableContent = document.getElementById("printable-content");
 
-      setKartuStok(response.data.data);
-      // setStokAwal(response.data.data_sebelumnya);
-      if (response.data.data_sebelumnya != null) {
-        setStokAwal(response.data.data_sebelumnya["logbarang_stoksekarang"]);
-      } else {
-        setStokAwal[0];
-      }
-
-      // console.log("ini data sebelumnya : ", response.data);
-      // console.log(response.data);
-    } catch (error) {
-      console.error("Terjadi kesalahan saat mengambil data kartu Stok:", error);
-    }
-  };
-
-  const handlePrint = () => {
-    // console.log(headerKeluar);
-    const printableContent = document.getElementById("printable-content");
-
-    const printWindow = window.open("", "_blank");
-    printWindow.document.write(`
-      <html>
-        <head>
-          <title>Print</title>
-        </head>
-        <body>${printableContent.innerHTML}</body>
-      </html>
-    `);
-    printWindow.document.close();
-    printWindow.print();
-    printWindow.onafterprint = () => printWindow.close();
-  };
+  //     const printWindow = window.open("", "_blank");
+  //     printWindow.document.write(`
+  //       <html>
+  //         <head>
+  //           <title>Print</title>
+  //         </head>
+  //         <body>${printableContent.innerHTML}</body>
+  //       </html>
+  //     `);
+  //     printWindow.document.close();
+  //     printWindow.print();
+  //     printWindow.onafterprint = () => printWindow.close();
+  //   };
 
   const columns = [
-    { Header: "Tanggal Transaksi", accessor: "created_at", align: "center" },
-    { Header: "Batch Barang", accessor: "detail_barang.detailbarang_batch", align: "center" },
-    { Header: "Barang Masuk", accessor: "logbarang_masuk", align: "center" },
-    { Header: "Barang Keluar", accessor: "logbarang_keluar", align: "center" },
-    { Header: "Stok Tersedia", accessor: "logbarang_stoksekarang", align: "center" },
-    { Header: "Jenis Transaksi", accessor: "jenistransaksi", align: "center" },
-    { Header: "Keterangan", accessor: "logbarang_keterangan", align: "left" },
-    { Header: "Action", accessor: "action", align: "center" },
+    { Header: "No. ", accessor: "nomor", align: "center" },
+    { Header: "Nama Customer ", accessor: "customer", align: "center" },
+    { Header: "Jumlah Pengiriman ", accessor: "pengiriman", align: "center" },
+    { Header: "Detail ", accessor: "detail", align: "center" },
   ];
 
-  const rows = kartuStok.map((item) => ({
-    created_at: item.created_at ? format(new Date(item.created_at), "dd-MM-yyyy") : "-",
-    detail_barang: { detailbarang_batch: item.detail_barang?.detailbarang_batch },
-    logbarang_masuk: item.logbarang_masuk ? item.logbarang_masuk : "-",
-    logbarang_keluar: item.logbarang_keluar ? item.logbarang_keluar : "-",
-    logbarang_stoksekarang: item.logbarang_stoksekarang,
-    logbarang_keterangan: item.logbarang_keterangan,
-    jenistransaksi:
-      item.hkeluar_id !== null
-        ? "Barang Keluar"
-        : item.hmasuk_id !== null
-        ? "Barang Masuk"
-        : item.htransfer_barang_id !== null
-        ? "Transfer internal"
-        : item.hpenyesuaian_id !== null
-        ? "Penyesuaian Barang"
-        : "Belum ada",
-    action: (
-      <Link to={`/detailbarang-masuk/${item.hmasuk_nota}`}>
+  const rows = laporanPengiriman.map((item, index) => ({
+    nomor: index + 1,
+    customer: item.customer.customer_nama,
+    pengiriman: item.jumlah_surat_jalan,
+    detail: (
+      <Link
+        to={`/detail-report-pengiriman-barang/${item.customer_id}/${datePickerAwal}/${datePickerAkhir}`}
+      >
         <MDTypography variant="caption" color="text" fontWeight="medium">
           Detail
         </MDTypography>
       </Link>
     ),
-    //   action_print:
-    //     item.suratjalan_status === 3 ? (
-    //       <Link to={`/detailsurat-jalan/${item.suratjalan_nota}`}>
-    //         <MDTypography variant="caption" color="text" fontWeight="medium">
-    //           Print
-    //         </MDTypography>
-    //       </Link>
-    //     ) : null,
   }));
 
   return (
@@ -167,14 +126,9 @@ function KartuStok() {
         <Grid container spacing={6}>
           <Grid item xs={12}>
             <Card>
-              <div id="printable-content" style={{ display: "none" }}>
-                <PrintAbleKartuStok
-                  kartuStok={kartuStok}
-                  stokAwal={stokAwal}
-                  datePickerAwal={datePickerAwal}
-                  datePickerAkhir={datePickerAkhir}
-                />
-              </div>
+              {/* <div id="printable-content" style={{ display: "none" }}>
+                <PrintAbleKartuStok kartuStok={kartuStok} />
+              </div> */}
               <MDBox
                 mx={2}
                 mt={-3}
@@ -186,29 +140,9 @@ function KartuStok() {
                 coloredShadow="info"
               >
                 <MDTypography variant="h6" color="white">
-                  Table Kartu Stok
+                  Laporan Pengiriman Barang
                 </MDTypography>
               </MDBox>
-              <Grid container>
-                <Grid item xs={12} pt={4} px={2}>
-                  {Array.isArray(barang) && barang.length > 0 ? (
-                    <Autocomplete
-                      disablePortal
-                      id="combo-box-demo"
-                      options={barang}
-                      getOptionLabel={(option) => `${option.barang_nama}`}
-                      onChange={(event, newValue) => {
-                        //   setGudangPick(newValue.gudang_id);
-                        handleChange(newValue);
-                      }}
-                      fullWidth
-                      renderInput={(params) => <TextField {...params} label="Pilih Barang " />}
-                    />
-                  ) : (
-                    <p>Loading customer data...</p>
-                  )}
-                </Grid>
-              </Grid>
               <Grid container>
                 <Grid item xs={6} pt={4} px={2}>
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -244,23 +178,20 @@ function KartuStok() {
                   Tampilkan
                 </MDButton>
               </Grid>
-              <Grid item xs={12} px={2} pb={3} pt={5}>
-                <MDTypography>Stok Awal : {stokAwal ?? 0}</MDTypography>
-              </Grid>
               <MDBox pt={3}>
                 <DataTable
                   table={{ columns, rows }}
                   isSorted={false}
                   entriesPerPage={true}
                   showTotalEntries={true}
-                  noEndBorder
                   canSearch
+                  noEndBorder
                 />
-                <Grid item xs={12} px={2} pb={3} pt={5}>
-                  <MDButton variant="gradient" color="success" onClick={handlePrint}>
+                {/* <Grid item xs={12} px={2} pb={3} pt={5}>
+                  <MDButton variant="gradient" color="success" onClick={handleSubmit}>
                     Print
                   </MDButton>
-                </Grid>
+                </Grid> */}
               </MDBox>
             </Card>
           </Grid>
@@ -297,4 +228,4 @@ function KartuStok() {
   );
 }
 
-export default KartuStok;
+export default PengirimanBarang;

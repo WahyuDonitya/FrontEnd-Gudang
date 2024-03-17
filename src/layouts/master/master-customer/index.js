@@ -16,20 +16,7 @@ import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 
 import Header from "../components/Header";
-import {
-  Autocomplete,
-  Divider,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  TextField,
-  Paper,
-  IconButton,
-  Icon,
-} from "@mui/material";
+import { Autocomplete, Divider, TextField } from "@mui/material";
 import axios from "axios";
 import MDInput from "components/MDInput";
 import DataTable from "examples/Tables/DataTable";
@@ -42,6 +29,9 @@ function MasterCustomer() {
   const [customer_nama, setCustomerNama] = useState("");
   const [customer_telepon, setCustomerTelepon] = useState("");
   const [customer_alamat, setCustomerAlamat] = useState("");
+  const [gudangs, setGudangs] = useState([]);
+  const [gudangPick, setGudangPick] = useState(null);
+  const [gudangValue, setGudangValue] = useState("");
 
   // state untuk notification
   const [successSB, setSuccessSB] = useState(false);
@@ -53,15 +43,15 @@ function MasterCustomer() {
   const closeErrorSB = () => setErrorSB(false);
 
   const accessToken = localStorage.getItem("access_token");
-  let gudang_id;
-  if (accessToken) {
-    // Decode token
-    const tokenParts = accessToken.split(".");
-    const payload = JSON.parse(atob(tokenParts[1]));
+  // let gudang_id;
+  // if (accessToken) {
+  //   // Decode token
+  //   const tokenParts = accessToken.split(".");
+  //   const payload = JSON.parse(atob(tokenParts[1]));
 
-    // Ambil nilai gudang_id
-    gudang_id = payload.gudang_id;
-  }
+  //   // Ambil nilai gudang_id
+  //   gudang_id = payload.gudang_id;
+  // }
 
   // End API
 
@@ -74,6 +64,7 @@ function MasterCustomer() {
             customer_nama: customer_nama,
             customer_alamat: customer_alamat,
             customer_telepon: customer_telepon,
+            gudang_id: gudangPick,
           },
           {
             headers: { Authorization: `Bearer ${accessToken}` },
@@ -84,10 +75,23 @@ function MasterCustomer() {
           // Refresh halaman
           window.location.reload();
         }, 2000);
+        setGudangPick(null);
       } catch (error) {
         openErrorSB();
         console.error("Terjadi kesalahan saat menghapus barang:", error);
       }
+    }
+  };
+
+  const getGudang = async () => {
+    try {
+      const response = await axios.get(`http://127.0.0.1:8000/api/gudang/`, {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
+
+      setGudangs(response.data);
+    } catch (error) {
+      console.log("Terdapat kesalahan saat mengambil data gudang ".error);
     }
   };
 
@@ -99,6 +103,10 @@ function MasterCustomer() {
       navigate("/authentication/sign-in");
     }
   }, [navigate]);
+
+  useEffect(() => {
+    getGudang();
+  }, []);
 
   // render Notificartion
   const renderSuccessSB = (
@@ -171,7 +179,7 @@ function MasterCustomer() {
                 }}
               />
             </Grid>
-            <Grid item xs={12}>
+            <Grid item xs={6}>
               <MDInput
                 label="Alamat Customer"
                 fullWidth
@@ -181,6 +189,29 @@ function MasterCustomer() {
                   setCustomerAlamat(e.target.value);
                 }}
               />
+            </Grid>
+            <Grid item xs={6}>
+              {Array.isArray(gudangs) && gudangs.length > 0 ? (
+                <Autocomplete
+                  disablePortal
+                  id="combo-box-demo"
+                  options={gudangs}
+                  getOptionLabel={(option) => `${option.gudang_nama}`}
+                  onChange={(event, newValue) => {
+                    if (newValue) {
+                      setGudangPick(newValue.gudang_id);
+                      setGudangValue(newValue.gudang_nama);
+                    } else {
+                      setGudangPick(null);
+                      setGudangValue("");
+                    }
+                  }}
+                  fullWidth
+                  renderInput={(params) => <TextField {...params} label="Gudang" />}
+                />
+              ) : (
+                <p>Loading gudang data...</p>
+              )}
             </Grid>
             <Grid item xs={12}>
               <MDButton variant="gradient" color="success" fullWidth onClick={addBarang}>

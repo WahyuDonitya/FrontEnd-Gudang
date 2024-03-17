@@ -1,18 +1,3 @@
-/**
-=========================================================
-* Material Dashboard 2 React - v2.2.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/material-dashboard-react
-* Copyright 2023 Creative Tim (https://www.creative-tim.com)
-
-Coded by www.creative-tim.com
-
- =========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
-
 // @mui material components
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
@@ -33,6 +18,8 @@ import MDSnackbar from "components/MDSnackbar";
 import { Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
 import MDInput from "components/MDInput";
 import PrintableFormBarangKeluar from "./PrintableFormBarangKeluar";
+import { jwtDecode } from "jwt-decode";
+
 // import projectsTableData from "layouts/tables/data/projectsTableData";
 
 function DetailData() {
@@ -40,6 +27,7 @@ function DetailData() {
   const [headerKeluar, setHeaderlKeluar] = useState([]);
   const { dataId } = useParams();
   const accessToken = localStorage.getItem("access_token");
+  const decode = jwtDecode(accessToken);
 
   // state untuk notification
   const [successSB, setSuccessSB] = useState(false);
@@ -157,7 +145,8 @@ function DetailData() {
   };
 
   const handlePrint = () => {
-    // console.log(headerKeluar);
+    // alert(decode.role_id);
+    console.log(headerKeluar);
     const printableContent = document.getElementById("printable-content");
 
     const printWindow = window.open("", "_blank");
@@ -324,7 +313,7 @@ function DetailData() {
                   />
                 </Grid>
               </Grid>
-              {headerKeluar.hkeluar_status === 3 && (
+              {headerKeluar.hkeluar_status === 3 && decode.role_id === 2 && (
                 <Grid container pt={5} spacing={7} px={3} mb={4}>
                   <Grid item xs={6}>
                     <MDButton
