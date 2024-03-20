@@ -83,7 +83,7 @@ function Basic() {
     if (decode.role_id != 3) {
       return <Navigate to="/dashboard" />;
     } else {
-      return <Navigate to="/master-barang" />;
+      return <Navigate to="/dashboard-admin" />;
     }
   }
 

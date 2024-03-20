@@ -43,6 +43,7 @@ import dayjs from "dayjs";
 import MDInput from "components/MDInput";
 import DataTable from "examples/Tables/DataTable";
 import { useNavigate } from "react-router-dom";
+import { navigateAndClearTokenUser } from "navigationUtils/navigationUtilsUser";
 
 function GeneratePackaging() {
   const [hmasuk, setHmasuk] = useState([]);
@@ -157,10 +158,7 @@ function GeneratePackaging() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const hasToken = !!localStorage.getItem("access_token");
-    if (!hasToken) {
-      navigate("/authentication/sign-in");
-    }
+    navigateAndClearTokenUser(navigate);
   }, [navigate]);
 
   // Untuk tes hasil dari picker

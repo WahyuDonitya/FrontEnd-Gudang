@@ -68,6 +68,7 @@ import StokOpname from "layouts/stok-opname";
 import InventoryAging from "layouts/report/inventory-aging";
 import PengirimanBarang from "layouts/report/pengiriman-barang";
 import PenerimaanBarang from "layouts/report/penerimaan-barang";
+import DashboardAdmin from "layouts/dashboard/dashboard-admin";
 import SignUp from "layouts/authentication/sign-up";
 
 // @mui iconsππ
@@ -83,6 +84,15 @@ const routes = [
     route: "/dashboard",
     component: <Dashboard />,
     roles: ["2", "1"],
+  },
+  {
+    type: "collapse",
+    name: "Dashboard Admin",
+    key: "dashboard-admin",
+    icon: <Icon fontSize="small">dashboard</Icon>,
+    route: "/dashboard-admin",
+    component: <DashboardAdmin />,
+    roles: ["3"],
   },
   // {
   //   type: "collapse",

@@ -7,7 +7,6 @@ import Card from "@mui/material/Card";
 // Material Dashboard 2 React components
 import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
-import MDAlert from "components/MDAlert";
 import MDButton from "components/MDButton";
 import MDSnackbar from "components/MDSnackbar";
 
@@ -16,32 +15,25 @@ import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 
 import Header from "../components/Header";
-import {
-  Autocomplete,
-  Divider,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  TextField,
-  Paper,
-  IconButton,
-  Icon,
-} from "@mui/material";
+import { Autocomplete, Divider, IconButton, TextField } from "@mui/material";
 import axios from "axios";
 import MDInput from "components/MDInput";
 import DataTable from "examples/Tables/DataTable";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
 
 // data
 import dataGudang from "./data/DataGudang";
 import { useNavigate } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
+import { navigateAndClearTokenAdmin } from "navigationUtils/navigationUtilsAdmin";
 
 function MasterGudang() {
   const [gudang_nama, setGudangNama] = useState("");
+  const [gudang, setGudang] = useState([]);
   const [jenisGudang, setJenisGudang] = useState([]);
   const [jenisGudangPickID, setJenisGudangPickId] = useState(null);
+  const [gudangEditId, setGudangEditId] = useState(null);
 
   // state untuk notification
   const [successSB, setSuccessSB] = useState(false);
@@ -53,15 +45,7 @@ function MasterGudang() {
   const closeErrorSB = () => setErrorSB(false);
 
   const accessToken = localStorage.getItem("access_token");
-  let gudang_id;
-  if (accessToken) {
-    // Decode token
-    const tokenParts = accessToken.split(".");
-    const payload = JSON.parse(atob(tokenParts[1]));
 
-    // Ambil nilai gudang_id
-    gudang_id = payload.gudang_id;
-  }
   // API
   const getAllJenisGudang = async () => {
     try {
@@ -74,35 +58,72 @@ function MasterGudang() {
     }
   };
 
+  const getGudang = async () => {
+    try {
+      const response = await axios.get("http://127.0.0.1:8000/api/gudang/", {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
+
+      setGudang(response.data);
+    } catch (error) {
+      console.error("Terjadi kesalahan saat mengambil data Gudang:", error);
+    }
+  };
+
+  const handleDelete = async (gudangId) => {
+    if (window.confirm("Anda yakin ingin menghapus barang ini?")) {
+      try {
+        await axios.delete(`http://127.0.0.1:8000/api/gudang/${gudangId}`, {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        });
+        getGudang();
+      } catch (error) {
+        console.error("Terjadi kesalahan saat menghapus barang:", error);
+      }
+    }
+  };
+
+  const handleEdit = (gudang_nama, gudang_id) => {
+    setGudangNama(gudang_nama);
+    setGudangEditId(gudang_id);
+  };
+
   useEffect(() => {
     getAllJenisGudang();
+    getGudang();
   }, []);
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    const hasToken = !!localStorage.getItem("access_token");
-    if (!hasToken) {
-      navigate("/authentication/sign-in");
-    }
+    navigateAndClearTokenAdmin(navigate);
   }, [navigate]);
   // End API
 
   const addBarang = async () => {
     if (window.confirm("Apakah data sudah benar?")) {
       try {
-        const datakirim = {
-          gudang_nama: gudang_nama,
-          jenis_gudang_id: parseInt(jenisGudangPickID),
-        };
-        const add = await axios.post(`http://127.0.0.1:8000/api/gudang`, datakirim, {
-          headers: { Authorization: `Bearer ${accessToken}` },
-        });
+        if (gudangEditId) {
+          const edit = await axios.put(
+            `http://127.0.0.1:8000/api/gudang/${gudangEditId}`,
+            {
+              gudang_nama: gudang_nama,
+            },
+            { headers: { Authorization: `Bearer  ${accessToken}` } }
+          );
+          setGudangEditId(null);
+        } else {
+          const datakirim = {
+            gudang_nama: gudang_nama,
+            jenis_gudang_id: parseInt(jenisGudangPickID),
+          };
+          const add = await axios.post(`http://127.0.0.1:8000/api/gudang`, datakirim, {
+            headers: { Authorization: `Bearer ${accessToken}` },
+          });
+        }
+        setGudangNama("");
         openSuccessSB();
-        setTimeout(() => {
-          // Refresh halaman
-          window.location.reload();
-        }, 2000);
+        getGudang();
       } catch (error) {
         openErrorSB();
         console.error("Terjadi kesalahan saat menambahkan gudang:", error);
@@ -147,7 +168,37 @@ function MasterGudang() {
     />
   );
 
-  const { columns, rows } = dataGudang();
+  const columns = [
+    { Header: "Nama Gudang", accessor: "gudang_nama", width: "12%", align: "left" },
+    { Header: "Jenis Gudang", accessor: "jenis_gudang.jenis_gudang_nama", align: "center" },
+    {
+      Header: "Delete",
+      accessor: "delete",
+      width: "12%",
+      align: "center",
+    },
+    {
+      Header: "Edit",
+      accessor: "edit",
+      width: "12%",
+      align: "center",
+    },
+  ];
+
+  const rows = gudang.map((item) => ({
+    gudang_nama: item.gudang_nama,
+    jenis_gudang: { jenis_gudang_nama: item.jenis_gudang.jenis_gudang_nama },
+    delete: (
+      <IconButton onClick={() => handleDelete(item.gudang_id)} aria-label="delete">
+        <DeleteIcon />
+      </IconButton>
+    ),
+    edit: (
+      <IconButton onClick={() => handleEdit(item.gudang_nama, item.gudang_id)} aria-label="delete">
+        <EditIcon />
+      </IconButton>
+    ),
+  }));
 
   return (
     <DashboardLayout>
@@ -208,6 +259,7 @@ function MasterGudang() {
               entriesPerPage={false}
               showTotalEntries={false}
               noEndBorder
+              canSearch
             />
           </MDBox>
         </MDBox>

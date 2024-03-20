@@ -60,6 +60,7 @@ import DetailBarangPemusnahan from "layouts/pemusnahan-barang/approval-pemusnaha
 import ListTempatBarang from "layouts/penempatan-barang/list-tempat-barang";
 import DetailStokOpname from "layouts/stok-opname/detail-stok-opname";
 import DetailReportPengirimanBarang from "layouts/report/pengiriman-barang/DetailReportPengiriman";
+import DetailBarangByGudang from "layouts/dashboard/dashboard-admin/detailBarangByGudang";
 
 import BillingInformation from "layouts/billing/components/BillingInformation";
 
@@ -182,7 +183,7 @@ export default function App() {
         <Routes>
           {getRoutes(routes)}
           <Route path="/" element={<Navigate to="/authentication/sign-in" />} />
-          <Route path="/detail-barang/:dataId" element={<DetailBarang />} />
+          <Route path="/detail-barang/:dataId/:gudangId?" element={<DetailBarang />} />
           <Route path="/detail/:dataId" element={<DetailData />} />
           <Route path="/detailsurat-jalan/:dataId" element={<DetailSJ />} />
           <Route path="/detailbarang-masuk/:dataId" element={<DetailBarangMasuk />} />
@@ -191,8 +192,9 @@ export default function App() {
           <Route path="/list-detailbarang-masuk/:dataId" element={<ListDetailBarangMasuk />} />
           <Route path="/list-suratjalan-by-hkeluar/:dataId" element={<ListSuratJalanByHkeluar />} />
           <Route path="/detail-pemusnahan-barang/:dataId" element={<DetailBarangPemusnahan />} />
-          <Route path="/list-tempat-barang/:dataId" element={<ListTempatBarang />} />
+          <Route path="/list-tempat-barang/:dataId/:gudangId?" element={<ListTempatBarang />} />
           <Route path="/detail-stok-opname/:dataId" element={<DetailStokOpname />} />
+          <Route path="/detail-barang-by-gudang/:dataId" element={<DetailBarangByGudang />} />
           <Route
             path="/detail-report-pengiriman-barang/:dataId/:dateAwal/:dateAkhir"
             element={<DetailReportPengirimanBarang />}

@@ -7,7 +7,6 @@ import Card from "@mui/material/Card";
 // Material Dashboard 2 React components
 import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
-import MDAlert from "components/MDAlert";
 import MDButton from "components/MDButton";
 import MDSnackbar from "components/MDSnackbar";
 
@@ -16,22 +15,27 @@ import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 
 import Header from "../components/Header";
-import { Autocomplete, Divider, TextField } from "@mui/material";
+import { Autocomplete, Divider, IconButton, TextField } from "@mui/material";
 import axios from "axios";
 import MDInput from "components/MDInput";
 import DataTable from "examples/Tables/DataTable";
 
 // data
-import databarang from "./data/DataCustomer";
 import { useNavigate } from "react-router-dom";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
+import { jwtDecode } from "jwt-decode";
+import { navigateAndClearTokenAdmin } from "navigationUtils/navigationUtilsAdmin";
 
 function MasterCustomer() {
+  const [customer, setCustomer] = useState([]);
   const [customer_nama, setCustomerNama] = useState("");
   const [customer_telepon, setCustomerTelepon] = useState("");
   const [customer_alamat, setCustomerAlamat] = useState("");
   const [gudangs, setGudangs] = useState([]);
   const [gudangPick, setGudangPick] = useState(null);
   const [gudangValue, setGudangValue] = useState("");
+  const [customerIdEdit, setCustomerIdEdit] = useState(null);
 
   // state untuk notification
   const [successSB, setSuccessSB] = useState(false);
@@ -43,38 +47,42 @@ function MasterCustomer() {
   const closeErrorSB = () => setErrorSB(false);
 
   const accessToken = localStorage.getItem("access_token");
-  // let gudang_id;
-  // if (accessToken) {
-  //   // Decode token
-  //   const tokenParts = accessToken.split(".");
-  //   const payload = JSON.parse(atob(tokenParts[1]));
-
-  //   // Ambil nilai gudang_id
-  //   gudang_id = payload.gudang_id;
-  // }
 
   // End API
 
   const addBarang = async () => {
     if (window.confirm("Apakah data sudah benar?")) {
       try {
-        const add = await axios.post(
-          `http://127.0.0.1:8000/api/customer`,
-          {
-            customer_nama: customer_nama,
-            customer_alamat: customer_alamat,
-            customer_telepon: customer_telepon,
-            gudang_id: gudangPick,
-          },
-          {
-            headers: { Authorization: `Bearer ${accessToken}` },
-          }
-        );
+        if (customerIdEdit) {
+          const response = await axios.put(
+            `http://127.0.0.1:8000/api/customer/${customerIdEdit}`,
+            {
+              customer_nama: customer_nama,
+              customer_telepon: customer_telepon,
+              customer_alamat: customer_alamat,
+            },
+            { headers: { Authorization: `Bearer ${accessToken}` } }
+          );
+          setCustomerIdEdit(null);
+        } else {
+          const add = await axios.post(
+            `http://127.0.0.1:8000/api/customer`,
+            {
+              customer_nama: customer_nama,
+              customer_alamat: customer_alamat,
+              customer_telepon: customer_telepon,
+              gudang_id: gudangPick,
+            },
+            {
+              headers: { Authorization: `Bearer ${accessToken}` },
+            }
+          );
+        }
+        setCustomerAlamat("");
+        setCustomerNama("");
+        setCustomerTelepon("");
         openSuccessSB();
-        setTimeout(() => {
-          // Refresh halaman
-          window.location.reload();
-        }, 2000);
+        getCustomer();
         setGudangPick(null);
       } catch (error) {
         openErrorSB();
@@ -95,17 +103,94 @@ function MasterCustomer() {
     }
   };
 
+  const getCustomer = async () => {
+    try {
+      const response = await axios.get("http://127.0.0.1:8000/api/customer/", {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
+
+      setCustomer(response.data);
+    } catch (error) {
+      console.error("Terjadi kesalahan saat mengambil data customer:", error);
+    }
+  };
+
+  const handleDelete = async (customerID) => {
+    if (window.confirm("Anda yakin ingin menghapus barang ini?")) {
+      try {
+        await axios.delete(`http://127.0.0.1:8000/api/customer/${customerID}`, {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        });
+        getCustomer();
+      } catch (error) {
+        console.error("Terjadi kesalahan saat menghapus barang:", error);
+      }
+    }
+  };
+
+  const handleEdit = (customer_nama, customer_telepon, customer_alamat, customer_id) => {
+    setCustomerNama(customer_nama);
+    setCustomerTelepon(customer_telepon);
+    setCustomerAlamat(customer_alamat);
+    setCustomerIdEdit(customer_id);
+  };
+
+  const columns = [
+    { Header: "No. ", accessor: "index", width: "12%", align: "left" },
+    { Header: "Customer Nama", accessor: "customer_nama", align: "center" },
+    { Header: "Customer Telepon", accessor: "customer_telepon", align: "center" },
+    { Header: "Customer Alamat", accessor: "customer_alamat", align: "center" },
+    { Header: "Customer Gudang", accessor: "gudang", align: "center" },
+    {
+      Header: "Delete",
+      accessor: "delete",
+      width: "12%",
+      align: "center",
+    },
+    {
+      Header: "Edit",
+      accessor: "edit",
+      width: "12%",
+      align: "center",
+    },
+  ];
+
+  const rows = customer.map((item, index) => ({
+    index: index + 1,
+    customer_nama: item.customer_nama,
+    customer_telepon: item.customer_telepon,
+    customer_alamat: item.customer_alamat,
+    gudang: item.gudang.gudang_nama,
+    delete: (
+      <IconButton onClick={() => handleDelete(item.customer_id)} aria-label="delete">
+        <DeleteIcon />
+      </IconButton>
+    ),
+    edit: (
+      <IconButton
+        onClick={() =>
+          handleEdit(
+            item.customer_nama,
+            item.customer_telepon,
+            item.customer_alamat,
+            item.customer_id
+          )
+        }
+        aria-label="delete"
+      >
+        <EditIcon />
+      </IconButton>
+    ),
+  }));
   const navigate = useNavigate();
 
   useEffect(() => {
-    const hasToken = !!localStorage.getItem("access_token");
-    if (!hasToken) {
-      navigate("/authentication/sign-in");
-    }
+    navigateAndClearTokenAdmin(navigate);
   }, [navigate]);
 
   useEffect(() => {
     getGudang();
+    getCustomer();
   }, []);
 
   // render Notificartion
@@ -136,8 +221,6 @@ function MasterCustomer() {
       bgWhite
     />
   );
-
-  const { columns, rows } = databarang();
 
   return (
     <DashboardLayout>

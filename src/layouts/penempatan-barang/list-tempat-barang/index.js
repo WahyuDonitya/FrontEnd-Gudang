@@ -47,7 +47,7 @@ import { SignalCellularNullTwoTone } from "@mui/icons-material";
 
 function ListTempatBarang() {
   const [tempatBarang, setTempatBarang] = useState([]);
-  const dataId = useParams();
+  const { dataId, gudangId } = useParams();
   const accessToken = localStorage.getItem("access_token");
   const [posisiAwal, setPosisiAwal] = useState(null);
   const [penempatanId, setPenempatanId] = useState(null);
@@ -68,12 +68,21 @@ function ListTempatBarang() {
   // API
   const getTempatBarang = async () => {
     try {
-      const res = await axios.get(
-        `http://127.0.0.1:8000/api/positioning/get-position-by-barang/${dataId.dataId}`,
-        { headers: { Authorization: `Bearer ${accessToken}` } }
-      );
-      console.log(res.data);
-      setTempatBarang(res.data);
+      if (!gudangId) {
+        const res = await axios.get(
+          `http://127.0.0.1:8000/api/positioning/get-position-by-barang/${dataId}`,
+          { headers: { Authorization: `Bearer ${accessToken}` } }
+        );
+        // console.log(res.data);
+        setTempatBarang(res.data);
+      } else {
+        const res = await axios.get(
+          `http://127.0.0.1:8000/api/positioning/get-position-by-barang/${dataId}/${gudangId}`,
+          { headers: { Authorization: `Bearer ${accessToken}` } }
+        );
+        // console.log(res.data);
+        setTempatBarang(res.data);
+      }
     } catch (error) {
       console.log("Terdapat kesalahan saat mengambil data tempat barang ", error);
     }

@@ -19,6 +19,7 @@ import { Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material
 import MDInput from "components/MDInput";
 import PrintableFormBarangKeluar from "./PrintableFormBarangKeluar";
 import { jwtDecode } from "jwt-decode";
+import { navigateAndClearTokenUser } from "navigationUtils/navigationUtilsUser";
 
 // import projectsTableData from "layouts/tables/data/projectsTableData";
 
@@ -27,7 +28,9 @@ function DetailData() {
   const [headerKeluar, setHeaderlKeluar] = useState([]);
   const { dataId } = useParams();
   const accessToken = localStorage.getItem("access_token");
-  const decode = jwtDecode(accessToken);
+  if (accessToken) {
+    const decode = jwtDecode(accessToken);
+  }
 
   // state untuk notification
   const [successSB, setSuccessSB] = useState(false);
@@ -172,10 +175,7 @@ function DetailData() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const hasToken = !!localStorage.getItem("access_token");
-    if (!hasToken) {
-      navigate("/authentication/sign-in");
-    }
+    navigateAndClearTokenUser(navigate);
   }, [navigate]);
 
   const columns = [

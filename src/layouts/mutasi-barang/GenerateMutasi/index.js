@@ -36,6 +36,8 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { format as dateFnsFormat } from "date-fns";
 import dayjs from "dayjs";
 import MDInput from "components/MDInput";
+import { useNavigate } from "react-router-dom";
+import { navigateAndClearTokenUser } from "navigationUtils/navigationUtilsUser";
 
 function GenerateMutasi() {
   const [gudangs, setGudangs] = useState([]);
@@ -276,6 +278,12 @@ function GenerateMutasi() {
     getBarang();
     getSupplier();
   }, []);
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    navigateAndClearTokenUser(navigate);
+  }, [navigate]);
 
   // Untuk tes hasil dari picker
   // useEffect(() => {

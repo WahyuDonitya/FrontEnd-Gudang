@@ -25,7 +25,7 @@ import MDTypography from "components/MDTypography";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import DataTable from "examples/Tables/DataTable";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import MDButton from "components/MDButton";
@@ -34,6 +34,7 @@ import PrintableFormSJTrans from "./PrintableFormSJTrans";
 import { Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
 import MDInput from "components/MDInput";
 import { jwtDecode } from "jwt-decode";
+import { navigateAndClearTokenUser } from "navigationUtils/navigationUtilsUser";
 // import projectsTableData from "layouts/tables/data/projectsTableData";
 
 function DetailSJTrans() {
@@ -75,7 +76,10 @@ function DetailSJTrans() {
   // End Handle modal
 
   const accessToken = localStorage.getItem("access_token");
-  const decode = jwtDecode(accessToken);
+  let decode = null;
+  if (accessToken) {
+    decode = jwtDecode(accessToken);
+  }
 
   // API
 
@@ -195,6 +199,12 @@ function DetailSJTrans() {
   useEffect(() => {
     getId();
   }, []);
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    navigateAndClearTokenUser(navigate);
+  }, [navigate]);
 
   const columns = [
     {

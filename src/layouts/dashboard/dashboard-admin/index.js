@@ -13,14 +13,16 @@ import ComplexStatisticsCard from "examples/Cards/StatisticsCards/ComplexStatist
 
 // Dashboard components
 import Projects from "layouts/dashboard/components/Projects";
+import TableStokAdmin from "../components/TableStokAdmin";
 import OrdersOverview from "layouts/dashboard/components/OrdersOverview";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { navigateAndClearTokenUser } from "navigationUtils/navigationUtilsUser";
+import { jwtDecode } from "jwt-decode";
 
-function Dashboard() {
+function DashboardAdmin() {
   const accessToken = localStorage.getItem("access_token");
+  const decode = jwtDecode(accessToken);
   const [countHkeluar, setCountHkeluar] = useState(0);
   const [countSuratJalan, setCountSuratJalan] = useState(0);
   const [countBarangMasuk, setCountBarangMasuk] = useState(0);
@@ -93,19 +95,25 @@ function Dashboard() {
   // end api
 
   // code dibawah untuk melakukan pengecekan token
-
   const navigate = useNavigate();
 
   useEffect(() => {
-    navigateAndClearTokenUser(navigate);
-  }, [navigate]);
+    const navigateUser = () => {
+      const hasToken = !!localStorage.getItem("access_token");
+      if (!hasToken || (hasToken && decode.role_id !== 3)) {
+        navigate("/authentication/sign-in");
+      }
+    };
+
+    navigateUser();
+  }, [decode.role_id, navigate]);
 
   // const { sales, tasks } = reportsLineChartData;
   return (
     <DashboardLayout>
       <DashboardNavbar />
       <MDBox py={3}>
-        <Grid container spacing={3}>
+        {/* <Grid container spacing={3}>
           <Grid item xs={12} md={6} lg={3}>
             <MDBox mb={1.5}>
               <ComplexStatisticsCard
@@ -165,7 +173,7 @@ function Dashboard() {
               />
             </MDBox>
           </Grid>
-        </Grid>
+        </Grid> */}
         {/* <MDBox mt={4.5}>
           <Grid container spacing={3}>
             <Grid item xs={12} md={6} lg={4}>
@@ -209,12 +217,12 @@ function Dashboard() {
         </MDBox> */}
         <MDBox>
           <Grid container spacing={3}>
-            <Grid item xs={12} md={6} lg={8}>
-              <Projects />
+            <Grid item xs={12} md={6} lg={12}>
+              <TableStokAdmin />
             </Grid>
-            <Grid item xs={12} md={6} lg={4}>
+            {/* <Grid item xs={12} md={6} lg={4}>
               <OrdersOverview />
-            </Grid>
+            </Grid> */}
           </Grid>
         </MDBox>
       </MDBox>
@@ -222,4 +230,4 @@ function Dashboard() {
   );
 }
 
-export default Dashboard;
+export default DashboardAdmin;

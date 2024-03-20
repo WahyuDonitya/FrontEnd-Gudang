@@ -34,6 +34,8 @@ import axios from "axios";
 import MDInput from "components/MDInput";
 import DataTable from "examples/Tables/DataTable";
 import { useNavigate } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
+import { navigateAndClearTokenAdmin } from "navigationUtils/navigationUtilsAdmin";
 
 // data
 // import dataGudang from "./data/DataGudang";
@@ -49,6 +51,7 @@ function MasterPengguna() {
   const [role, setRole] = useState([]);
   const [rolePick, setRolePick] = useState(null);
   const [errorMessages, setErrorMessages] = useState({});
+  const navigate = useNavigate();
 
   // state untuk notification
   const [successSB, setSuccessSB] = useState(false);
@@ -60,15 +63,7 @@ function MasterPengguna() {
   const closeErrorSB = () => setErrorSB(false);
 
   const accessToken = localStorage.getItem("access_token");
-  let gudang_id;
-  if (accessToken) {
-    // Decode token
-    const tokenParts = accessToken.split(".");
-    const payload = JSON.parse(atob(tokenParts[1]));
 
-    // Ambil nilai gudang_id
-    gudang_id = payload.gudang_id;
-  }
   // API
   const getAllGudang = async () => {
     try {
@@ -97,14 +92,10 @@ function MasterPengguna() {
     getAllRole();
   }, []);
 
-  const navigate = useNavigate();
-
   useEffect(() => {
-    const hasToken = !!localStorage.getItem("access_token");
-    if (!hasToken) {
-      navigate("/authentication/sign-in");
-    }
+    navigateAndClearTokenAdmin(navigate);
   }, [navigate]);
+
   // End API
 
   const addBarang = async () => {

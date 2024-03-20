@@ -36,6 +36,8 @@ import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { format as dateFnsFormat } from "date-fns";
 import dayjs from "dayjs";
+import { useNavigate } from "react-router-dom";
+import { navigateAndClearTokenUser } from "navigationUtils/navigationUtilsUser";
 
 function BarangMasuk() {
   const [gudangs, setGudangs] = useState([]);
@@ -216,6 +218,12 @@ function BarangMasuk() {
     getBarang();
     getSupplier();
   }, []);
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    navigateAndClearTokenUser(navigate);
+  }, [navigate]);
 
   // Untuk tes hasil dari picker
   // useEffect(() => {

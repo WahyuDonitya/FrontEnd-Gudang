@@ -34,6 +34,7 @@ import PrintableformSJ from "./PrintableformSJ";
 import { Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
 import MDInput from "components/MDInput";
 import { jwtDecode } from "jwt-decode";
+import { navigateAndClearTokenUser } from "navigationUtils/navigationUtilsUser";
 // import projectsTableData from "layouts/tables/data/projectsTableData";
 
 function DetailSJ() {
@@ -75,7 +76,11 @@ function DetailSJ() {
   // End Handle modal
 
   const accessToken = localStorage.getItem("access_token");
-  const decode = jwtDecode(accessToken);
+  let decode = null;
+  if (accessToken) {
+    decode = jwtDecode(accessToken);
+  }
+
   // API
 
   const getId = async () => {
@@ -199,10 +204,7 @@ function DetailSJ() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const hasToken = !!localStorage.getItem("access_token");
-    if (!hasToken) {
-      navigate("/authentication/sign-in");
-    }
+    navigateAndClearTokenUser(navigate);
   }, [navigate]);
 
   const columns = [

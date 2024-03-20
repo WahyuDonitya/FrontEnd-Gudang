@@ -77,7 +77,10 @@ function DetailBarangMasuk() {
   // end Handle modal
 
   const accessToken = localStorage.getItem("access_token");
-  const decode = jwtDecode(accessToken);
+  let decode = null;
+  if (accessToken) {
+    decode = jwtDecode(accessToken);
+  }
   let tahupolos = false;
 
   // API

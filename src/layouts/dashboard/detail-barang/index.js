@@ -53,7 +53,8 @@ function DetailBarang() {
   const [positionAvailable, setPositionAvailable] = useState([]);
   const [positionDipilih, setPositionDipilih] = useState(null);
   const [detailBarangId, setDetailBarangId] = useState(null);
-  const dataId = useParams();
+  const { dataId } = useParams();
+  const { gudangId } = useParams();
   const accessToken = localStorage.getItem("access_token");
 
   // state untuk notification
@@ -96,15 +97,27 @@ function DetailBarang() {
 
   // API
   const getDetailBarang = async () => {
-    const response = await axios.get(
-      `http://127.0.0.1:8000/api/detailbarang/get-detail-by-barang-id/${dataId.dataId}`,
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      }
-    );
-    setDetailBarang(response.data);
+    if (!gudangId) {
+      const response = await axios.get(
+        `http://127.0.0.1:8000/api/detailbarang/get-detail-by-barang-id/${dataId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      setDetailBarang(response.data);
+    } else {
+      const response = await axios.get(
+        `http://127.0.0.1:8000/api/detailbarang/get-detail-by-barang-id/${dataId}/${gudangId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      setDetailBarang(response.data);
+    }
   };
 
   const getPositionAvailable = async () => {
@@ -180,73 +193,132 @@ function DetailBarang() {
     }
   };
   // End Function
+  let columns = null;
+  let rows = null;
 
-  const columns = [
-    { Header: "No . ", accessor: "nomor", width: "3%", align: "center" },
-    { Header: "Batch Barang", accessor: "detailbarang_batch", align: "center" },
-    { Header: "Exp Date", accessor: "detailbarang_expdate", align: "center" },
-    { Header: "Jumlah Barang saat datang", accessor: "detailbarang_stokmasuk", align: "center" },
-    { Header: "Stok Barang", accessor: "detailbarang_stok", align: "center" },
-    {
-      Header: "Jumlah yang butuh tempat",
-      accessor: "detailbarang_jumlahplacement",
-      align: "center",
-    },
-    { Header: "Status", accessor: "status", align: "center" },
-    { Header: "Penempatan", accessor: "action", align: "center" },
-    { Header: "Cek Tempat", accessor: "cek", align: "center" },
-  ];
+  if (!gudangId) {
+    columns = [
+      { Header: "No . ", accessor: "nomor", width: "3%", align: "center" },
+      { Header: "Batch Barang", accessor: "detailbarang_batch", align: "center" },
+      { Header: "Exp Date", accessor: "detailbarang_expdate", align: "center" },
+      { Header: "Jumlah Barang saat datang", accessor: "detailbarang_stokmasuk", align: "center" },
+      { Header: "Stok Barang", accessor: "detailbarang_stok", align: "center" },
+      {
+        Header: "Jumlah yang butuh tempat",
+        accessor: "detailbarang_jumlahplacement",
+        align: "center",
+      },
+      { Header: "Status", accessor: "status", align: "center" },
+      { Header: "Penempatan", accessor: "action", align: "center" },
+      { Header: "Cek Tempat", accessor: "cek", align: "center" },
+    ];
 
-  const rows = detailBarang.map((item, index) => {
-    const isExpired = dayjs(item.detailbarang_expdate).isBefore(today);
-    let statusPlacement = false;
-    if (item.detailbarang_jumlahplacement > 0) {
-      statusPlacement = true;
-    }
+    rows = detailBarang.map((item, index) => {
+      const isExpired = dayjs(item.detailbarang_expdate).isBefore(today);
+      let statusPlacement = false;
+      if (item.detailbarang_jumlahplacement > 0) {
+        statusPlacement = true;
+      }
 
-    const openRejectModalHandler = () => {
-      setOpenRejectModal(true);
-      setJumlahDapatPlacement(item.detailbarang_jumlahplacement);
-      setDetailBarangId(item.detailbarang_id);
-    };
+      const openRejectModalHandler = () => {
+        setOpenRejectModal(true);
+        setJumlahDapatPlacement(item.detailbarang_jumlahplacement);
+        setDetailBarangId(item.detailbarang_id);
+      };
 
-    return {
-      nomor: index + 1,
-      detailbarang_batch: item.detailbarang_batch,
-      detailbarang_expdate: dayjs(item.detailbarang_expdate).format("DD-MM-YYYY"),
-      detailbarang_stokmasuk: item.detailbarang_stokmasuk,
-      detailbarang_jumlahplacement: item.detailbarang_jumlahplacement,
-      detailbarang_stok: item.detailbarang_stok,
-      status: isExpired ? (
-        <MDBox ml={-1}>
-          <MDBadge badgeContent="Expired" color="warning" variant="gradient" size="sm" />
-        </MDBox>
-      ) : (
-        <MDBox ml={-1}>
-          <MDBadge badgeContent="Not Expired" color="success" variant="gradient" size="sm" />
-        </MDBox>
-      ),
-      action: statusPlacement ? (
-        <MDTypography
-          variant="caption"
-          color="text"
-          fontWeight="medium"
-          onClick={openRejectModalHandler}
-        >
-          Action
-        </MDTypography>
-      ) : (
-        "-"
-      ),
-      cek: (
-        <Link to={`/list-tempat-barang/${item.detailbarang_id}`}>
-          <MDTypography variant="caption" color="text" fontWeight="medium">
-            Detail
+      return {
+        nomor: index + 1,
+        detailbarang_batch: item.detailbarang_batch,
+        detailbarang_expdate: dayjs(item.detailbarang_expdate).format("DD-MM-YYYY"),
+        detailbarang_stokmasuk: item.detailbarang_stokmasuk,
+        detailbarang_jumlahplacement: item.detailbarang_jumlahplacement,
+        detailbarang_stok: item.detailbarang_stok,
+        status: isExpired ? (
+          <MDBox ml={-1}>
+            <MDBadge badgeContent="Expired" color="warning" variant="gradient" size="sm" />
+          </MDBox>
+        ) : (
+          <MDBox ml={-1}>
+            <MDBadge badgeContent="Not Expired" color="success" variant="gradient" size="sm" />
+          </MDBox>
+        ),
+        action: statusPlacement ? (
+          <MDTypography
+            variant="caption"
+            color="text"
+            fontWeight="medium"
+            onClick={openRejectModalHandler}
+          >
+            Action
           </MDTypography>
-        </Link>
-      ),
-    };
-  });
+        ) : (
+          "-"
+        ),
+        cek: (
+          <Link to={`/list-tempat-barang/${item.detailbarang_id}`}>
+            <MDTypography variant="caption" color="text" fontWeight="medium">
+              Detail
+            </MDTypography>
+          </Link>
+        ),
+      };
+    });
+  } else {
+    columns = [
+      { Header: "No . ", accessor: "nomor", width: "3%", align: "center" },
+      { Header: "Batch Barang", accessor: "detailbarang_batch", align: "center" },
+      { Header: "Exp Date", accessor: "detailbarang_expdate", align: "center" },
+      { Header: "Jumlah Barang saat datang", accessor: "detailbarang_stokmasuk", align: "center" },
+      { Header: "Stok Barang", accessor: "detailbarang_stok", align: "center" },
+      {
+        Header: "Jumlah yang butuh tempat",
+        accessor: "detailbarang_jumlahplacement",
+        align: "center",
+      },
+      { Header: "Status", accessor: "status", align: "center" },
+      { Header: "Cek Tempat", accessor: "cek", align: "center" },
+    ];
+
+    rows = detailBarang.map((item, index) => {
+      const isExpired = dayjs(item.detailbarang_expdate).isBefore(today);
+      let statusPlacement = false;
+      if (item.detailbarang_jumlahplacement > 0) {
+        statusPlacement = true;
+      }
+
+      const openRejectModalHandler = () => {
+        setOpenRejectModal(true);
+        setJumlahDapatPlacement(item.detailbarang_jumlahplacement);
+        setDetailBarangId(item.detailbarang_id);
+      };
+
+      return {
+        nomor: index + 1,
+        detailbarang_batch: item.detailbarang_batch,
+        detailbarang_expdate: dayjs(item.detailbarang_expdate).format("DD-MM-YYYY"),
+        detailbarang_stokmasuk: item.detailbarang_stokmasuk,
+        detailbarang_jumlahplacement: item.detailbarang_jumlahplacement,
+        detailbarang_stok: item.detailbarang_stok,
+        status: isExpired ? (
+          <MDBox ml={-1}>
+            <MDBadge badgeContent="Expired" color="warning" variant="gradient" size="sm" />
+          </MDBox>
+        ) : (
+          <MDBox ml={-1}>
+            <MDBadge badgeContent="Not Expired" color="success" variant="gradient" size="sm" />
+          </MDBox>
+        ),
+
+        cek: (
+          <Link to={`/list-tempat-barang/${item.detailbarang_id}/${gudangId}`}>
+            <MDTypography variant="caption" color="text" fontWeight="medium">
+              Detail
+            </MDTypography>
+          </Link>
+        ),
+      };
+    });
+  }
 
   return (
     <DashboardLayout>

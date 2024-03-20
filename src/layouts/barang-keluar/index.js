@@ -37,6 +37,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { format as dateFnsFormat } from "date-fns";
 import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
+import { navigateAndClearTokenUser } from "navigationUtils/navigationUtilsUser";
 
 function BarangKeluar() {
   // State
@@ -247,10 +248,7 @@ function BarangKeluar() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const hasToken = !!localStorage.getItem("access_token");
-    if (!hasToken) {
-      navigate("/authentication/sign-in");
-    }
+    navigateAndClearTokenUser(navigate);
   }, [navigate]);
 
   // Untuk tes hasil dari picker

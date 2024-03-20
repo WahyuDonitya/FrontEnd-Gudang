@@ -51,6 +51,12 @@ export default function data() {
         width: "12%",
         align: "center",
       },
+      {
+        Header: "Edit",
+        accessor: "edit",
+        width: "12%",
+        align: "center",
+      },
     ],
 
     rows: barang.map((item) => ({
