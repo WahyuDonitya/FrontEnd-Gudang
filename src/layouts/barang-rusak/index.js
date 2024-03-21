@@ -14,6 +14,8 @@ import MDSnackbar from "components/MDSnackbar";
 // Material Dashboard 2 React example components
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
+// import { makeStyles } from "@mui/styles";
+// import { makeStyles } from "@mui/material";
 import Footer from "examples/Footer";
 
 import Header from "./components/Header";
@@ -24,38 +26,43 @@ import {
   TableBody,
   TableCell,
   TableContainer,
-  TableHead,
   TableRow,
   TextField,
   Paper,
   IconButton,
   Icon,
+  Button,
 } from "@mui/material";
 import axios from "axios";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { format as dateFnsFormat } from "date-fns";
 import dayjs from "dayjs";
+import MDInput from "components/MDInput";
 import { useNavigate } from "react-router-dom";
 import { navigateAndClearTokenUser } from "navigationUtils/navigationUtilsUser";
 
-function BarangMasuk() {
-  const [gudangs, setGudangs] = useState([]);
-  const [suppliers, setSuppliers] = useState([]);
+// const useStyles = makeStyles((theme) => ({
+//   input: {
+//     display: "none",
+//   },
+// }));
+
+function GenerateBarangRusak() {
   const [barangs, setBarangs] = useState([]);
-  const [gudangPick, setGudangPick] = useState(null);
-  const [supplierPick, setSupplierPick] = useState(null);
-  const [datePicker, setdatePicker] = useState(null);
   const [batch, setBatch] = useState("");
-  const [notaSupplier, setNotaSupplier] = useState("");
-  const [barangRusak, setBarangRusak] = useState(0);
+  const [detailBarang, setDetailBarang] = useState([]);
+  const [detailBarangStok, setDetailBarangStok] = useState(null);
+  const [detailBarangByBatch, setDetailBarangByBatch] = useState([]);
+  const [catatan, setCatatan] = useState("");
+  const [pelaku, setPelaku] = useState("");
+  const [selectedFile, setSelectedFile] = useState(null);
 
   // ini untuk inputan dynamic table
   const [inputBarangId, setInputBarangId] = useState(null);
   const [inputBarangNama, setInputBarangNama] = useState(null);
   const [inputBarangStok, setInputBarangStok] = useState(null);
   const [inputMasukJumlah, setinputMasukJumlah] = useState("");
-  const [hargakeluar, setHargaKeluar] = useState("");
 
   // ini untuk dynamic table
   const [data, setData] = useState([]);
@@ -74,45 +81,8 @@ function BarangMasuk() {
   const [isInputInvalid, setIsInputInvalid] = useState(false);
 
   const accessToken = localStorage.getItem("access_token");
-  let gudang_id;
-  if (accessToken) {
-    // Decode token
-    const tokenParts = accessToken.split(".");
-    const payload = JSON.parse(atob(tokenParts[1]));
-
-    // Ambil nilai gudang_id
-    gudang_id = payload.gudang_id;
-  }
 
   // API
-
-  // const getGudang = async () => {
-  //   try {
-  //     const response = await axios.get("http://127.0.0.1:8000/api/gudang/", {
-  //       headers: {
-  //         Authorization: `Bearer ${accessToken}`,
-  //       },
-  //     });
-  //     // console.log("Data Customer:", response.data);
-  //     setGudangs(response.data);
-  //   } catch (error) {
-  //     console.error("Terjadi kesalahan saat mengambil data Gudang:", error);
-  //   }
-  // };
-
-  const getSupplier = async () => {
-    try {
-      const response = await axios.get("http://127.0.0.1:8000/api/supplier/", {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
-      // console.log("Data Customer:", response.data);
-      setSuppliers(response.data);
-    } catch (error) {
-      console.error("Terjadi kesalahan saat mengambil data Gudang:", error);
-    }
-  };
 
   const getBarang = async () => {
     try {
@@ -129,26 +99,35 @@ function BarangMasuk() {
     }
   };
 
-  const addBarangMasuk = async () => {
+  const addBarangRusak = async () => {
     if (window.confirm("Apakah data yang anda masukkan sudah benar?")) {
       try {
         // console.log("nota supplier", notaSupplier);
         const dataKirim = {
-          hmasuk_notasupplier: notaSupplier,
-          supplier_id: parseInt(supplierPick),
-          barang_masuk: dataToSubmit,
+          hbarangrusak_kronologi: catatan,
+          hbarangrusak_pelaku: pelaku,
+          // file_foto: selectedFile,
+          detailrusak: dataToSubmit,
         };
 
-        const response = await axios.post("http://127.0.0.1:8000/api/detailbarang/add", dataKirim, {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        });
+        console.log("hasil data kirim ", dataKirim);
+        const response = await axios.post(
+          "http://127.0.0.1:8000/api/barang-rusak/add-barang-rusak",
+          dataKirim,
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
         openSuccessSB();
-        console.log("berhasil input");
+        console.log(response);
         setData([]);
-        setDataToSubmit([]);
-        setNotaSupplier("");
+        setCatatan("");
+        setPelaku("");
+        setBarangs([]);
+        setinputMasukJumlah("");
+        setBatch("");
       } catch (error) {
         openErrorSB();
         console.error("Terjadi kesalahan saat mengambil input data Barang keluar:", error);
@@ -156,40 +135,96 @@ function BarangMasuk() {
     }
   };
 
+  const handleChangeBarang = async (barangID) => {
+    const response = await axios.get(
+      `http://127.0.0.1:8000/api/detailbarang/get-detail-by-barang-id/${barangID}`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    setDetailBarang(response.data);
+  };
+
+  const handleSetBatch = async (batchlok) => {
+    // console.log("hasil Batch", batchlok);
+    // console.log("hasil gudang", gudangAwal);
+    // console.log("hasil barang", inputBarangId);
+
+    try {
+      const response = await axios.get(
+        `http://127.0.0.1:8000/api/detailbarang/get-detail-barang-by-batch/${batchlok}/${inputBarangId}/1`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      console.log("Data Detail barang:", response.data);
+      setDetailBarangStok(response.data.detailbarang_stok);
+      setDetailBarangByBatch(response.data);
+    } catch (error) {
+      console.error("Terjadi kesalahan saat mengambil data Gudang:", error);
+    }
+  };
+
   // End API
 
   const handleAdd = () => {
-    const barangId = parseInt(inputBarangId);
+    if (isInputInvalid) {
+      alert("Tidak bisa melakukan input row");
+    } else {
+      const barangId = parseInt(inputBarangId);
 
-    const newBarangMasuk = {
-      gudang_id: parseInt(gudang_id),
-      barang_id: parseInt(barangId),
-      detailbarang_stok: parseInt(inputMasukJumlah),
-      detailbarang_batch: batch,
-      detailbarang_expdate: datePicker,
-      detailbarang_jumlahrusakmasuk: barangRusak,
-    };
-    dataToSubmit.push(newBarangMasuk);
+      const newBarangMasuk = {
+        barang_id: parseInt(barangId),
+        detailbarang_jumlahrusak: parseInt(inputMasukJumlah),
+        detailbarang_batch: batch,
+        detailbarang_id: detailBarangByBatch.detailbarang_id,
+        file_foto: selectedFile,
+      };
+      dataToSubmit.push(newBarangMasuk);
+      console.log(dataToSubmit);
 
-    // ini untuk memunculkan ke dynamic table
-    const newData = {
-      inputBarangNama,
-      detailbarang_stok: inputMasukJumlah.toString(),
-      detailbarang_batch: batch,
-      detailbarang_expdate: datePicker,
-      jumlahrusak: barangRusak.toString(),
-    };
+      // console.log("hasil dari data to submit : ", dataToSubmit);
 
-    setData([...data, newData]);
+      // ini untuk memunculkan ke dynamic table
+      const newData = {
+        inputBarangNama,
+        detailbarang_stok: inputMasukJumlah.toString(),
+        detailbarang_batch: batch,
+      };
 
-    setInputBarangId(null);
-    setInputBarangNama(null);
-    setInputBarangStok(null);
-    setBarangRusak(0);
-    setinputMasukJumlah("");
-    setBatch("");
-    setdatePicker(null);
-    console.log(dataToSubmit);
+      setData([...data, newData]);
+
+      // Membuat input file baru
+      const newFileInput = document.createElement("input");
+      newFileInput.type = "file";
+      newFileInput.id = "contained-button-file";
+      newFileInput.onchange = handleFileChange;
+
+      // Hapus input file yang lama dari DOM
+      const oldFileInput = document.getElementById("contained-button-file");
+      oldFileInput.parentNode.replaceChild(newFileInput, oldFileInput);
+
+      setInputBarangId(null);
+      setInputBarangNama(null);
+      setInputBarangStok(null);
+      setSelectedFile(null);
+      setinputMasukJumlah("");
+      setBatch("");
+      console.log(dataToSubmit);
+    }
+  };
+
+  const convertImageToBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result.split(",")[1]);
+      reader.onerror = (error) => reject(error);
+      reader.readAsDataURL(file);
+    });
   };
 
   const handleDelete = (index) => {
@@ -207,20 +242,26 @@ function BarangMasuk() {
     console.log(dataToSubmit);
   };
 
-  const handleCustomerInputChange = (event, newValue) => {
-    // Pemisahan string berdasarkan tanda kurung buka dan tutup
-    const parts = newValue.split("(");
-    if (parts.length > 1) {
-      // Mengambil ID yang ada di dalam tanda kurung tutup
-      const id = parts[1].replace(")", "");
-      setCustomerPick(id);
+  const handleStokChange = (newValue) => {
+    const numericValue = parseInt(newValue);
+    // console.log(detailBarangStok);
+    if (numericValue > detailBarangStok) {
+      alert(`Barang yang anda pilih hanya memiliki stok : ${detailBarangStok}`);
+      setIsInputInvalid(true);
+    } else {
+      setIsInputInvalid(false);
+      setinputMasukJumlah(numericValue);
     }
+
+    // if (isInputInvalid == true) {
+    //   setinputMasukJumlah((prev) => {
+    //     prev;
+    //   });
+    // }
   };
 
   useEffect(() => {
-    // getGudang();
     getBarang();
-    getSupplier();
   }, []);
 
   const navigate = useNavigate();
@@ -264,6 +305,26 @@ function BarangMasuk() {
     />
   );
 
+  // INI UNTUK GAMBAR
+
+  const handleFileChange = async (event) => {
+    // setSelectedFile(event.target.files[0]);
+    // console.log(event.target.files[0]);
+    const file = event.target.files[0];
+    if (file) {
+      const base64Image = await convertImageToBase64(file);
+      setSelectedFile(base64Image);
+      // Kirim base64Image ke backend
+      // Misalnya: sendDataToBackend(base64Image);
+    }
+  };
+
+  const handleUpload = () => {
+    // Lakukan pengiriman file ke server di sini
+    console.log("File yang dipilih:", selectedFile);
+  };
+  // END GAMBAR
+
   return (
     <DashboardLayout>
       <DashboardNavbar />
@@ -278,64 +339,42 @@ function BarangMasuk() {
           </Grid>
         </MDBox>
         <MDBox pt={2} px={2} lineHeight={1.25}>
-          <MDTypography variant="h6" fontWeight="medium">
-            Barang Masuk Form
-          </MDTypography>
           <Grid container pt={3} spacing={7}>
-            {/* <Grid item xs={6}>
-              {Array.isArray(gudangs) && gudangs.length > 0 ? (
-                <Autocomplete
-                  disablePortal
-                  id="combo-box-demo"
-                  options={gudangs}
-                  getOptionLabel={(option) =>
-                    `${option.gudang_nama} (${option.jenis_gudang.jenis_gudang_nama})`
-                  }
-                  fullWidth
-                  renderInput={(params) => <TextField {...params} label="Gudang" />}
-                  onChange={(event, newValue) => {
-                    // console.log(newValue.gudang_id);
-                    setGudangPick(newValue.gudang_id);
-                  }}
-                />
-              ) : (
-                <p>Loading customer data...</p>
-              )}
-            </Grid> */}
-            {/* <Grid item xs={12}>
-              {gudang_id === 1 &&
-                (Array.isArray(suppliers) && suppliers.length > 0 ? (
-                  <Autocomplete
-                    disablePortal
-                    id="combo-box-demo"
-                    options={suppliers}
-                    getOptionLabel={(option) => option.supplier_name}
-                    onChange={(event, newValue) => {
-                      if (newValue) {
-                        setSupplierPick(newValue.supplier_id);
-                      } else {
-                        setSupplierPick(null);
-                      }
-                    }}
-                    fullWidth
-                    renderInput={(params) => <TextField {...params} label="Supplier" />}
-                  />
-                ) : (
-                  <p>Loading customer data...</p>
-                ))}
-            </Grid> */}
+            {/* Untuk Autocomplete nama barang */}
 
-            <Grid item xs={12}>
-              <TextField
-                label="Nota Kediri"
-                fullWidth
-                value={notaSupplier}
-                onChange={(e) => setNotaSupplier(e.target.value)}
-              />
-            </Grid>
+            {/* Untuk catatan kirim Mutasi */}
             <Grid item xs={12}>
               <MDTypography variant="h6" fontWeight="medium">
-                List Barang Masuk
+                Ceritakan Kejadian
+              </MDTypography>
+              <br />
+              <MDInput
+                label="Kronologi"
+                fullWidth
+                type="text"
+                value={catatan}
+                onChange={(e) => {
+                  setCatatan(e.target.value);
+                }}
+              />
+            </Grid>
+
+            {/* Untuk pelaku */}
+            <Grid item xs={12}>
+              <MDInput
+                label="Penanggung Jawab"
+                fullWidth
+                type="text"
+                value={pelaku}
+                onChange={(e) => {
+                  setPelaku(e.target.value);
+                }}
+              />
+            </Grid>
+
+            <Grid item xs={6}>
+              <MDTypography variant="h6" fontWeight="medium">
+                Pilih Barang Rusak
               </MDTypography>
               <br />
               {Array.isArray(barangs) && barangs.length > 0 ? (
@@ -349,7 +388,9 @@ function BarangMasuk() {
                       setInputBarangId(newValue.barang_id);
                       setInputBarangNama(newValue.barang_nama);
                       setInputBarangStok(newValue.barang_stok);
+                      handleChangeBarang(newValue.barang_id);
                     } else {
+                      // Mengosongkan input ketika pilihan dihapus.
                       setInputBarangId(null);
                       setInputBarangNama(null);
                       setInputBarangStok(null);
@@ -362,47 +403,72 @@ function BarangMasuk() {
                 <p>Data Customer tidak ditemukan...</p>
               )}
             </Grid>
+
+            {/* Untuk Autocomplete Nomor batch barang */}
             <Grid item xs={6}>
-              <TextField
-                label="Jumlah barang masuk"
+              <br />
+              <br />
+              {Array.isArray(detailBarang) && detailBarang.length > 0 ? (
+                <Autocomplete
+                  disablePortal
+                  id="combo-box-demo"
+                  options={detailBarang}
+                  getOptionLabel={(option) => `${option.detailbarang_batch}`}
+                  onChange={(event, newValue) => {
+                    if (newValue) {
+                      setBatch(newValue.detailbarang_batch);
+                      handleSetBatch(newValue.detailbarang_batch);
+                    } else {
+                      setDetailBarangStok(null);
+                      setBatch("");
+                    }
+                  }}
+                  fullWidth
+                  renderInput={(params) => <TextField {...params} label="Batch Barang" />}
+                />
+              ) : (
+                <p>Data Batch tidak ditemukan...</p>
+              )}
+            </Grid>
+
+            {/* untuk Jumlah barang yang akan dimutasi */}
+            <Grid item xs={12}>
+              <MDInput
+                label="Jumlah barang rusak"
                 fullWidth
                 type="number"
                 value={inputMasukJumlah}
-                onChange={(e) => setinputMasukJumlah(e.target.value)}
+                onChange={(e) => {
+                  handleStokChange(e.target.value);
+                  // setinputMasukJumlah(e.target.value);
+                }}
+                error={isInputInvalid}
+                helperText={isInputInvalid ? "Jumlah melebihi stok yang tersedia" : ""}
+                sx={{
+                  "& .MuiInput-root": { borderColor: isInputInvalid ? "red" : "" },
+                }}
                 inputProps={{ min: 0 }}
               />
             </Grid>
-            <Grid item xs={6}>
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DatePicker
-                  fullWidth
-                  sx={{ width: "100%" }}
-                  value={datePicker}
-                  onChange={(newValue) => {
-                    // Menggunakan format dayjs untuk mengonversi ke "YYYY-MM-DD"
-                    const formattedDate = newValue ? dayjs(newValue).format("YYYY-MM-DD") : "";
-                    setdatePicker(formattedDate);
-                    const formattedDate2 = newValue ? dayjs(newValue).format("DDMMYYYY") : "";
-                    setBatch(formattedDate2);
-                  }}
-                />
-              </LocalizationProvider>
-            </Grid>
+
             <Grid item xs={12}>
-              <TextField
-                label="Jumlah barang Rusak"
-                fullWidth
-                type="number"
-                value={barangRusak}
-                onChange={(e) => setBarangRusak(e.target.value)}
-                inputProps={{ min: 0 }}
-              />
+              <input id="contained-button-file" type="file" onChange={handleFileChange} />
+              {selectedFile && <div>File yang dipilih: {selectedFile.name}</div>}
             </Grid>
+            {/* <Grid item xs={12}>
+              <Button variant="contained" color="primary" onClick={handleUpload}>
+                Upload
+              </Button>
+            </Grid> */}
+
+            {/* Button Add */}
             <Grid item xs={12}>
               <MDButton variant="gradient" color="info" fullWidth onClick={handleAdd}>
                 Add Row
               </MDButton>
             </Grid>
+
+            {/* Untuk data table */}
             <Grid item xs={12}>
               {data.length > 0 ? (
                 <TableContainer component={Paper}>
@@ -414,7 +480,6 @@ function BarangMasuk() {
                           <TableCell>{item.detailbarang_stok}</TableCell>
                           <TableCell>{item.detailbarang_batch}</TableCell>
                           <TableCell>{item.detailbarang_expdate}</TableCell>
-                          <TableCell>{item.jumlahrusak}</TableCell>
                           <TableCell>
                             <IconButton
                               aria-label="delete"
@@ -433,13 +498,17 @@ function BarangMasuk() {
                 <p>No data available</p>
               )}
             </Grid>
+
+            {/* Untuk Add data ke DB */}
             <Grid item xs={12}>
-              <MDButton variant="gradient" color="success" fullWidth onClick={addBarangMasuk}>
+              <MDButton variant="gradient" color="success" fullWidth onClick={addBarangRusak}>
                 Add data
               </MDButton>
             </Grid>
           </Grid>
         </MDBox>
+
+        {/* Untuk Snackbar */}
         <MDBox p={2}>
           <Grid container spacing={6}>
             {renderSuccessSB}
@@ -451,4 +520,4 @@ function BarangMasuk() {
   );
 }
 
-export default BarangMasuk;
+export default GenerateBarangRusak;

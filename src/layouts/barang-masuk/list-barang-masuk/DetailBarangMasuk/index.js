@@ -187,6 +187,7 @@ function ListDetailBarangMasuk() {
     { Header: "Exp Barang", accessor: "detailbarang_expdate", align: "center" },
     { Header: "Batch Barang", accessor: "detailbarang_batch", align: "center" },
     { Header: "Jumlah Barang Masuk", accessor: "detailbarang_stokmasuk", align: "center" },
+    { Header: "Jumlah Barang Rusak", accessor: "detailbarang_jumlahrusakmasuk", align: "center" },
     { Header: "Jumlah Barang Dibungkus", accessor: "detailbarang_jumlahpack", align: "center" },
     {
       Header: "Jumlah Barang Rusak Saat Dibungkus",
@@ -207,6 +208,8 @@ function ListDetailBarangMasuk() {
     const jumlahRusak =
       item.detailbarang_jumlahrusakpack === 0 ? "-" : item.detailbarang_jumlahrusakpack;
     const jumlahBerhasil = jumlahPackValue - jumlahRusak;
+    const jumlahrusakmasuk =
+      item.detailbarang_jumlahrusakmasuk === 0 ? "-" : item.detailbarang_jumlahrusakmasuk;
     if (item.barang.barang_nama === "Tahu POO polos") {
       tahupolos = true;
     }
@@ -215,6 +218,7 @@ function ListDetailBarangMasuk() {
       detailbarang_expdate: dayjs(item.detailbarang_expdate).format("DD-MM-YYYY"),
       detailbarang_batch: item.detailbarang_batch,
       detailbarang_stokmasuk: item.detailbarang_stokmasuk,
+      detailbarang_jumlahrusakmasuk: jumlahrusakmasuk,
       detailbarang_jumlahpack: jumlahPackValue,
       detailbarang_jumlahrusakpack: jumlahRusak,
       jumlah_bungkus: jumlahBerhasil || "-",

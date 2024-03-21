@@ -69,6 +69,8 @@ import InventoryAging from "layouts/report/inventory-aging";
 import PengirimanBarang from "layouts/report/pengiriman-barang";
 import PenerimaanBarang from "layouts/report/penerimaan-barang";
 import DashboardAdmin from "layouts/dashboard/dashboard-admin";
+import ChangePassword from "layouts/change-password";
+import GenerateBarangRusak from "layouts/barang-rusak";
 import SignUp from "layouts/authentication/sign-up";
 
 // @mui iconsππ
@@ -191,6 +193,15 @@ const routes = [
     icon: <Icon fontSize="small">local_shipping</Icon>,
     route: "/stok-opname",
     component: <StokOpname />,
+    roles: ["2", "1"],
+  },
+  {
+    type: "collapse",
+    name: "Pelaporan Barang Rusak",
+    key: "barang-rusak",
+    icon: <Icon fontSize="small">local_shipping</Icon>,
+    route: "/barang-rusak",
+    component: <GenerateBarangRusak />,
     roles: ["2", "1"],
   },
   {
@@ -373,6 +384,16 @@ const routes = [
     route: "/master-customer",
     component: <MasterCustomer />,
     roles: ["3"],
+  },
+
+  {
+    type: "collapse",
+    name: "Change Password",
+    key: "change-password",
+    icon: <Icon fontSize="small">warehouse</Icon>,
+    route: "/change-password",
+    component: <ChangePassword />,
+    roles: ["3", "1", "2"],
   },
 
   {
