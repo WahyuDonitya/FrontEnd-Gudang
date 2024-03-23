@@ -31,6 +31,7 @@ function OrdersOverview() {
   const accessToken = localStorage.getItem("access_token");
   const [countSuratJalanSend, setCountSuratJalanSend] = useState([]);
   const [countPemusnahanToday, setCountPemusnahanToday] = useState([]);
+  const [countHbarangrusak, setHbarangrusak] = useState(0);
 
   // API
   const getCountSuratJalan = async () => {
@@ -56,11 +57,24 @@ function OrdersOverview() {
       console.log("Terdapat kesalahan saat mengambil data count surat pemusnahan : ", error);
     }
   };
+
+  const getCountHbarangRusak = async () => {
+    try {
+      const response = await axios.get(
+        `http://127.0.0.1:8000/api/barang-rusak/get-hbarang-rusak-count`,
+        { headers: { Authorization: `Bearer ${accessToken}` } }
+      );
+      setHbarangrusak(response.data);
+    } catch (error) {
+      console.log("Terdapat error saat melakukan pengambilan data hbarang rusak ".error);
+    }
+  };
   // End API
 
   useEffect(() => {
     getCountSuratJalan();
     getCountPemusnahan();
+    getCountHbarangRusak();
   }, []);
 
   const today = new Date();
@@ -100,7 +114,7 @@ function OrdersOverview() {
         <TimelineItem
           color="info"
           icon="shopping_cart"
-          title="Server payments for April"
+          title={`${countHbarangrusak} List barang rusak belum dilihat`}
           dateTime={formattedDate}
         />
         <TimelineItem

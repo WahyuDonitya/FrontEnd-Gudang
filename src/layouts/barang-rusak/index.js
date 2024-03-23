@@ -52,11 +52,14 @@ function GenerateBarangRusak() {
   const [barangs, setBarangs] = useState([]);
   const [batch, setBatch] = useState("");
   const [detailBarang, setDetailBarang] = useState([]);
+  const [penempatanBarang, setPenempatanBarang] = useState([]);
   const [detailBarangStok, setDetailBarangStok] = useState(null);
   const [detailBarangByBatch, setDetailBarangByBatch] = useState([]);
   const [catatan, setCatatan] = useState("");
   const [pelaku, setPelaku] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
+  const [penempatanId, setPenempatanId] = useState(null);
+  const [detailBarangPick, setDetailBarangPick] = useState(null);
 
   // ini untuk inputan dynamic table
   const [inputBarangId, setInputBarangId] = useState(null);
@@ -148,22 +151,42 @@ function GenerateBarangRusak() {
   };
 
   const handleSetBatch = async (batchlok) => {
-    // console.log("hasil Batch", batchlok);
-    // console.log("hasil gudang", gudangAwal);
-    // console.log("hasil barang", inputBarangId);
-
     try {
       const response = await axios.get(
-        `http://127.0.0.1:8000/api/detailbarang/get-detail-barang-by-batch/${batchlok}/${inputBarangId}/1`,
+        `http://127.0.0.1:8000/api/detailbarang/get-detail-barang-by-batch/${batchlok.detailbarang_batch}/${inputBarangId}/1`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
         }
       );
-      console.log("Data Detail barang:", response.data);
-      setDetailBarangStok(response.data.detailbarang_stok);
+
+      const res = await axios.get(
+        `http://127.0.0.1:8000/api/positioning/get-penempatan-by-detailbarang/${batchlok.detailbarang_id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      // console.log("Data Detail barang:", batchlok);
+      if (batchlok.detailbarang_jumlahplacement > 0) {
+        const additionalData = {
+          penempatan_id: "Bulk",
+          get_rack: {
+            get_rows: { row_name: " : Bulk" },
+            rack_bay: " : Bulk",
+            rack_level: " : Bulk",
+          },
+        };
+        setPenempatanBarang([additionalData, ...res.data]);
+      } else {
+        setPenempatanBarang(res.data);
+      }
+      console.log("Ini penempatan barang ", penempatanBarang);
+      // setDetailBarangStok(response.data.detailbarang_stok);
       setDetailBarangByBatch(response.data);
+      setDetailBarangPick(batchlok);
     } catch (error) {
       console.error("Terjadi kesalahan saat mengambil data Gudang:", error);
     }
@@ -183,6 +206,7 @@ function GenerateBarangRusak() {
         detailbarang_batch: batch,
         detailbarang_id: detailBarangByBatch.detailbarang_id,
         file_foto: selectedFile,
+        penempatanproduk_id: penempatanId,
       };
       dataToSubmit.push(newBarangMasuk);
       console.log(dataToSubmit);
@@ -212,6 +236,8 @@ function GenerateBarangRusak() {
       setInputBarangNama(null);
       setInputBarangStok(null);
       setSelectedFile(null);
+      setDetailBarangPick(null);
+      setPenempatanId(null);
       setinputMasukJumlah("");
       setBatch("");
       console.log(dataToSubmit);
@@ -258,6 +284,16 @@ function GenerateBarangRusak() {
     //     prev;
     //   });
     // }
+  };
+
+  const handleSetPenempatan = (newValue) => {
+    // console.log(newValue, detailBarangPick);
+    if (newValue.penempatan_id == "Bulk") {
+      setDetailBarangStok(detailBarangPick.detailbarang_jumlahplacement);
+    } else {
+      setDetailBarangStok(newValue.penempatanproduk_jumlah);
+      setPenempatanId(newValue.penempatanproduk_id);
+    }
   };
 
   useEffect(() => {
@@ -417,7 +453,7 @@ function GenerateBarangRusak() {
                   onChange={(event, newValue) => {
                     if (newValue) {
                       setBatch(newValue.detailbarang_batch);
-                      handleSetBatch(newValue.detailbarang_batch);
+                      handleSetBatch(newValue);
                     } else {
                       setDetailBarangStok(null);
                       setBatch("");
@@ -431,8 +467,36 @@ function GenerateBarangRusak() {
               )}
             </Grid>
 
+            {/* Untuk Autocomplete Nomor batch barang */}
+            <Grid item xs={6}>
+              {Array.isArray(penempatanBarang) && penempatanBarang.length > 0 ? (
+                <Autocomplete
+                  disablePortal
+                  id="combo-box-demo"
+                  options={penempatanBarang}
+                  getOptionLabel={(option) =>
+                    `Rows ${option.get_rack.get_rows.row_name}, Sel ${option.get_rack.rack_bay}, level ${option.get_rack.rack_level} `
+                  }
+                  onChange={(event, newValue) => {
+                    if (newValue) {
+                      // setBatch(newValue.detailbarang_batch);
+                      // handleSetBatch(newValue);
+                      handleSetPenempatan(newValue);
+                    } else {
+                      // setDetailBarangStok(null);
+                      // setBatch("");
+                    }
+                  }}
+                  fullWidth
+                  renderInput={(params) => <TextField {...params} label="Batch Barang" />}
+                />
+              ) : (
+                <p>Data Penempatan tidak ditemukan...</p>
+              )}
+            </Grid>
+
             {/* untuk Jumlah barang yang akan dimutasi */}
-            <Grid item xs={12}>
+            <Grid item xs={6}>
               <MDInput
                 label="Jumlah barang rusak"
                 fullWidth

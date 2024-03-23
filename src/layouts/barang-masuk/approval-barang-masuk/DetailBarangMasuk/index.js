@@ -182,6 +182,8 @@ function DetailBarangMasuk() {
     { Header: "Nama Barang", accessor: "barang.barang_nama", width: "10%", align: "left" },
     { Header: "Exp Barang", accessor: "detailbarang_expdate", align: "center" },
     { Header: "Batch Barang", accessor: "detailbarang_batch", align: "center" },
+    { Header: "Jumlah Barang Datang", accessor: "detailbarang_stokmasuk", align: "center" },
+    { Header: "Jumlah Barang Rusak", accessor: "detailbarang_jumlahrusakmasuk", align: "center" },
     { Header: "Jumlah Barang Masuk", accessor: "detailbarang_stok", align: "center" },
   ];
 
@@ -194,6 +196,8 @@ function DetailBarangMasuk() {
       barang: { barang_nama: item.barang.barang_nama },
       detailbarang_expdate: dayjs(item.detailbarang_expdate).format("DD-MM-YYYY"),
       detailbarang_batch: item.detailbarang_batch,
+      detailbarang_stokmasuk: item.detailbarang_stokmasuk,
+      detailbarang_jumlahrusakmasuk: item.detailbarang_jumlahrusakmasuk,
       detailbarang_stok: item.detailbarang_stok,
     };
   });

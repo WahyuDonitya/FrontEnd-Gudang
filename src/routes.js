@@ -71,6 +71,7 @@ import PenerimaanBarang from "layouts/report/penerimaan-barang";
 import DashboardAdmin from "layouts/dashboard/dashboard-admin";
 import ChangePassword from "layouts/change-password";
 import GenerateBarangRusak from "layouts/barang-rusak";
+import ListBarangRusak from "layouts/barang-rusak/list-barang-rusak";
 import SignUp from "layouts/authentication/sign-up";
 
 // @mui iconsππ
@@ -292,6 +293,15 @@ const routes = [
     icon: <Icon fontSize="small">warehouse</Icon>,
     route: "/list-pemusnahan-barang",
     component: <ListPemusnahanBarang />,
+    roles: ["1", "2"],
+  },
+  {
+    type: "collapse",
+    name: "List Barang Rusak",
+    key: "list-barang-rusak",
+    icon: <Icon fontSize="small">warehouse</Icon>,
+    route: "/list-barang-rusak",
+    component: <ListBarangRusak />,
     roles: ["1", "2"],
   },
   {

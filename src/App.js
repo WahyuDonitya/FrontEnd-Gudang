@@ -61,6 +61,7 @@ import ListTempatBarang from "layouts/penempatan-barang/list-tempat-barang";
 import DetailStokOpname from "layouts/stok-opname/detail-stok-opname";
 import DetailReportPengirimanBarang from "layouts/report/pengiriman-barang/DetailReportPengiriman";
 import DetailBarangByGudang from "layouts/dashboard/dashboard-admin/detailBarangByGudang";
+import DetailListBarangRusak from "layouts/barang-rusak/detail-list-rusak";
 
 import BillingInformation from "layouts/billing/components/BillingInformation";
 
@@ -199,6 +200,7 @@ export default function App() {
             path="/detail-report-pengiriman-barang/:dataId/:dateAwal/:dateAkhir"
             element={<DetailReportPengirimanBarang />}
           />
+          <Route path="/detail-list-barang-rusak/:dataId" element={<DetailListBarangRusak />} />
         </Routes>
       </ThemeProvider>
     </LocalizationProvider>
