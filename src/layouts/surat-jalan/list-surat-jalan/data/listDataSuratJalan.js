@@ -60,13 +60,21 @@ export default function data() {
       suratjalan_tanggalkirim: dayjs(item.suratjalan_tanggalkirim).format("DD-MM-YYYY"),
       suratjalan_comment: item.suratjalan_comment || "-",
       status:
-        item.suratjalan_status === 1
-          ? "Ditolak"
-          : item.suratjalan_status === 2
-          ? "Menunggu Approval"
-          : item.suratjalan_status === 3
-          ? "Proses Pengiriman"
-          : "Terkirim",
+        item.suratjalan_status === 1 ? (
+          <MDBox ml={-1}>
+            <MDBadge badgeContent="Dtiolak" color="warning" variant="gradient" size="sm" />
+          </MDBox>
+        ) : item.suratjalan_status === 2 ? (
+          "Menunggu Approval"
+        ) : item.suratjalan_status === 3 ? (
+          <MDBox ml={-1}>
+            <MDBadge badgeContent="Proses Pengiriman" color="info" variant="gradient" size="sm" />
+          </MDBox>
+        ) : (
+          <MDBox ml={-1}>
+            <MDBadge badgeContent="Terkirim" color="success" variant="gradient" size="sm" />
+          </MDBox>
+        ),
       pengguna_generate: { pengguna_nama: item.pengguna_generate?.pengguna_nama || "-" },
       pengguna_action: { pengguna_nama: item.pengguna_action?.pengguna_nama || "-" },
       action: (

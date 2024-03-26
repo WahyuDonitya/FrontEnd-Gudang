@@ -8,10 +8,11 @@ const PrintableformSJ = ({ detailSuratJalan, headerSuratJalan }) => {
         <img
           src={require("../../../../assets/images/logos/nyonya-poo.png")}
           style={{ width: "150px", height: "auto" }}
+          alt="Company Logo"
         />
         <div style={{ marginLeft: "20px" }}>
           <p style={{ fontSize: "24px", fontWeight: "bold", marginBottom: "2px" }}>
-            PT. Eka Artha Buana
+            Tahu POO Kediri
           </p>
           <p style={{ fontSize: "14px", color: "#555" }}>
             Alamat: Perumahan Nginden Intan Barat Blok C1-24
@@ -84,6 +85,12 @@ const PrintableformSJ = ({ detailSuratJalan, headerSuratJalan }) => {
         </tbody>
       </table>
 
+      {/* Signature Column */}
+
+      <div style={{ marginTop: "200px", textAlign: "right" }}>
+        <p>Tanda tangan: ____________________________</p>
+      </div>
+
       {/* Styling for printing, you may include media queries in your CSS */}
       <style>
         {`
@@ -100,4 +107,5 @@ PrintableformSJ.propTypes = {
   detailSuratJalan: PropTypes.array.isRequired,
   headerSuratJalan: PropTypes.object.isRequired,
 };
+
 export default PrintableformSJ;

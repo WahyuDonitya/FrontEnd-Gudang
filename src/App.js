@@ -62,22 +62,44 @@ import DetailStokOpname from "layouts/stok-opname/detail-stok-opname";
 import DetailReportPengirimanBarang from "layouts/report/pengiriman-barang/DetailReportPengiriman";
 import DetailBarangByGudang from "layouts/dashboard/dashboard-admin/detailBarangByGudang";
 import DetailListBarangRusak from "layouts/barang-rusak/detail-list-rusak";
+import DetailPenyesuaian from "layouts/stok-opname/detail-penyesuaian";
 
 import BillingInformation from "layouts/billing/components/BillingInformation";
 
+// const getFilteredRoutes = (allRoutes, userRole) => {
+//   const filteredRoutes = allRoutes.filter((route) => {
+//     if (route.collapse) {
+//       route.collapse = getFilteredRoutes(route.collapse, userRole);
+//       return route.collapse.length > 0;
+//     }
+
+//     if (route.roles) {
+//       return route.roles.includes(userRole);
+//     }
+
+//     return true;
+//   });
+
+//   return filteredRoutes;
+// };
+
 const getFilteredRoutes = (allRoutes, userRole) => {
-  const filteredRoutes = allRoutes.filter((route) => {
-    if (route.collapse) {
-      route.collapse = getFilteredRoutes(route.collapse, userRole);
-      return route.collapse.length > 0;
-    }
-
-    if (route.roles) {
-      return route.roles.includes(userRole);
-    }
-
-    return true;
-  });
+  const filteredRoutes = allRoutes
+    .map((route) => {
+      if (route.type === "collapse" && Array.isArray(route.children)) {
+        const filteredChildren = route.children.filter(
+          (child) => child.roles && child.roles.includes(userRole)
+        );
+        return {
+          ...route,
+          children: filteredChildren,
+        };
+      } else if (route.roles && route.roles.includes(userRole)) {
+        return route;
+      }
+      return null; // Filter out routes that don't match the user role
+    })
+    .filter((route) => route !== null); // Filter out null routes
 
   return filteredRoutes;
 };
@@ -201,6 +223,7 @@ export default function App() {
             element={<DetailReportPengirimanBarang />}
           />
           <Route path="/detail-list-barang-rusak/:dataId" element={<DetailListBarangRusak />} />
+          <Route path="/detail-penyesuaian/:dataId" element={<DetailPenyesuaian />} />
         </Routes>
       </ThemeProvider>
     </LocalizationProvider>

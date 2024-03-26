@@ -93,7 +93,7 @@ const PrintableDetailStokOpname = ({ detailKeluar, headerKeluar, detailBarang })
                 {index + 1}.
               </td>
               <td style={{ border: "1px solid #ddd", padding: "8px", textAlign: "center" }}>
-                {item.barang.barang_nama}
+                {item.barang?.barang_nama || "-"}
               </td>
               <td style={{ border: "1px solid #ddd", padding: "8px", textAlign: "center" }}>
                 {item.detailopname_stokawal}
@@ -181,10 +181,10 @@ const PrintableDetailStokOpname = ({ detailKeluar, headerKeluar, detailBarang })
                 {index + 1}.
               </td>
               <td style={{ border: "1px solid #ddd", padding: "8px", textAlign: "center" }}>
-                {item.detail_barang.barang.barang_nama}
+                {item.detail_barang?.barang?.barang_nama}
               </td>
               <td style={{ border: "1px solid #ddd", padding: "8px", textAlign: "center" }}>
-                {item.detail_barang.detailbarang_batch}
+                {item.detail_barang?.detailbarang_batch}
               </td>
               <td style={{ border: "1px solid #ddd", padding: "8px", textAlign: "center" }}>
                 {item.detailbarangopname_jumlahditempat}
@@ -193,7 +193,7 @@ const PrintableDetailStokOpname = ({ detailKeluar, headerKeluar, detailBarang })
                 {item.penempatanproduk_id
                   ? "Rows : " +
                     (item.penempatan_produk
-                      ? item.penempatan_produk.get_rack?.get_rows.row_name || "ambil dari Bulk"
+                      ? item.penempatan_produk?.get_rack?.get_rows?.row_name || "ambil dari Bulk"
                       : "ambil dari Bulk") +
                     " Sel: " +
                     (item.penempatan_produk?.get_rack?.rack_bay || "ambil dari Bulk") +

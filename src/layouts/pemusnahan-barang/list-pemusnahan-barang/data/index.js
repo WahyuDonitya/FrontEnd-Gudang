@@ -22,6 +22,8 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import dayjs from "dayjs";
+import MDBox from "components/MDBox";
+import MDBadge from "components/MDBadge";
 
 export default function data() {
   const accessToken = localStorage.getItem("access_token");
@@ -70,13 +72,28 @@ export default function data() {
       hpemusnahan_catatan: item.hpemusnahan_catatan || "-",
       hpemusnahan_tanggal: dayjs(item.hpemusnahan_tanggal).format("DD-MM-YYYY"),
       hpemusnahan_status:
-        item.hpemusnahan_status === 0
-          ? "Menunggu Approval"
-          : item.hpemusnahan_status === 1
-          ? "Sudah Disetujui"
-          : item.hpemusnahan_status === 2
-          ? "Ditolak"
-          : "Sudah Dimusnahkan",
+        item.hpemusnahan_status === 0 ? (
+          <MDBox ml={-1}>
+            <MDBadge badgeContent="Menunggu Approval" color="info" variant="gradient" size="sm" />
+          </MDBox>
+        ) : item.hpemusnahan_status === 1 ? (
+          <MDBox ml={-1}>
+            <MDBadge badgeContent="Disetujui" color="success" variant="gradient" size="sm" />
+          </MDBox>
+        ) : item.hpemusnahan_status === 2 ? (
+          <MDBox ml={-1}>
+            <MDBadge badgeContent="Ditolak" color="warning" variant="gradient" size="sm" />
+          </MDBox>
+        ) : (
+          <MDBox ml={-1}>
+            <MDBadge
+              badgeContent="Sudah Dimusnahkan"
+              color="success"
+              variant="gradient"
+              size="sm"
+            />
+          </MDBox>
+        ),
       hpemusnahan_rejectreason: item.hpemusnahan_rejectreason || "-",
       // gudang: {
       //   gudang_nama: item.h_keluar.gudang.gudang_nama,

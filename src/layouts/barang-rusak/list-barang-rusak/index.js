@@ -13,6 +13,7 @@ import DataTable from "examples/Tables/DataTable";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import MDBadge from "components/MDBadge";
 
 // Data
 // import listpemusnahan from "./data";
@@ -69,11 +70,17 @@ function ListBarangRusak() {
       kronologi: item.hbarangrusak_kronologi,
       pelaku: item.hbarangrusak_pelaku,
       status:
-        item.hbarangrusak_status == 0
-          ? "Belum Dilihat"
-          : item.hbarangrusak_status == 1
-          ? "Sudah Dilihat"
-          : "-",
+        item.hbarangrusak_status == 0 ? (
+          <MDBox ml={-1}>
+            <MDBadge badgeContent="Belum Dilihat" color="warning" variant="gradient" size="sm" />
+          </MDBox>
+        ) : item.hbarangrusak_status == 1 ? (
+          <MDBox ml={-1}>
+            <MDBadge badgeContent="Sudah Dilihat" color="success" variant="gradient" size="sm" />
+          </MDBox>
+        ) : (
+          "-"
+        ),
       detail: (
         <Link to={`/detail-list-barang-rusak/${item.hbarangrusak_nota}`}>
           <MDTypography

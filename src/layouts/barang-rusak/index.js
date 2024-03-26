@@ -41,6 +41,7 @@ import dayjs from "dayjs";
 import MDInput from "components/MDInput";
 import { useNavigate } from "react-router-dom";
 import { navigateAndClearTokenUser } from "navigationUtils/navigationUtilsUser";
+import DataTable from "examples/Tables/DataTable";
 
 // const useStyles = makeStyles((theme) => ({
 //   input: {
@@ -195,10 +196,20 @@ function GenerateBarangRusak() {
   // End API
 
   const handleAdd = () => {
+    // console.log(batch);
     if (isInputInvalid) {
       alert("Tidak bisa melakukan input row");
     } else {
       const barangId = parseInt(inputBarangId);
+
+      const existingItemIndex = dataToSubmit.findIndex(
+        (item) => item.barang_id === barangId && item.detailbarang_batch === batch
+      );
+
+      if (existingItemIndex !== -1) {
+        alert("Barang dengan batch yang sama sudah ditambahkan sebelumnya!");
+        return;
+      }
 
       const newBarangMasuk = {
         barang_id: parseInt(barangId),
@@ -360,6 +371,28 @@ function GenerateBarangRusak() {
     console.log("File yang dipilih:", selectedFile);
   };
   // END GAMBAR
+
+  const columns = [
+    { Header: "No. ", accessor: "index", width: "10%", align: "left" },
+    { Header: "Nama Barang ", accessor: "nama", align: "center" },
+    { Header: "Jumlah Barang ", accessor: "jumlah", align: "center" },
+    { Header: "Batch ", accessor: "batch", align: "center" },
+    { Header: "Action", accessor: "action", align: "center" },
+  ];
+
+  const rows = data.map((item, index) => {
+    return {
+      index: index + 1,
+      nama: item.inputBarangNama,
+      jumlah: item.detailbarang_stok,
+      batch: item.detailbarang_batch,
+      action: (
+        <IconButton aria-label="delete" size="large" onClick={() => handleDelete(index)}>
+          <Icon fontSize="small">delete</Icon>
+        </IconButton>
+      ),
+    };
+  });
 
   return (
     <DashboardLayout>
@@ -534,7 +567,7 @@ function GenerateBarangRusak() {
 
             {/* Untuk data table */}
             <Grid item xs={12}>
-              {data.length > 0 ? (
+              {/* {data.length > 0 ? (
                 <TableContainer component={Paper}>
                   <Table>
                     <TableBody>
@@ -560,7 +593,16 @@ function GenerateBarangRusak() {
                 </TableContainer>
               ) : (
                 <p>No data available</p>
-              )}
+              )} */}
+              <MDBox pt={3}>
+                <DataTable
+                  table={{ columns, rows }}
+                  isSorted={false}
+                  entriesPerPage={false}
+                  showTotalEntries={false}
+                  noEndBorder
+                />
+              </MDBox>
             </Grid>
 
             {/* Untuk Add data ke DB */}

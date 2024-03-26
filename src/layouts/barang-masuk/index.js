@@ -30,6 +30,7 @@ import {
   Paper,
   IconButton,
   Icon,
+  Button,
 } from "@mui/material";
 import axios from "axios";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
@@ -38,6 +39,7 @@ import { format as dateFnsFormat } from "date-fns";
 import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
 import { navigateAndClearTokenUser } from "navigationUtils/navigationUtilsUser";
+import DataTable from "examples/Tables/DataTable";
 
 function BarangMasuk() {
   const [gudangs, setGudangs] = useState([]);
@@ -229,6 +231,32 @@ function BarangMasuk() {
     navigateAndClearTokenUser(navigate);
   }, [navigate]);
 
+  const columns = [
+    { Header: "No. ", accessor: "index", width: "10%", align: "left" },
+    { Header: "Nama Barang", accessor: "barang", align: "center" },
+    { Header: "Jumlah barang masuk", accessor: "jumlahmasuk", align: "center" },
+    { Header: "Batch Barang", accessor: "batch", align: "center" },
+    { Header: "Barang Exp Date", accessor: "exp", align: "center" },
+    { Header: "Jumlah Barang Rusak", accessor: "jumlahrusak", align: "center" },
+    { Header: "Action", accessor: "action", align: "center" },
+  ];
+
+  const rows = data.map((item, index) => {
+    return {
+      index: index + 1,
+      barang: item.inputBarangNama,
+      jumlahmasuk: item.detailbarang_stok,
+      batch: item.detailbarang_batch,
+      exp: item.detailbarang_expdate,
+      jumlahrusak: item.jumlahrusak,
+      action: (
+        <IconButton aria-label="delete" size="large" onClick={() => handleDelete(index)}>
+          <Icon fontSize="small">delete</Icon>
+        </IconButton>
+      ),
+    };
+  });
+
   // Untuk tes hasil dari picker
   // useEffect(() => {
   //   console.log("hasil date pick : ", datePicker);
@@ -404,34 +432,57 @@ function BarangMasuk() {
               </MDButton>
             </Grid>
             <Grid item xs={12}>
-              {data.length > 0 ? (
-                <TableContainer component={Paper}>
-                  <Table>
-                    <TableBody>
-                      {data.map((item, index) => (
-                        <TableRow key={index}>
-                          <TableCell>{item.inputBarangNama}</TableCell>
-                          <TableCell>{item.detailbarang_stok}</TableCell>
-                          <TableCell>{item.detailbarang_batch}</TableCell>
-                          <TableCell>{item.detailbarang_expdate}</TableCell>
-                          <TableCell>{item.jumlahrusak}</TableCell>
-                          <TableCell>
-                            <IconButton
-                              aria-label="delete"
-                              size="large"
-                              onClick={() => handleDelete(index)}
-                            >
-                              <Icon fontSize="small">delete</Icon>
-                            </IconButton>
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </TableContainer>
-              ) : (
+              {/* {data.length > 0 ? ( */}
+              {/* <TableContainer>
+                <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                  <TableHead>
+                    <TableRow>
+                      <TableCell style={{ width: "20%", minWidth: "20%" }}>Nama Barang</TableCell>
+                      <TableCell style={{ width: "15%", minWidth: "15%" }}>
+                        Jumlah barang masuk
+                      </TableCell>
+                      <TableCell style={{ width: "15%", minWidth: "15%" }}>Batch Barang</TableCell>
+                      <TableCell style={{ width: "20%", minWidth: "20%" }}>
+                        Barang Exp Date
+                      </TableCell>
+                      <TableCell style={{ width: "15%", minWidth: "15%" }}>Jumlah Rusak</TableCell>
+                      <TableCell style={{ width: "15%", minWidth: "15%" }}>Action</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {data.map((item, index) => (
+                      <TableRow key={index}>
+                        <TableCell style={{ width: "20%" }}>{item.inputBarangNama}</TableCell>
+                        <TableCell style={{ width: "15%" }}>{item.detailbarang_stok}</TableCell>
+                        <TableCell style={{ width: "15%" }}>{item.detailbarang_batch}</TableCell>
+                        <TableCell style={{ width: "20%" }}>{item.detailbarang_expdate}</TableCell>
+                        <TableCell style={{ width: "15%" }}>{item.jumlahrusak}</TableCell>
+                        <TableCell style={{ width: "15%" }}>
+                          <IconButton
+                            aria-label="delete"
+                            size="large"
+                            onClick={() => handleDelete(index)}
+                          >
+                            <Icon fontSize="small">delete</Icon>
+                          </IconButton>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer> */}
+              {/* ) : (
                 <p>No data available</p>
-              )}
+              )} */}
+              <MDBox pt={3}>
+                <DataTable
+                  table={{ columns, rows }}
+                  isSorted={false}
+                  entriesPerPage={false}
+                  showTotalEntries={false}
+                  noEndBorder
+                />
+              </MDBox>
             </Grid>
             <Grid item xs={12}>
               <MDButton variant="gradient" color="success" fullWidth onClick={addBarangMasuk}>

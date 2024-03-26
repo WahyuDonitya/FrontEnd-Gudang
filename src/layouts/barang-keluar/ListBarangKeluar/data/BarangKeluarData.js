@@ -80,15 +80,37 @@ export default function data() {
       pengguna_action: { pengguna_nama: item.pengguna_action?.pengguna_nama || "-" },
       hkeluar_comment: item.hkeluar_comment || "-",
       status:
-        item.hkeluar_status === 0
-          ? "Sudah Tuntas Terkirim"
-          : item.hkeluar_status === 1
-          ? "Terkirim Sebagian"
-          : item.hkeluar_status === 2
-          ? "Belum Terkirim"
-          : item.hkeluar_status === 3
-          ? "Menunggu Approval"
-          : "Ditolak",
+        item.hkeluar_status === 0 ? (
+          <MDBox ml={-1}>
+            <MDBadge
+              badgeContent="Sudah tuntas terkirim"
+              color="success"
+              variant="gradient"
+              size="sm"
+            />
+          </MDBox>
+        ) : item.hkeluar_status === 1 ? (
+          <MDBox ml={-1}>
+            <MDBadge
+              badgeContent="terkirim sebagian"
+              color="success"
+              variant="gradient"
+              size="sm"
+            />
+          </MDBox>
+        ) : item.hkeluar_status === 2 ? (
+          <MDBox ml={-1}>
+            <MDBadge badgeContent="Belum Terkirim" color="info" variant="gradient" size="sm" />
+          </MDBox>
+        ) : item.hkeluar_status === 3 ? (
+          <MDBox ml={-1}>
+            <MDBadge badgeContent="Menunggu Approval" color="info" variant="gradient" size="sm" />
+          </MDBox>
+        ) : (
+          <MDBox ml={-1}>
+            <MDBadge badgeContent="Ditolak" color="warning" variant="gradient" size="sm" />
+          </MDBox>
+        ),
       action: (
         <Link to={`/detail/${item.hkeluar_nota}`}>
           <MDTypography variant="caption" color="text" fontWeight="medium">

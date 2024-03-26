@@ -28,8 +28,9 @@ function DetailData() {
   const [headerKeluar, setHeaderlKeluar] = useState([]);
   const { dataId } = useParams();
   const accessToken = localStorage.getItem("access_token");
+  let decode = null;
   if (accessToken) {
-    const decode = jwtDecode(accessToken);
+    decode = jwtDecode(accessToken);
   }
 
   // state untuk notification

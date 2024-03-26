@@ -38,6 +38,7 @@ import { format as dateFnsFormat } from "date-fns";
 import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
 import { navigateAndClearTokenUser } from "navigationUtils/navigationUtilsUser";
+import DataTable from "examples/Tables/DataTable";
 
 function BarangKeluar() {
   // State
@@ -157,6 +158,15 @@ function BarangKeluar() {
 
   const handleAdd = () => {
     const barangId = parseInt(inputBarangId);
+
+    const existingItemIndex = dataToSubmit.findIndex((item) => item.barang_id === barangId);
+
+    if (existingItemIndex !== -1) {
+      alert(
+        "Barang sudah ditambahkan sebelumnya! Jika ingin melakukan update harap hapus data yang ada pada Table"
+      );
+      return;
+    }
 
     const newDetailTransaksi = {
       barang_id: barangId,
@@ -286,6 +296,26 @@ function BarangKeluar() {
     />
   );
 
+  const columns = [
+    { Header: "No. ", accessor: "index", width: "10%", align: "left" },
+    { Header: "Nama Barang ", accessor: "nama", align: "center" },
+    { Header: "Jumlah Barang ", accessor: "jumlah", align: "center" },
+    { Header: "Action ", accessor: "action", align: "center" },
+  ];
+
+  const rows = data.map((item, index) => {
+    return {
+      index: index + 1,
+      nama: item.inputBarangNama,
+      jumlah: item.inputKeluarJumlah,
+      action: (
+        <IconButton aria-label="delete" size="large" onClick={() => handleDelete(index)}>
+          <Icon fontSize="small">delete</Icon>
+        </IconButton>
+      ),
+    };
+  });
+
   return (
     <DashboardLayout>
       <DashboardNavbar />
@@ -406,14 +436,14 @@ function BarangKeluar() {
             </Grid>
 
             {/* Harga */}
-            <Grid item xs={12}>
+            {/* <Grid item xs={12}>
               <TextField
                 label="Harga Barang Keluar (Tidak Wajib)"
                 fullWidth
                 value={hargakeluar}
                 onChange={(e) => setHargaKeluar(e.target.value)}
               />
-            </Grid>
+            </Grid> */}
 
             <Grid item xs={12}>
               <MDButton variant="gradient" color="info" fullWidth onClick={handleAdd}>
@@ -421,7 +451,7 @@ function BarangKeluar() {
               </MDButton>
             </Grid>
             <Grid item xs={12}>
-              {data.length > 0 ? (
+              {/* {data.length > 0 ? (
                 <TableContainer component={Paper}>
                   <Table>
                     <TableBody>
@@ -446,7 +476,16 @@ function BarangKeluar() {
                 </TableContainer>
               ) : (
                 <p>No data available</p>
-              )}
+              )} */}
+              <MDBox pt={3}>
+                <DataTable
+                  table={{ columns, rows }}
+                  isSorted={false}
+                  entriesPerPage={false}
+                  showTotalEntries={false}
+                  noEndBorder
+                />
+              </MDBox>
             </Grid>
             <Grid item xs={12}>
               <MDButton variant="gradient" color="success" fullWidth onClick={addBarangKeluar}>

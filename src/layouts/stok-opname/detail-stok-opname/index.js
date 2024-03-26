@@ -24,6 +24,7 @@ function DetailStokOpname() {
   const [detailBarangMasuk, setDetailBarangMasuk] = useState([]);
   const [headerBarangMasuk, setHeaderlBarangMasuk] = useState([]);
   const [detailBarang, setDetailBarang] = useState([]);
+  const [dataPenyesuaian, setDataPenyesuaian] = useState([]);
   const { dataId } = useParams();
 
   // state untuk notification
@@ -82,8 +83,16 @@ function DetailStokOpname() {
           },
         }
       );
+
+      const res = await axios.get(
+        `http://127.0.0.1:8000/api/stok-opname/get-penyesuaian/${id.data.opname_id}`,
+        {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        }
+      );
+      setDataPenyesuaian(res.data);
       //   console.log("hasil get id", response.data);
-      //   console.log(id.data.hmasuk_id);
+      console.log(id.data);
       setDetailBarangMasuk(response.data);
       setHeaderlBarangMasuk(id.data);
     } catch (error) {
@@ -202,8 +211,12 @@ function DetailStokOpname() {
     } catch (error) {}
   };
 
+  const handleDetailPenyesuaian = () => {
+    navigate(`/detail-penyesuaian/${headerBarangMasuk.opname_id}`);
+  };
+
   const columns = [
-    { Header: "Nama Barang", accessor: "barang.barang_nama", width: "10%", align: "left" },
+    { Header: "Nama Barang", accessor: "namabarang", width: "10%", align: "left" },
     { Header: "Jumlah Awal", accessor: "detailopname_stokawal", align: "center" },
     { Header: "Jumlah Masuk", accessor: "detailopname_stokmasuk", align: "center" },
     { Header: "Jumlah Keluar", accessor: "detailopname_stokkeluar", align: "center" },
@@ -213,18 +226,44 @@ function DetailStokOpname() {
 
   const rows = detailBarangMasuk.map((item) => {
     return {
-      barang: { barang_nama: item.barang.barang_nama },
+      namabarang: item.barang?.barang_nama,
       detailopname_stokawal: item.detailopname_stokawal,
       detailopname_stokmasuk: item.detailopname_stokmasuk,
       detailopname_stokkeluar: item.detailopname_stokkeluar,
       detailopname_stoktercatat: item.detailopname_stoktercatat,
       detail: (
-        <Link to={`/detail-barang/${item.barang.barang_id}`}>
+        <Link to={`/detail-barang/${item.barang?.barang_id}`}>
           <MDTypography variant="caption" color="text" fontWeight="medium">
             Detail
           </MDTypography>
         </Link>
       ),
+    };
+  });
+
+  const columns2 = [
+    { Header: "No. ", accessor: "index", width: "10%", align: "left" },
+    { Header: "Nama Barang", accessor: "barang", align: "center" },
+    { Header: "Batch Barang", accessor: "batch", align: "center" },
+    { Header: "Tempat Barang", accessor: "tempat", align: "center" },
+    { Header: "Jumlah Tercatat", accessor: "tercatat", align: "center" },
+    { Header: "Jumlah Aktual", accessor: "aktual", align: "center" },
+    { Header: "Jumlah Difference", accessor: "difference", align: "center" },
+    { Header: "Catatan", accessor: "catatan", align: "center" },
+  ];
+
+  const rows2 = dataPenyesuaian.map((item, index) => {
+    return {
+      index: index + 1,
+      barang: item.detail_barang?.barang?.barang_nama || "-",
+      batch: item.detail_barang?.detailbarang_batch || "-",
+      tempat: item.penempatan_produk?.get_rack?.get_rows?.row_name
+        ? `Rows ${item.penempatan_produk.get_rack.get_rows.row_name}, Sel ${item.penempatan_produk.get_rack.rack_bay}, Level ${item.penempatan_produk.get_rack.rack_level}`
+        : "Dari Bulk",
+      tercatat: item.detailbarangopname_jumlahditempat || "-",
+      aktual: item.detailbarangopname_jumlahaktual || "-",
+      difference: item.detailbarangopname_jumlahdifference || "-",
+      catatan: item.detailbarangopname_catatan || "-",
     };
   });
 
@@ -309,6 +348,17 @@ function DetailStokOpname() {
                   />
                 </Grid>
               </Grid>
+              <Grid container pt={4}>
+                <Grid item xs={12}>
+                  <DataTable
+                    table={{ columns: columns2, rows: rows2 }}
+                    isSorted={false}
+                    entriesPerPage={false}
+                    showTotalEntries={false}
+                    noEndBorder
+                  />
+                </Grid>
+              </Grid>
               {headerBarangMasuk.opname_status === 2 && decode.role_id === 2 && (
                 <Grid container pt={5} spacing={7} px={3} mb={4}>
                   <Grid item xs={6}>
@@ -346,9 +396,19 @@ function DetailStokOpname() {
 
               {headerBarangMasuk.opname_status === 4 && (
                 <Grid container pt={5} spacing={7} px={3} mb={4}>
-                  <Grid item xs={12}>
+                  <Grid item xs={6}>
                     <MDButton variant="gradient" color="info" fullWidth onClick={handlePrint}>
                       Show Document
+                    </MDButton>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <MDButton
+                      variant="gradient"
+                      color="success"
+                      fullWidth
+                      onClick={handleDetailPenyesuaian}
+                    >
+                      Detail Penyesuaian
                     </MDButton>
                   </Grid>
                 </Grid>

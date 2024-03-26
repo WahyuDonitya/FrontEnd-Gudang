@@ -21,6 +21,8 @@ import MDTypography from "components/MDTypography";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import MDBox from "components/MDBox";
+import MDBadge from "components/MDBadge";
 
 export default function data() {
   const accessToken = localStorage.getItem("access_token");
@@ -106,15 +108,32 @@ export default function data() {
       pengguna_generate: { pengguna_nama: item.pengguna_generate?.pengguna_nama || "-" },
       pengguna_action: { pengguna_nama: item.pengguna_action?.pengguna_nama || "-" },
       status:
-        item.htransfer_barang_status === 1
-          ? "Menunggu Persetujuan"
-          : item.htransfer_barang_status === 2
-          ? "Sudah Disetujui"
-          : item.htransfer_barang_status === 3
-          ? "Ditolak"
-          : item.htransfer_barang_status === 4
-          ? "Terkirim Sebagian"
-          : "Terkirim",
+        item.htransfer_barang_status === 1 ? (
+          <MDBox ml={-1}>
+            <MDBadge badgeContent="Menunggu Approval" color="info" variant="gradient" size="sm" />
+          </MDBox>
+        ) : item.htransfer_barang_status === 2 ? (
+          <MDBox ml={-1}>
+            <MDBadge badgeContent="Disetujui" color="success" variant="gradient" size="sm" />
+          </MDBox>
+        ) : item.htransfer_barang_status === 3 ? (
+          <MDBox ml={-1}>
+            <MDBadge badgeContent="Ditolak" color="warning" variant="gradient" size="sm" />
+          </MDBox>
+        ) : item.htransfer_barang_status === 4 ? (
+          <MDBox ml={-1}>
+            <MDBadge
+              badgeContent="Terkirim Sebagian"
+              color="success"
+              variant="gradient"
+              size="sm"
+            />
+          </MDBox>
+        ) : (
+          <MDBox ml={-1}>
+            <MDBadge badgeContent="Terkirim" color="success" variant="gradient" size="sm" />
+          </MDBox>
+        ),
       action: (
         <Link to={`/detailmutasi-barang/${item.htransfer_barang_id}`}>
           <MDTypography variant="caption" color="text" fontWeight="medium">

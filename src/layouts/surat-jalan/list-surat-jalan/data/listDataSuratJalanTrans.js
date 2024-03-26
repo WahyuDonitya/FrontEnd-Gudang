@@ -23,6 +23,8 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import dayjs from "dayjs";
+import MDBox from "components/MDBox";
+import MDBadge from "components/MDBadge";
 
 export default function data() {
   const accessToken = localStorage.getItem("access_token");
@@ -82,13 +84,21 @@ export default function data() {
       pengguna_generate: { pengguna_nama: item.pengguna_generate?.pengguna_nama || "-" },
       pengguna_action: { pengguna_nama: item.pengguna_action?.pengguna_nama || "-" },
       status:
-        item.suratjalantransfer_status === 0
-          ? "Sudah selesai"
-          : item.suratjalantransfer_status === 1
-          ? "Tidak disetujui"
-          : item.suratjalantransfer_status === 2
-          ? "Menunggu Approval"
-          : "Proses Pengiriman",
+        item.suratjalantransfer_status === 0 ? (
+          <MDBox ml={-1}>
+            <MDBadge badgeContent="Terkirim" color="success" variant="gradient" size="sm" />
+          </MDBox>
+        ) : item.suratjalantransfer_status === 1 ? (
+          <MDBox ml={-1}>
+            <MDBadge badgeContent="Ditolak" color="danger" variant="gradient" size="sm" />
+          </MDBox>
+        ) : item.suratjalantransfer_status === 2 ? (
+          "Menunggu Approval"
+        ) : (
+          <MDBox ml={-1}>
+            <MDBadge badgeContent="Proses Pengiriman" color="info" variant="gradient" size="sm" />
+          </MDBox>
+        ),
       action: (
         <Link to={`/detailsurat-jalan/transferbarang/${item.suratjalantransfer_nota}`}>
           <MDTypography variant="caption" color="text" fontWeight="medium">

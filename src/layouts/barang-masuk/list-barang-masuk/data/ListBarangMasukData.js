@@ -3,6 +3,8 @@ import MDTypography from "components/MDTypography";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import MDBadge from "components/MDBadge";
+import MDBox from "components/MDBox";
 
 export default function data() {
   const accessToken = localStorage.getItem("access_token");
@@ -49,11 +51,19 @@ export default function data() {
       pengguna_action: { pengguna_nama: item.pengguna_action?.pengguna_nama || "-" },
       hmasuk_comment: item.hmasuk_comment || "-",
       status:
-        item.hmasuk_status === 2
-          ? "Menunggu Approval"
-          : item.hmasuk_status === 1
-          ? "Sudah Disetujui"
-          : "Ditolak",
+        item.hmasuk_status === 2 ? (
+          <MDBox ml={-1}>
+            <MDBadge badgeContent="Menunggu Approval" color="info" variant="gradient" size="sm" />
+          </MDBox>
+        ) : item.hmasuk_status === 1 ? (
+          <MDBox ml={-1}>
+            <MDBadge badgeContent="Disetujui" color="success" variant="gradient" size="sm" />
+          </MDBox>
+        ) : (
+          <MDBox ml={-1}>
+            <MDBadge badgeContent="Ditolak" color="warning" variant="gradient" size="sm" />
+          </MDBox>
+        ),
       action: (
         <Link to={`/list-detailbarang-masuk/${item.hmasuk_nota}`}>
           <MDTypography variant="caption" color="text" fontWeight="medium">
