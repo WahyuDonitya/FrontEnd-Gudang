@@ -17,21 +17,7 @@ import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
 
 import Header from "./components/Header";
-import {
-  Autocomplete,
-  Divider,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  TextField,
-  Paper,
-  IconButton,
-  Icon,
-  Button,
-} from "@mui/material";
+import { Autocomplete, Divider, TextField, IconButton, Icon } from "@mui/material";
 import axios from "axios";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -161,37 +147,41 @@ function BarangMasuk() {
   // End API
 
   const handleAdd = () => {
-    const barangId = parseInt(inputBarangId);
+    if (isInputInvalid == false) {
+      const barangId = parseInt(inputBarangId);
 
-    const newBarangMasuk = {
-      gudang_id: parseInt(gudang_id),
-      barang_id: parseInt(barangId),
-      detailbarang_stok: parseInt(inputMasukJumlah),
-      detailbarang_batch: batch,
-      detailbarang_expdate: datePicker,
-      detailbarang_jumlahrusakmasuk: barangRusak,
-    };
-    dataToSubmit.push(newBarangMasuk);
+      const newBarangMasuk = {
+        gudang_id: parseInt(gudang_id),
+        barang_id: parseInt(barangId),
+        detailbarang_stok: parseInt(inputMasukJumlah),
+        detailbarang_batch: batch,
+        detailbarang_expdate: datePicker,
+        detailbarang_jumlahrusakmasuk: barangRusak,
+      };
+      dataToSubmit.push(newBarangMasuk);
 
-    // ini untuk memunculkan ke dynamic table
-    const newData = {
-      inputBarangNama,
-      detailbarang_stok: inputMasukJumlah.toString(),
-      detailbarang_batch: batch,
-      detailbarang_expdate: datePicker,
-      jumlahrusak: barangRusak.toString(),
-    };
+      // ini untuk memunculkan ke dynamic table
+      const newData = {
+        inputBarangNama,
+        detailbarang_stok: inputMasukJumlah.toString(),
+        detailbarang_batch: batch,
+        detailbarang_expdate: datePicker,
+        jumlahrusak: barangRusak.toString(),
+      };
 
-    setData([...data, newData]);
+      setData([...data, newData]);
 
-    setInputBarangId(null);
-    setInputBarangNama(null);
-    setInputBarangStok(null);
-    setBarangRusak(0);
-    setinputMasukJumlah("");
-    setBatch("");
-    setdatePicker(null);
-    console.log(dataToSubmit);
+      setInputBarangId(null);
+      setInputBarangNama(null);
+      setInputBarangStok(null);
+      setBarangRusak(0);
+      setinputMasukJumlah("");
+      setBatch("");
+      setdatePicker(null);
+      console.log(dataToSubmit);
+    } else {
+      alert("Gagal menambahkan barang karna masih ada error");
+    }
   };
 
   const handleDelete = (index) => {
@@ -216,6 +206,17 @@ function BarangMasuk() {
       // Mengambil ID yang ada di dalam tanda kurung tutup
       const id = parts[1].replace(")", "");
       setCustomerPick(id);
+    }
+  };
+
+  const handleInputChange = (e) => {
+    const value = parseInt(e.target.value);
+    if (value >= inputMasukJumlah) {
+      alert(`Barang yang anda pilih hanya memiliki stok : ${inputMasukJumlah}`);
+      setIsInputInvalid(true);
+    } else {
+      setIsInputInvalid(false);
+      setBarangRusak(value);
     }
   };
 
@@ -422,7 +423,10 @@ function BarangMasuk() {
                 fullWidth
                 type="number"
                 value={barangRusak}
-                onChange={(e) => setBarangRusak(e.target.value)}
+                onChange={handleInputChange}
+                error={isInputInvalid}
+                helperText={isInputInvalid ? "Jumlah melebihi stok yang masuk" : ""}
+                sx={{ "& .MuiInput-root": { borderColor: isInputInvalid ? "red" : "" } }}
                 inputProps={{ min: 0 }}
               />
             </Grid>

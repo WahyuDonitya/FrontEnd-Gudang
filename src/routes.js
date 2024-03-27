@@ -646,7 +646,7 @@ const routes = [
   {
     type: "collapse",
     name: "Master Customer",
-    key: "master-pengguna",
+    key: "master-customer",
     icon: <Icon fontSize="small">warehouse</Icon>,
     route: "/master-customer",
     component: <MasterCustomer />,

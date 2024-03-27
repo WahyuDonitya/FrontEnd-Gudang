@@ -242,7 +242,7 @@ function PergerakanBarang() {
               <MDBox pt={3}>
                 <DataTable
                   table={{ columns, rows }}
-                  isSorted={false}
+                  isSorted={true}
                   entriesPerPage={true}
                   showTotalEntries={true}
                   canSearch
