@@ -39,6 +39,7 @@ function MasterBarang() {
   const [errorSB, setErrorSB] = useState(false);
   const openErrorSB = () => setErrorSB(true);
   const closeErrorSB = () => setErrorSB(false);
+  const [file, setFile] = useState(null);
 
   const accessToken = localStorage.getItem("access_token");
 
@@ -114,6 +115,52 @@ function MasterBarang() {
   const handleEdit = (barangId, barang_nama) => {
     setBarangIdEdit(barangId);
     setNamaBarang(barang_nama);
+  };
+
+  const handleFileChange = (event) => {
+    setFile(event.target.files[0]);
+  };
+
+  const uploadExcel = async () => {
+    if (window.confirm("Apakah data yang anda masukkan sudah benar")) {
+      if (!file) {
+        alert("Pilih file Excel terlebih dahulu!");
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append("file_excel", file);
+
+      try {
+        // Upload file to backend
+        const response = await axios.post(
+          "http://127.0.0.1:8000/api/upload-excel/upload-barang",
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
+        console.log("File Excel berhasil diunggah:", response.data);
+        getBarang();
+        openSuccessSB();
+
+        // Membuat input file baru
+        const newFileInput = document.createElement("input");
+        newFileInput.type = "file";
+        newFileInput.id = "contained-button-file";
+        newFileInput.onchange = handleFileChange;
+
+        // Hapus input file yang lama dari DOM
+        const oldFileInput = document.getElementById("contained-button-file");
+        oldFileInput.parentNode.replaceChild(newFileInput, oldFileInput);
+      } catch (error) {
+        console.error("Terjadi kesalahan saat mengunggah file Excel:", error);
+        openErrorSB();
+      }
+    }
   };
 
   // render Notificartion
@@ -200,6 +247,7 @@ function MasterBarang() {
           <MDTypography variant="h6" fontWeight="medium">
             Form Master Barang
           </MDTypography>
+
           <Grid container pt={3} spacing={7}>
             <Grid item xs={12}>
               <MDInput
@@ -227,6 +275,13 @@ function MasterBarang() {
               noEndBorder
             />
           </MDBox>
+          <Grid item xs={12}>
+            {/* <input type="file" onChange={handleFileChange} /> */}
+            <input id="contained-button-file" type="file" onChange={handleFileChange} />
+            <MDButton variant="gradient" color="success" onClick={uploadExcel}>
+              Upload Excel
+            </MDButton>
+          </Grid>
         </MDBox>
         <MDBox p={2}>
           <Grid container spacing={6}>

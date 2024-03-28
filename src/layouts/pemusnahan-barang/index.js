@@ -315,7 +315,7 @@ function PemusnahanBarang() {
     { Header: "Nama Barang ", accessor: "nama", align: "center" },
     { Header: "Jumlah Barang ", accessor: "jumlah", align: "center" },
     { Header: "Batch ", accessor: "batch", align: "center" },
-    { Header: "Exp Date ", accessor: "exp", align: "center" },
+    // { Header: "Exp Date ", accessor: "exp", align: "center" },
     { Header: "Action", accessor: "action", align: "center" },
   ];
 
@@ -325,7 +325,7 @@ function PemusnahanBarang() {
       nama: item.inputBarangNama,
       jumlah: item.detailbarang_stok,
       batch: item.detailbarang_batch,
-      batch: item.detailbarang_expdate,
+      // exp: item.detailbarang_expdate,
       action: (
         <IconButton aria-label="delete" size="large" onClick={() => handleDelete(index)}>
           <Icon fontSize="small">delete</Icon>

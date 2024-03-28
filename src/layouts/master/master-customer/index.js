@@ -1,10 +1,7 @@
 import { useEffect, useState } from "react";
 
-// @mui material components
 import Grid from "@mui/material/Grid";
-import Card from "@mui/material/Card";
 
-// Material Dashboard 2 React components
 import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
 import MDButton from "components/MDButton";
@@ -36,6 +33,7 @@ function MasterCustomer() {
   const [gudangPick, setGudangPick] = useState(null);
   const [gudangValue, setGudangValue] = useState("");
   const [customerIdEdit, setCustomerIdEdit] = useState(null);
+  const [file, setFile] = useState(null);
 
   // state untuk notification
   const [successSB, setSuccessSB] = useState(false);
@@ -135,6 +133,52 @@ function MasterCustomer() {
     setCustomerIdEdit(customer_id);
   };
 
+  const handleFileChange = (event) => {
+    setFile(event.target.files[0]);
+  };
+
+  const uploadExcel = async () => {
+    if (window.confirm("Apakah data yang anda masukkan sudah benar")) {
+      if (!file) {
+        alert("Pilih file Excel terlebih dahulu!");
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append("file_excel", file);
+
+      try {
+        // Upload file to backend
+        const response = await axios.post(
+          "http://127.0.0.1:8000/api/upload-excel/upload-customer",
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
+        console.log("File Excel berhasil diunggah:", response.data);
+        getCustomer();
+        openSuccessSB();
+
+        // Membuat input file baru
+        const newFileInput = document.createElement("input");
+        newFileInput.type = "file";
+        newFileInput.id = "contained-button-file";
+        newFileInput.onchange = handleFileChange;
+
+        // Hapus input file yang lama dari DOM
+        const oldFileInput = document.getElementById("contained-button-file");
+        oldFileInput.parentNode.replaceChild(newFileInput, oldFileInput);
+      } catch (error) {
+        console.error("Terjadi kesalahan saat mengunggah file Excel:", error);
+        openErrorSB();
+      }
+    }
+  };
+
   const columns = [
     { Header: "No. ", accessor: "index", width: "12%", align: "left" },
     { Header: "Customer Nama", accessor: "customer_nama", align: "center" },
@@ -160,7 +204,7 @@ function MasterCustomer() {
     customer_nama: item.customer_nama,
     customer_telepon: item.customer_telepon,
     customer_alamat: item.customer_alamat,
-    gudang: item.gudang.gudang_nama,
+    gudang: item.gudang?.gudang_nama,
     delete: (
       <IconButton onClick={() => handleDelete(item.customer_id)} aria-label="delete">
         <DeleteIcon />
@@ -311,6 +355,13 @@ function MasterCustomer() {
               noEndBorder
             />
           </MDBox>
+          <Grid item xs={12}>
+            {/* <input type="file" onChange={handleFileChange} /> */}
+            <input id="contained-button-file" type="file" onChange={handleFileChange} />
+            <MDButton variant="gradient" color="success" onClick={uploadExcel}>
+              Upload Excel
+            </MDButton>
+          </Grid>
         </MDBox>
         <MDBox p={2}>
           <Grid container spacing={6}>

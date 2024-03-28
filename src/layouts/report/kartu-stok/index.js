@@ -13,6 +13,8 @@ import Footer from "examples/Footer";
 import DataTable from "examples/Tables/DataTable";
 import axios from "axios";
 import PrintAbleKartuStok from "./PrintAbleKartuStok";
+import * as XLSX from "xlsx";
+import { saveAs } from "file-saver";
 
 // Data
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
@@ -28,6 +30,7 @@ function KartuStok() {
   //   state
   const [barang, setBarang] = useState([]);
   const [barangId, setBarangId] = useState(null);
+  const [barangNama, setBarangNama] = useState(null);
   const [datePickerAwal, setdatePickerAwal] = useState(null);
   const [datePickerAkhir, setdatePickerAkhir] = useState(null);
   const [kartuStok, setKartuStok] = useState([]);
@@ -67,7 +70,10 @@ function KartuStok() {
   const handleChange = async (newValue) => {
     if (newValue) {
       setBarangId(newValue.barang_id);
+      setBarangNama(newValue.barang_nama);
     } else {
+      setBarangId(null);
+      setBarangNama(null);
       console.log("tidak ada new values");
     }
   };
@@ -159,6 +165,30 @@ function KartuStok() {
     //       </Link>
     //     ) : null,
   }));
+
+  // Handle Excel
+  const handleDownload = (data) => {
+    const formattedData = data.map((item, index) => ({
+      "Tanggal Transaksi": dayjs(item.created_at).format("DD-MM-YYYY"),
+      "Batch Barang": item.detail_barang.detailbarang_batch,
+      "Barang Masuk": item.logbarang_masuk || "-",
+      "Barang Keluar": item.logbarang_keluar || "-",
+      "Jumlah Stok Sekarang": item.logbarang_stoksekarang,
+      Keterangan: item.logbarang_keterangan,
+    }));
+    const worksheet = XLSX.utils.json_to_sheet(formattedData);
+    const wscols = formattedData[0]
+      ? Object.keys(formattedData[0]).map((key) => ({ wch: key.length }))
+      : [];
+    worksheet["!cols"] = wscols;
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Kartu Stok");
+    const excelBuffer = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
+    saveAs(
+      new Blob([excelBuffer]),
+      `${barangNama}/${datePickerAwal}/${datePickerAkhir}/stokawal-${stokAwal}.xlsx`
+    );
+  };
 
   return (
     <DashboardLayout>
@@ -256,11 +286,27 @@ function KartuStok() {
                   noEndBorder
                   canSearch
                 />
-                <Grid item xs={12} px={2} pb={3} pt={5}>
-                  <MDButton variant="gradient" color="success" onClick={handlePrint}>
-                    Print
-                  </MDButton>
-                </Grid>
+                {kartuStok.length > 0 && (
+                  <Grid item xs={12} px={2} pb={3} pt={5}>
+                    <MDButton
+                      variant="gradient"
+                      color="success"
+                      onClick={handlePrint}
+                      sx={{ marginRight: "8px" }}
+                    >
+                      Print
+                    </MDButton>
+                    <MDButton
+                      variant="gradient"
+                      color="info"
+                      onClick={() => handleDownload(kartuStok)}
+                    >
+                      Download Excel
+                    </MDButton>
+                  </Grid>
+                )}
+
+                {/* <Grid item xs={12} px={2} pb={3} pt={5}></Grid> */}
               </MDBox>
             </Card>
           </Grid>

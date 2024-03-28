@@ -24,6 +24,8 @@ import MDButton from "components/MDButton";
 import { Link, useNavigate } from "react-router-dom";
 import { format } from "date-fns";
 import ComplexStatisticsCard from "examples/Cards/StatisticsCards/ComplexStatisticsCard";
+import * as XLSX from "xlsx";
+import { saveAs } from "file-saver";
 
 function PenerimaanBarang() {
   //   state
@@ -101,6 +103,30 @@ function PenerimaanBarang() {
       </Link>
     ),
   }));
+
+  const handleDownload = (data) => {
+    const formattedData = data.map((item, index) => ({
+      "Nota Masuk": item.hmasuk_nota,
+      "Nota Supplier": item.hmasuk_notasupplier,
+      "Pengguna Generate": item.pengguna_generate.pengguna_nama || "-",
+      "Pengguna Action": item.pengguna_action.pengguna_nama || "-",
+      Status:
+        item.hmasuk_status == 1
+          ? "Disetujui"
+          : item.hmasuk_status == 2
+          ? "Menunggu Persetujuan"
+          : "Ditolak",
+    }));
+    const worksheet = XLSX.utils.json_to_sheet(formattedData);
+    const wscols = formattedData[0]
+      ? Object.keys(formattedData[0]).map((key) => ({ wch: key.length }))
+      : [];
+    worksheet["!cols"] = wscols;
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Kartu Stok");
+    const excelBuffer = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
+    saveAs(new Blob([excelBuffer]), `penerimaanbarang/${datePickerAwal}/${datePickerAkhir}.xlsx`);
+  };
 
   return (
     <DashboardLayout>
@@ -221,6 +247,17 @@ function PenerimaanBarang() {
                     Print
                   </MDButton>
                 </Grid> */}
+                {dataBarang.length > 0 && (
+                  <Grid item xs={12} px={2} pb={3} pt={5}>
+                    <MDButton
+                      variant="gradient"
+                      color="info"
+                      onClick={() => handleDownload(dataBarang)}
+                    >
+                      Download Excel
+                    </MDButton>
+                  </Grid>
+                )}
               </MDBox>
             </Card>
           </Grid>

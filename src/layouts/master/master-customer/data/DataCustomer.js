@@ -61,7 +61,7 @@ export default function data() {
       customer_nama: item.customer_nama,
       customer_telepon: item.customer_telepon,
       customer_alamat: item.customer_alamat,
-      gudang: item.gudang.gudang_nama,
+      gudang: item.gudang?.gudang_nama || "-",
       delete: (
         <IconButton onClick={() => handleDelete(item.customer_id)} aria-label="delete">
           <DeleteIcon />
