@@ -23,6 +23,7 @@ import dayjs from "dayjs";
 import MDButton from "components/MDButton";
 import { Link, useNavigate } from "react-router-dom";
 import { format } from "date-fns";
+import { navigateAndClearTokenUser } from "navigationUtils/navigationUtilsUser";
 
 function InventoryAging() {
   //   state
@@ -52,10 +53,7 @@ function InventoryAging() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const hasToken = !!localStorage.getItem("access_token");
-    if (!hasToken) {
-      navigate("/authentication/sign-in");
-    }
+    navigateAndClearTokenUser(navigate);
   }, [navigate]);
 
   //   function

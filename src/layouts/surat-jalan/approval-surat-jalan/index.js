@@ -29,11 +29,20 @@ import DataTable from "examples/Tables/DataTable";
 // Data
 import approvalSJ from "./data/approvalTableData";
 import approvalSJTrans from "./data/approvalSuratJalanTransfer";
+import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import { navigateAndClearTokenKepalaGudang } from "navigationUtils/navigationUtilsKepalaGudang";
 // import projectsTableData from "layouts/tables/data/projectsTableData";
 
 function ApprovalSuratJalan() {
   const { columns, rows } = approvalSJ();
   const { columnstrans, rowstrans } = approvalSJTrans();
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    navigateAndClearTokenKepalaGudang(navigate);
+  }, [navigate]);
 
   return (
     <DashboardLayout>

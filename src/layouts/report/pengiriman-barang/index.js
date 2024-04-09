@@ -23,6 +23,7 @@ import dayjs from "dayjs";
 import MDButton from "components/MDButton";
 import { Link, useNavigate } from "react-router-dom";
 import { format } from "date-fns";
+import { navigateAndClearTokenUser } from "navigationUtils/navigationUtilsUser";
 
 function PengirimanBarang() {
   //   state
@@ -67,6 +68,12 @@ function PengirimanBarang() {
   useEffect(() => {
     getBarang();
   }, []);
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    navigateAndClearTokenUser(navigate);
+  }, [navigate]);
 
   // const navigate = useNavigate();
 

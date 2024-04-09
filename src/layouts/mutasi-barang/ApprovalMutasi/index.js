@@ -28,11 +28,19 @@ import DataTable from "examples/Tables/DataTable";
 
 // Data
 import approvalBarangMasuk from "./data/approvalTableData";
+import { useNavigate } from "react-router-dom";
+import { navigateAndClearTokenKepalaGudang } from "navigationUtils/navigationUtilsKepalaGudang";
+import { useEffect } from "react";
 // import rejectedSJ from "./data/listRejectedData";
 // import projectsTableData from "layouts/tables/data/projectsTableData";
 
 function ApprovalMutasi() {
   const { columns, rows } = approvalBarangMasuk();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    navigateAndClearTokenKepalaGudang(navigate);
+  }, [navigate]);
   // const { columnsreject, rowsreject } = rejectedSJ();
 
   return (

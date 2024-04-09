@@ -23,6 +23,7 @@ import dayjs from "dayjs";
 import MDButton from "components/MDButton";
 import { Link, useNavigate } from "react-router-dom";
 import { format } from "date-fns";
+import { navigateAndClearTokenKepalaGudang } from "navigationUtils/navigationUtilsKepalaGudang";
 
 function PergerakanBarang() {
   //   state
@@ -53,6 +54,11 @@ function PergerakanBarang() {
     getBarang();
   }, []);
 
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    navigateAndClearTokenKepalaGudang(navigate);
+  }, [navigate]);
   // const navigate = useNavigate();
 
   // useEffect(() => {

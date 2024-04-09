@@ -26,6 +26,7 @@ import { format } from "date-fns";
 import ComplexStatisticsCard from "examples/Cards/StatisticsCards/ComplexStatisticsCard";
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
+import { navigateAndClearTokenUser } from "navigationUtils/navigationUtilsUser";
 
 function PenerimaanBarang() {
   //   state
@@ -35,6 +36,12 @@ function PenerimaanBarang() {
   const [dataBarang, setDataBarang] = useState([]);
 
   const accessToken = localStorage.getItem("access_token");
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    navigateAndClearTokenUser(navigate);
+  }, [navigate]);
 
   //   Pemanggilan API
 

@@ -77,6 +77,20 @@ function GenerateMutasi() {
   const [isInputInvalid, setIsInputInvalid] = useState(false);
 
   const accessToken = localStorage.getItem("access_token");
+  useEffect(() => {
+    const accessToken = localStorage.getItem("access_token");
+
+    if (accessToken && !gudangAwal) {
+      const [, payloadBase64] = accessToken.split(".");
+      const payload = JSON.parse(atob(payloadBase64));
+      const gudangId = payload.gudang_id;
+      setGudangAwal(gudangId);
+
+      console.log("Nilai gudang_id:", gudangId);
+    } else if (!accessToken) {
+      console.error("Token JWT tidak ditemukan dalam localStorage.");
+    }
+  }, [gudangAwal]);
 
   // API
 
@@ -151,9 +165,9 @@ function GenerateMutasi() {
         setCatatan("");
         setGudangAwal(null);
         setGudangTujuan(null);
-        setBarangs([]);
         setinputMasukJumlah("");
         setBatch("");
+        setdatePicker(null);
       } catch (error) {
         openErrorSB();
         console.error("Terjadi kesalahan saat mengambil input data Barang keluar:", error);
@@ -371,7 +385,7 @@ function GenerateMutasi() {
           </MDTypography>
           <Grid container pt={3} spacing={7}>
             {/* Untuk Gudang asal */}
-            <Grid item xs={6}>
+            {/* <Grid item xs={6}>
               {Array.isArray(gudangs) && gudangs.length > 0 ? (
                 <Autocomplete
                   disablePortal
@@ -393,10 +407,10 @@ function GenerateMutasi() {
               ) : (
                 <p>Loading customer data...</p>
               )}
-            </Grid>
+            </Grid> */}
 
             {/* Untuk Gudang Tujuan */}
-            <Grid item xs={6}>
+            <Grid item xs={12}>
               {Array.isArray(gudangs) && gudangs.length > 0 ? (
                 <Autocomplete
                   disablePortal

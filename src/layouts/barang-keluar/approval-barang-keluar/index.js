@@ -28,10 +28,18 @@ import DataTable from "examples/Tables/DataTable";
 
 // Data
 import authorsTableData from "layouts/barang-keluar/approval-barang-keluar/data/approvalTableData";
+import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import { navigateAndClearTokenKepalaGudang } from "navigationUtils/navigationUtilsKepalaGudang";
 // import projectsTableData from "layouts/tables/data/projectsTableData";
 
 function ApprovalBarangKeluar() {
   const { columns, rows } = authorsTableData();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    navigateAndClearTokenKepalaGudang(navigate);
+  }, [navigate]);
 
   return (
     <DashboardLayout>

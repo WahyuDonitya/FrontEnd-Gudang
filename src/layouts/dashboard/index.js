@@ -111,7 +111,7 @@ function Dashboard() {
               <ComplexStatisticsCard
                 color="dark"
                 icon="weekend"
-                title="Jumlah approval barang keluar"
+                title="Jumlah proses approval barang keluar"
                 count={countHkeluar}
                 percentage={{
                   color: "success",
@@ -125,7 +125,7 @@ function Dashboard() {
             <MDBox mb={1.5}>
               <ComplexStatisticsCard
                 icon="leaderboard"
-                title="Jumlah approval surat jalan"
+                title="Jumlah proses approval surat jalan"
                 count={countSuratJalan}
                 percentage={{
                   color: "success",
@@ -140,7 +140,7 @@ function Dashboard() {
               <ComplexStatisticsCard
                 color="success"
                 icon="store"
-                title="Jumlah approval barang masuk"
+                title="Jumlah proses approval barang masuk"
                 count={countBarangMasuk}
                 percentage={{
                   color: "success",
@@ -155,7 +155,7 @@ function Dashboard() {
               <ComplexStatisticsCard
                 color="primary"
                 icon="person_add"
-                title="Jumlah approval mutasi barang"
+                title="Jumlah proses approval mutasi barang"
                 count={countMutasiBarang}
                 percentage={{
                   color: "success",

@@ -44,6 +44,7 @@ import MDInput from "components/MDInput";
 import MDButton from "components/MDButton";
 import MDSnackbar from "components/MDSnackbar";
 import { SignalCellularNullTwoTone } from "@mui/icons-material";
+import { navigateAndClearTokenKepalaGudang } from "navigationUtils/navigationUtilsKepalaGudang";
 
 function ListTempatBarang() {
   const [tempatBarang, setTempatBarang] = useState([]);
@@ -140,10 +141,7 @@ function ListTempatBarang() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const hasToken = !!localStorage.getItem("access_token");
-    if (!hasToken) {
-      navigate("/authentication/sign-in");
-    }
+    navigateAndClearTokenKepalaGudang(navigate);
   }, [navigate]);
 
   // Handle modal

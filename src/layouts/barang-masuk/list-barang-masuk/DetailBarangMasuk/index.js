@@ -199,6 +199,11 @@ function ListDetailBarangMasuk() {
       accessor: "jumlah_bungkus",
       align: "center",
     },
+    {
+      Header: "penanggung jawab bungkus",
+      accessor: "pelakubungkus",
+      align: "center",
+    },
     { Header: "Jumlah Barang Saat ini", accessor: "detailbarang_stok", align: "center" },
   ];
 
@@ -214,6 +219,7 @@ function ListDetailBarangMasuk() {
       tahupolos = true;
     }
     return {
+      pelakubungkus: item.detail_barang_packagingorang || "-",
       barang: { barang_nama: item.barang.barang_nama },
       detailbarang_expdate: dayjs(item.detailbarang_expdate).format("DD-MM-YYYY"),
       detailbarang_batch: item.detailbarang_batch,

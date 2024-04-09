@@ -19,6 +19,7 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
+import { navigateAndClearTokenAdmin } from "navigationUtils/navigationUtilsAdmin";
 
 function DashboardAdmin() {
   const accessToken = localStorage.getItem("access_token");
@@ -98,16 +99,8 @@ function DashboardAdmin() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const navigateUser = () => {
-      const hasToken = !!localStorage.getItem("access_token");
-      if (!hasToken || (hasToken && decode.role_id !== 3)) {
-        navigate("/authentication/sign-in");
-      }
-    };
-
-    navigateUser();
-  }, [decode.role_id, navigate]);
-
+    navigateAndClearTokenAdmin(navigate);
+  }, [navigate]);
   // const { sales, tasks } = reportsLineChartData;
   return (
     <DashboardLayout>

@@ -22,6 +22,8 @@ import MDTypography from "components/MDTypography";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import MDBadge from "components/MDBadge";
+import MDBox from "components/MDBox";
 
 export default function data() {
   const accessToken = localStorage.getItem("access_token");
@@ -58,11 +60,26 @@ export default function data() {
         align: "left",
       },
       { Header: "Jumlah Stok", accessor: "total_stok", align: "center" },
+      { Header: "Status", accessor: "status", align: "center" },
       { Header: "Detail", accessor: "detail", align: "center" },
     ],
 
     rows: stok.map((item) => ({
       barang: { barang_nama: item.barang.barang_nama },
+      status: (
+        <>
+          {item.total_stok < 50 && (
+            <MDBox ml={-1}>
+              <MDBadge badgeContent="Under Stok" color="warning" variant="gradient" size="sm" />
+            </MDBox>
+          )}
+          {item.total_stok >= 50 && (
+            <MDBox ml={-1}>
+              <MDBadge badgeContent="OK" color="success" variant="gradient" size="sm" />
+            </MDBox>
+          )}
+        </>
+      ),
       total_stok: item.total_stok,
       detail: (
         <Link to={`/detail-barang/${item.barang.barang_id}`}>

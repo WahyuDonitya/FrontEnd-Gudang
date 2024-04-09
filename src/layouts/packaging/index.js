@@ -54,6 +54,7 @@ function GeneratePackaging() {
   const [detailBarangBatch, setDetailBarangBatch] = useState(null);
   const [stokBarang, setStokBarang] = useState(0);
   const [jumlahRusak, setJumlahRusak] = useState(null);
+  const [pelaku, setPelaku] = useState("");
 
   // ini untuk inputan dynamic table
   const [inputBarangId, setInputBarangId] = useState(null);
@@ -128,6 +129,7 @@ function GeneratePackaging() {
             detailbarang_id: detailBarangId,
             jumlah_packing: parseInt(inputJumlahPacking),
             jumlah_rusak: parseInt(jumlahRusak),
+            pelaku: pelaku,
           };
           console.log(datatosend);
 
@@ -332,6 +334,18 @@ function GeneratePackaging() {
               ) : (
                 <p>Loading customer data...</p>
               )}
+            </Grid>
+
+            <Grid item xs={12}>
+              <MDInput
+                label="Penanggung Jawab"
+                fullWidth
+                type="text"
+                value={pelaku}
+                onChange={(e) => {
+                  setPelaku(e.target.value);
+                }}
+              />
             </Grid>
 
             <Grid item xs={12}>

@@ -512,7 +512,7 @@ const routes = [
     icon: <Icon fontSize="small">warehouse</Icon>,
     route: "/rak-penyimpanan-barang",
     component: <MasterPositioning />,
-    roles: ["1", "2"],
+    roles: ["2"],
   },
 
   {
