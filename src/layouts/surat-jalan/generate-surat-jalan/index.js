@@ -230,6 +230,7 @@ function GenerateSuratJalan() {
         setSelectedHkeluar(null);
         setListBarang([]);
         setJumlahKirimByItem({});
+        setIsInputInvalid({});
         getHkeluar();
       } catch (error) {
         openErrorSB();
@@ -546,6 +547,14 @@ function GenerateSuratJalan() {
                   <MDTypography variant="h6" fontWeight="medium">
                     Dari Gudang :{" "}
                     {selectedHkeluar ? selectedHkeluar.gudang.gudang_nama : "Pilih Nota"}
+                  </MDTypography>
+                </Grid>
+                <Grid item xs={6}>
+                  <MDTypography variant="h6" fontWeight="medium">
+                    Rencana tanggal kirim :{" "}
+                    {selectedHkeluar
+                      ? dayjs(selectedHkeluar.hkeluar_tanggal).format("DD-MM-YYYY")
+                      : "Pilih Nota"}
                   </MDTypography>
                 </Grid>
               </Grid>

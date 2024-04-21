@@ -141,6 +141,7 @@ function PemusnahanBarang() {
         openSuccessSB();
         console.log("berhasil input");
         setData([]);
+        setDataToSubmit([]);
         setCatatan("");
         setinputMasukJumlah("");
         setBatch("");

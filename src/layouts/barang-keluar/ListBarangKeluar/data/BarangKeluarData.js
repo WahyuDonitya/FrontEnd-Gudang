@@ -28,6 +28,7 @@ import team4 from "assets/images/team-4.jpg";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import dayjs from "dayjs";
 
 export default function data() {
   const accessToken = localStorage.getItem("access_token");
@@ -75,7 +76,7 @@ export default function data() {
       hkeluar_nota: item.hkeluar_nota,
       customer: { customer_nama: item.customer?.customer_nama },
       gudang: { gudang_nama: item.gudang?.gudang_nama },
-      hkeluar_tanggal: item.hkeluar_tanggal,
+      hkeluar_tanggal: dayjs(item.hkeluar_tanggal).format("DD-MM-YYYY"),
       pengguna_generate: { pengguna_nama: item.pengguna_generate?.pengguna_nama || "-" },
       pengguna_action: { pengguna_nama: item.pengguna_action?.pengguna_nama || "-" },
       hkeluar_comment: item.hkeluar_comment || "-",

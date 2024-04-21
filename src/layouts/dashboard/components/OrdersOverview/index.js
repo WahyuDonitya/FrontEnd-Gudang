@@ -32,6 +32,7 @@ function OrdersOverview() {
   const [countSuratJalanSend, setCountSuratJalanSend] = useState([]);
   const [countPemusnahanToday, setCountPemusnahanToday] = useState([]);
   const [countHbarangrusak, setHbarangrusak] = useState(0);
+  const [countHbarangKeluaresok, setCountHbarangKeluaresok] = useState(0);
 
   // API
   const getCountSuratJalan = async () => {
@@ -67,6 +68,17 @@ function OrdersOverview() {
       setHbarangrusak(response.data);
     } catch (error) {
       console.log("Terdapat error saat melakukan pengambilan data hbarang rusak ".error);
+    }
+  };
+
+  const getcountHbarangKeluarBesok = async () => {
+    try {
+      const response = await axios.get(
+        "http://127.0.0.1:8000/api/transaksi-barang/barang-keluar-send-tommorow",
+        { headers: { Authorization: `Bearer ${accessToken}` } }
+      );
+    } catch (error) {
+      console.log("gagal saat ingin mengambil data hbarang keluar");
     }
   };
   // End API
@@ -120,7 +132,7 @@ function OrdersOverview() {
         <TimelineItem
           color="warning"
           icon="payment"
-          title="New card added for order #4395133"
+          title={`${countHbarangKeluaresok} Barang keluar untuk besok`}
           dateTime={formattedDate}
         />
         <TimelineItem

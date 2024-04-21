@@ -20,6 +20,7 @@ import MDInput from "components/MDInput";
 import PrintableFormBarangKeluar from "./PrintableFormBarangKeluar";
 import { jwtDecode } from "jwt-decode";
 import { navigateAndClearTokenUser } from "navigationUtils/navigationUtilsUser";
+import dayjs from "dayjs";
 
 // import projectsTableData from "layouts/tables/data/projectsTableData";
 
@@ -34,6 +35,14 @@ function DetailData() {
   }
 
   // state untuk notification
+  const [successSBRusak, setSuccessSBRusak] = useState(false);
+  const openSuccessRusakSB = () => setSuccessSB(true);
+  const closeSuccessRusakSB = () => setSuccessSB(false);
+
+  const [errorSBRusak, setErrorSBRusak] = useState(false);
+  const openErrorRusakSB = () => setErrorSB(true);
+  const closeErrorRusakSB = () => setErrorSB(false);
+
   const [successSB, setSuccessSB] = useState(false);
   const openSuccessSB = () => setSuccessSB(true);
   const closeSuccessSB = () => setSuccessSB(false);
@@ -49,6 +58,9 @@ function DetailData() {
   const [errorRejectSB, setErrorRejectSB] = useState(false);
   const openErrorRejectSB = () => setErrorRejectSB(true);
   const closeErrorRejectSB = () => setErrorRejectSB(false);
+
+  const [isInputInvalid, setIsInputInvalid] = useState({});
+  const [jumlahRusakByItem, setJumlahRusakByItem] = useState({});
   // End state notification
 
   // Handle modal
@@ -167,6 +179,60 @@ function DetailData() {
     printWindow.onafterprint = () => printWindow.close();
   };
 
+  const handleBarangRusak = async () => {
+    if (window.confirm("Apakah data rusak yang anda masukkan sudah benar?")) {
+      try {
+        const selectedBarang = detailKeluar
+          .filter((item) => jumlahRusakByItem[item.dkeluar_id] > 0)
+          .map((item) => ({
+            dkeluar_id: item.dkeluar_id,
+            jumlah_rusak: jumlahRusakByItem[item.dkeluar_id],
+          }));
+
+        const datatosend = {
+          hkeluar_nota: headerKeluar.hkeluar_nota,
+          dbarang_keluarrusak: selectedBarang,
+        };
+
+        const response = await axios.post(
+          "http://127.0.0.1:8000/api/transaksi-barang/barang-keluar-rusak",
+          datatosend,
+          { headers: { Authorization: `Bearer ${accessToken}` } }
+        );
+        setJumlahRusakByItem({});
+        setIsInputInvalid({});
+        getId();
+        openSuccessRusakSB();
+      } catch (error) {
+        openErrorRusakSB();
+        console.log("Terjadi kesalahan saat melakukan barang rusak : ", error);
+      }
+    }
+  };
+
+  const handleChangeJumlahKirim = (itemId, newValue) => {
+    const currentItem = detailKeluar.find((item) => item.dkeluar_id === itemId);
+
+    // Create a copy of the existing isInputInvalid state
+    const updatedIsInputInvalid = { ...isInputInvalid };
+
+    // Update the validity for the current item
+    if (newValue > currentItem.dkeluar_sisa) {
+      updatedIsInputInvalid[itemId] = true;
+    } else {
+      updatedIsInputInvalid[itemId] = false;
+    }
+
+    setIsInputInvalid(updatedIsInputInvalid);
+
+    if (!updatedIsInputInvalid[itemId]) {
+      setJumlahRusakByItem((prev) => ({
+        ...prev,
+        [itemId]: parseInt(newValue),
+      }));
+    }
+  };
+
   // END API
 
   useEffect(() => {
@@ -186,7 +252,8 @@ function DetailData() {
     { Header: "Jumlah Terkirim", accessor: "dkeluar_terkirim", align: "center" },
     { Header: "Jumlah Sisa", accessor: "dkeluar_sisa", align: "center" },
     { Header: "Proses Approve", accessor: "dkeluar_needapprovekirim", align: "center" },
-    { Header: "Harga", accessor: "dkeluar_harga", align: "center" },
+    { Header: "Jumlah rusak tercatat", accessor: "dkeluar_rusak", align: "center" },
+    { Header: "Jumlah rusak", accessor: "jumlah_rusak", align: "center" },
   ];
 
   const rows = detailKeluar.map((item) => ({
@@ -196,15 +263,54 @@ function DetailData() {
     dkeluar_terkirim: item.dkeluar_terkirim,
     dkeluar_sisa: item.dkeluar_sisa,
     dkeluar_needapprovekirim: item.dkeluar_needapprovekirim,
-    dkeluar_harga: item.dkeluar_harga !== null ? item.dkeluar_harga : "Tidak ada harga",
+    dkeluar_rusak: item.dkeluar_rusak,
+    jumlah_rusak: (
+      <MDInput
+        type="number"
+        value={jumlahRusakByItem[item.dkeluar_id] || 0}
+        inputProps={{ min: 0 }}
+        error={isInputInvalid[item.dkeluar_id]}
+        helperText={isInputInvalid[item.dkeluar_id] ? "Jumlah melebihi stok yang tersedia" : ""}
+        onChange={(e) => handleChangeJumlahKirim(item.dkeluar_id, e.target.value)}
+        sx={{ "& .MuiInput-root": { borderColor: isInputInvalid[item.dkeluar_id] ? "red" : "" } }}
+      ></MDInput>
+    ),
   }));
+
+  const renderSuccessSBRusak = (
+    <MDSnackbar
+      color="success"
+      icon="check"
+      title="Notifikasi Berhasil"
+      content="Berhasil Melakukan pelaporan barang rusak"
+      dateTime="Baru Saja"
+      open={successSBRusak}
+      onClose={closeSuccessRusakSB}
+      close={closeSuccessRusakSB}
+      bgWhite
+    />
+  );
+
+  const renderErrorSBRusak = (
+    <MDSnackbar
+      color="error"
+      icon="warning"
+      title="Notifikasi Error"
+      content="Error Melakukan pelaporan barang rusak"
+      dateTime="Baru Saja"
+      open={errorSB}
+      onClose={closeErrorRusakSB}
+      close={closeErrorRusakSB}
+      bgWhite
+    />
+  );
 
   const renderSuccessSB = (
     <MDSnackbar
       color="success"
       icon="check"
       title="Notifikasi Berhasil"
-      content="Berhasil Melakukan approve Surat Jalan"
+      content="Berhasil Melakukan approve Barang keluar"
       dateTime="Baru Saja"
       open={successSB}
       onClose={closeSuccessSB}
@@ -218,7 +324,7 @@ function DetailData() {
       color="error"
       icon="warning"
       title="Notifikasi Error"
-      content="Error Melakukan approve Surat Jalan"
+      content="Error Melakukan approve barang keluar"
       dateTime="Baru Saja"
       open={errorSB}
       onClose={closeErrorSB}
@@ -232,7 +338,7 @@ function DetailData() {
       color="success"
       icon="check"
       title="Notifikasi Berhasil"
-      content="Berhasil Melakukan Reject Surat Jalan"
+      content="Berhasil Melakukan Reject barang keluar"
       dateTime="Baru Saja"
       open={successRejectSB}
       onClose={closeSuccessRejectSB}
@@ -246,7 +352,7 @@ function DetailData() {
       color="error"
       icon="warning"
       title="Notifikasi Error"
-      content="Error Melakukan Reject Surat Jalan"
+      content="Error Melakukan Reject barang keluar"
       dateTime="Baru Saja"
       open={errorRejectSB}
       onClose={closeErrorRejectSB}
@@ -275,7 +381,7 @@ function DetailData() {
                 </Grid>
                 <Grid item xs={6} style={{ textAlign: "center" }}>
                   <MDTypography variant="h6">
-                    Tanggal Dibuat : {formatDate(headerKeluar.created_at)}
+                    Tanggal Dibuat : {dayjs(headerKeluar.created_at).format("DD-MM-YYYY")}
                   </MDTypography>
                 </Grid>
               </Grid>
@@ -294,7 +400,8 @@ function DetailData() {
               <Grid container>
                 <Grid item xs={6} style={{ textAlign: "center" }}>
                   <MDTypography variant="h6">
-                    Rencana kirim tanggal : {headerKeluar.hkeluar_tanggal}
+                    Rencana kirim tanggal :{" "}
+                    {dayjs(headerKeluar.hkeluar_tanggal).format("DD-MM-YYYY")}
                   </MDTypography>
                 </Grid>
                 <Grid item xs={6} style={{ textAlign: "center" }}>
@@ -336,7 +443,19 @@ function DetailData() {
 
               {headerKeluar.hkeluar_status !== 3 && (
                 <Grid container pt={5} spacing={7} px={3} mb={4}>
-                  <Grid item xs={12}>
+                  {headerKeluar.hkeluar_status !== 0 && (
+                    <Grid item xs={6}>
+                      <MDButton
+                        variant="gradient"
+                        color="error"
+                        fullWidth
+                        onClick={handleBarangRusak}
+                      >
+                        Lapor barang rusak
+                      </MDButton>
+                    </Grid>
+                  )}
+                  <Grid item xs={6}>
                     <MDButton variant="gradient" color="info" fullWidth onClick={handlePrint}>
                       Print Nota
                     </MDButton>
@@ -351,6 +470,8 @@ function DetailData() {
         <Grid container spacing={6}>
           {renderSuccessSB}
           {renderErrorSB}
+          {renderSuccessSBRusak}
+          {renderErrorSBRusak}
           {renderRejectSuccessSB}
           {renderRejectErrorSB}
         </Grid>
