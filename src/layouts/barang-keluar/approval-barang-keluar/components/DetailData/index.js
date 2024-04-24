@@ -189,10 +189,24 @@ function DetailData() {
             jumlah_rusak: jumlahRusakByItem[item.dkeluar_id],
           }));
 
+        if (selectedBarang.length === 0) {
+          alert("Barang rusak tidak ada yang diisi");
+          return;
+        }
+
+        const hasInvalidInput = Object.values(isInputInvalid).some((value) => value === true);
+
+        if (hasInvalidInput) {
+          alert("Ada input yang tidak valid. Silakan periksa kembali sebelum melanjutkan.");
+          return;
+        }
+
         const datatosend = {
           hkeluar_nota: headerKeluar.hkeluar_nota,
           dbarang_keluarrusak: selectedBarang,
         };
+
+        console.log(datatosend);
 
         const response = await axios.post(
           "http://127.0.0.1:8000/api/transaksi-barang/barang-keluar-rusak",
@@ -298,7 +312,7 @@ function DetailData() {
       title="Notifikasi Error"
       content="Error Melakukan pelaporan barang rusak"
       dateTime="Baru Saja"
-      open={errorSB}
+      open={errorSBRusak}
       onClose={closeErrorRusakSB}
       close={closeErrorRusakSB}
       bgWhite

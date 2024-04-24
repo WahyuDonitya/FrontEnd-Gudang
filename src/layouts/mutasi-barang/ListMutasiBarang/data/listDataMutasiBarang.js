@@ -129,6 +129,10 @@ export default function data() {
               size="sm"
             />
           </MDBox>
+        ) : item.htransfer_barang_status === 5 ? (
+          <MDBox ml={-1}>
+            <MDBadge badgeContent="Rusak Semua" color="error" variant="gradient" size="sm" />
+          </MDBox>
         ) : (
           <MDBox ml={-1}>
             <MDBadge badgeContent="Terkirim" color="success" variant="gradient" size="sm" />

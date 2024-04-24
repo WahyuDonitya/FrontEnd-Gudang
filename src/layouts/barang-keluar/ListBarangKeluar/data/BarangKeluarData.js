@@ -107,6 +107,10 @@ export default function data() {
           <MDBox ml={-1}>
             <MDBadge badgeContent="Menunggu Approval" color="info" variant="gradient" size="sm" />
           </MDBox>
+        ) : item.hkeluar_status === 5 ? (
+          <MDBox ml={-1}>
+            <MDBadge badgeContent="Rusak Semua" color="error" variant="gradient" size="sm" />
+          </MDBox>
         ) : (
           <MDBox ml={-1}>
             <MDBadge badgeContent="Ditolak" color="warning" variant="gradient" size="sm" />

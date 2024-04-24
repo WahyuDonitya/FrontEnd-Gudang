@@ -42,6 +42,14 @@ function DetailMB() {
   const { dataId } = useParams();
 
   // state untuk notification
+  const [successSBRusak, setSuccessSBRusak] = useState(false);
+  const openSuccessRusakSB = () => setSuccessSB(true);
+  const closeSuccessRusakSB = () => setSuccessSB(false);
+
+  const [errorSBRusak, setErrorSBRusak] = useState(false);
+  const openErrorRusakSB = () => setErrorSB(true);
+  const closeErrorRusakSB = () => setErrorSB(false);
+
   const [successSB, setSuccessSB] = useState(false);
   const openSuccessSB = () => setSuccessSB(true);
   const closeSuccessSB = () => setSuccessSB(false);
@@ -57,6 +65,9 @@ function DetailMB() {
   const [errorRejectSB, setErrorRejectSB] = useState(false);
   const openErrorRejectSB = () => setErrorRejectSB(true);
   const closeErrorRejectSB = () => setErrorRejectSB(false);
+
+  const [isInputInvalid, setIsInputInvalid] = useState({});
+  const [jumlahRusakByItem, setJumlahRusakByItem] = useState({});
   // End Notification state
 
   // Handle modal
@@ -172,6 +183,73 @@ function DetailMB() {
     }
   };
 
+  const handleChangeJumlahKirim = (itemId, newValue) => {
+    const currentItem = detailMutasiBarang.find((item) => item.dtransfer_barang_id === itemId);
+
+    // Create a copy of the existing isInputInvalid state
+    const updatedIsInputInvalid = { ...isInputInvalid };
+
+    // Update the validity for the current item
+    if (newValue > currentItem.dtransfer_barang_jumlah_belum_terkirim) {
+      updatedIsInputInvalid[itemId] = true;
+    } else {
+      updatedIsInputInvalid[itemId] = false;
+    }
+
+    setIsInputInvalid(updatedIsInputInvalid);
+
+    if (!updatedIsInputInvalid[itemId]) {
+      setJumlahRusakByItem((prev) => ({
+        ...prev,
+        [itemId]: parseInt(newValue),
+      }));
+    }
+  };
+
+  const handleBarangRusak = async () => {
+    if (window.confirm("Apakah data rusak yang anda masukkan sudah benar?")) {
+      try {
+        const selectedBarang = detailMutasiBarang
+          .filter((item) => jumlahRusakByItem[item.dtransfer_barang_id] > 0)
+          .map((item) => ({
+            dtransfer_barang_id: item.dtransfer_barang_id,
+            jumlah_rusak: jumlahRusakByItem[item.dtransfer_barang_id],
+          }));
+        if (selectedBarang.length === 0) {
+          alert("Barang rusak tidak ada yang diisi");
+          return;
+        }
+
+        const hasInvalidInput = Object.values(isInputInvalid).some((value) => value === true);
+
+        if (hasInvalidInput) {
+          alert("Ada input yang tidak valid. Silakan periksa kembali sebelum melanjutkan.");
+          return;
+        }
+
+        const datatosend = {
+          htransfer_barang_nota: headerMutasiBarang.htransfer_barang_nota,
+          dtransfer_barangrusak: selectedBarang,
+        };
+
+        console.log(datatosend);
+        const response = await axios.post(
+          "http://127.0.0.1:8000/api/gudang/pelaporan-barang-rusak",
+          datatosend,
+          { headers: { Authorization: `Bearer ${accessToken}` } }
+        );
+        console.log("hasil response : ", response);
+        setJumlahRusakByItem({});
+        setIsInputInvalid({});
+        getId();
+        openSuccessRusakSB();
+      } catch (error) {
+        openErrorRusakSB();
+        console.log("Terjadi kesalahan saat melakukan barang rusak : ", error);
+      }
+    }
+  };
+
   const handlePrint = () => {
     // console.log(headerKeluar);
     const printableContent = document.getElementById("printable-content");
@@ -200,7 +278,11 @@ function DetailMB() {
     { Header: "Nama Barang", accessor: "barang.barang_nama", width: "10%", align: "center" },
     { Header: "Exp. Barang", accessor: "barang_detail.detailbarang_expdate", align: "center" },
     { Header: "Batch Barang", accessor: "barang_detail.detailbarang_batch", align: "center" },
-    { Header: "Jumlah Dikirim", accessor: "dtransfer_barang_jumlah", align: "center" },
+    { Header: "Jumlah", accessor: "dtransfer_barang_jumlah", align: "center" },
+    { Header: "Jumlah Terkirim", accessor: "jumlah_terkirim", align: "center" },
+    { Header: "Jumlah Belum Terkirim", accessor: "jumlah_belumterkirim", align: "center" },
+    { Header: "Jumlah barang rusak", accessor: "jumlahbarangrusak", align: "center" },
+    { Header: "Jumlah rusak", accessor: "jumlah_rusak", align: "center" },
   ];
 
   const rows = detailMutasiBarang.map((item) => ({
@@ -210,7 +292,55 @@ function DetailMB() {
       detailbarang_batch: item?.barang_detail?.detailbarang_batch || "N/A",
     },
     dtransfer_barang_jumlah: item.dtransfer_barang_jumlah,
+    jumlah_terkirim: item.dtransfer_barang_jumlah_terkirim,
+    jumlah_belumterkirim: item.dtransfer_barang_jumlah_belum_terkirim,
+    jumlahbarangrusak: item.dtransfer_barang_jumlahrusak,
+    jumlah_rusak: (
+      <MDInput
+        type="number"
+        value={jumlahRusakByItem[item.dtransfer_barang_id] || 0}
+        inputProps={{ min: 0 }}
+        error={isInputInvalid[item.dtransfer_barang_id]}
+        helperText={
+          isInputInvalid[item.dtransfer_barang_id] ? "Jumlah melebihi stok yang tersedia" : ""
+        }
+        onChange={(e) => handleChangeJumlahKirim(item.dtransfer_barang_id, e.target.value)}
+        sx={{
+          "& .MuiInput-root": {
+            borderColor: isInputInvalid[item.dtransfer_barang_id] ? "red" : "",
+          },
+        }}
+      ></MDInput>
+    ),
   }));
+
+  const renderSuccessSBRusak = (
+    <MDSnackbar
+      color="success"
+      icon="check"
+      title="Notifikasi Berhasil"
+      content="Berhasil Melakukan pelaporan barang rusak"
+      dateTime="Baru Saja"
+      open={successSBRusak}
+      onClose={closeSuccessRusakSB}
+      close={closeSuccessRusakSB}
+      bgWhite
+    />
+  );
+
+  const renderErrorSBRusak = (
+    <MDSnackbar
+      color="error"
+      icon="warning"
+      title="Notifikasi Error"
+      content="Error Melakukan pelaporan barang rusak"
+      dateTime="Baru Saja"
+      open={errorSBRusak}
+      onClose={closeErrorRusakSB}
+      close={closeErrorRusakSB}
+      bgWhite
+    />
+  );
 
   const renderSuccessSB = (
     <MDSnackbar
@@ -313,7 +443,20 @@ function DetailMB() {
               )}
               {headerMutasiBarang.htransfer_barang_status !== 1 && (
                 <Grid container pt={5} spacing={7} px={3} mb={4}>
-                  <Grid item xs={12}>
+                  {headerMutasiBarang.htransfer_barang_status !== 0 &&
+                    headerMutasiBarang.htransfer_barang_status !== 5 && (
+                      <Grid item xs={6}>
+                        <MDButton
+                          variant="gradient"
+                          color="error"
+                          fullWidth
+                          onClick={handleBarangRusak}
+                        >
+                          Lapor barang rusak
+                        </MDButton>
+                      </Grid>
+                    )}
+                  <Grid item xs={6}>
                     <MDButton variant="gradient" color="info" fullWidth onClick={handlePrint}>
                       Print Nota
                     </MDButton>
@@ -330,6 +473,8 @@ function DetailMB() {
           {renderErrorSB}
           {renderRejectSuccessSB}
           {renderRejectErrorSB}
+          {renderSuccessSBRusak}
+          {renderErrorSBRusak}
         </Grid>
       </MDBox>
       <Dialog open={openRejectModal} onClose={closeRejectModalHandler}>
