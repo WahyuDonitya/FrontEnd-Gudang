@@ -82,8 +82,8 @@ function PenerimaanBarang() {
     { Header: "No. ", accessor: "nomor", align: "center" },
     { Header: "Nota Masuk ", accessor: "hmasuk_nota", align: "center" },
     { Header: "Nota Supplier", accessor: "hmasuk_notasupplier", align: "center" },
-    { Header: "Pengguna Generate ", accessor: "pengguna_generate", align: "center" },
-    { Header: "Pengguna Keputusan ", accessor: "pengguna_keputusan", align: "center" },
+    // { Header: "Pengguna Generate ", accessor: "pengguna_generate", align: "center" },
+    // { Header: "Pengguna Keputusan ", accessor: "pengguna_keputusan", align: "center" },
     { Header: "Status ", accessor: "status", align: "center" },
     { Header: "Detail Barang ", accessor: "detail", align: "center" },
   ];
@@ -92,8 +92,8 @@ function PenerimaanBarang() {
     nomor: index + 1,
     hmasuk_nota: item.hmasuk_nota,
     hmasuk_notasupplier: item.hmasuk_notasupplier,
-    pengguna_generate: item.pengguna_generate.pengguna_nama,
-    pengguna_keputusan: item.pengguna_action.pengguna_nama,
+    // pengguna_generate: item.pengguna_generate.pengguna_username || "-",
+    // pengguna_keputusan: item.pengguna_action.pengguna_username || "-",
     status:
       item.hmasuk_status == 0
         ? "Ditolak"

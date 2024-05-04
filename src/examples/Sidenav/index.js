@@ -90,35 +90,43 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
       let returnValue;
 
       if (type === "collapse") {
-        returnValue = href ? (
-          <Link
-            href={href}
-            key={key}
-            target="_blank"
-            rel="noreferrer"
-            sx={{ textDecoration: "none" }}
-          >
-            <SidenavCollapse name={name} icon={icon} active={key === collapseName}>
-              {children &&
-                children.map((child) => (
-                  <NavLink key={child.route} to={child.route}>
-                    <SidenavCollapse name={child.name} icon={child.icon} />
-                  </NavLink>
-                ))}
-            </SidenavCollapse>
-          </Link>
-        ) : (
-          <NavLink key={key} to={route}>
-            <SidenavCollapse name={name} icon={icon} active={key === collapseName}>
-              {children &&
-                children.map((child) => (
-                  <NavLink key={child.route} to={child.route}>
-                    <SidenavCollapse name={child.name} icon={child.icon} />
-                  </NavLink>
-                ))}
-            </SidenavCollapse>
-          </NavLink>
-        );
+        if (children && children.length > 0) {
+          returnValue = href ? (
+            <Link
+              href={href}
+              key={key}
+              target="_blank"
+              rel="noreferrer"
+              sx={{ textDecoration: "none" }}
+            >
+              <SidenavCollapse name={name} icon={icon} active={key === collapseName}>
+                {children &&
+                  children.map((child) => (
+                    <NavLink key={child.route} to={child.route}>
+                      <SidenavCollapse name={child.name} icon={child.icon} />
+                    </NavLink>
+                  ))}
+              </SidenavCollapse>
+            </Link>
+          ) : (
+            <NavLink key={key} to={route}>
+              <SidenavCollapse name={name} icon={icon} active={key === collapseName}>
+                {children &&
+                  children.map((child) => (
+                    <NavLink key={child.route} to={child.route}>
+                      <SidenavCollapse name={child.name} icon={child.icon} />
+                    </NavLink>
+                  ))}
+              </SidenavCollapse>
+            </NavLink>
+          );
+        } else if (route) {
+          returnValue = (
+            <NavLink key={key} to={route}>
+              <SidenavCollapse name={name} icon={icon} active={key === collapseName} />
+            </NavLink>
+          );
+        }
       } else if (type === "title") {
         returnValue = (
           <MDTypography

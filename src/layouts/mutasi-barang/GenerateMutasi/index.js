@@ -139,38 +139,42 @@ function GenerateMutasi() {
 
   const addMutasiBarang = async () => {
     if (window.confirm("Apakah data yang anda masukkan sudah benar?")) {
-      try {
-        // console.log("nota supplier", notaSupplier);
-        const dataKirim = {
-          htransfer_barang_tanggal_dikirim: datePicker,
-          gudang_id_asal: parseInt(gudangAwal),
-          gudang_id_tujuan: parseInt(gudangTujuan),
-          htransfer_barang_catatan: catatan,
-          detail_transfer: dataToSubmit,
-        };
+      if (gudangTujuan == null || datePicker == null || data.length == 0) {
+        alert("Gudang tujuan atau date picker belum diisi");
+      } else {
+        try {
+          // console.log("nota supplier", notaSupplier);
+          const dataKirim = {
+            htransfer_barang_tanggal_dikirim: datePicker,
+            gudang_id_asal: parseInt(gudangAwal),
+            gudang_id_tujuan: parseInt(gudangTujuan),
+            htransfer_barang_catatan: catatan,
+            detail_transfer: dataToSubmit,
+          };
 
-        console.log("hasil data kirim ", dataKirim);
-        const response = await axios.post(
-          "http://127.0.0.1:8000/api/gudang/transaksi-transfer-barang",
-          dataKirim,
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          }
-        );
-        openSuccessSB();
-        console.log("berhasil input");
-        setData([]);
-        setCatatan("");
-        setGudangAwal(null);
-        setGudangTujuan(null);
-        setinputMasukJumlah("");
-        setBatch("");
-        setdatePicker(null);
-      } catch (error) {
-        openErrorSB();
-        console.error("Terjadi kesalahan saat mengambil input data Barang keluar:", error);
+          console.log("hasil data kirim ", dataKirim);
+          const response = await axios.post(
+            "http://127.0.0.1:8000/api/gudang/transaksi-transfer-barang",
+            dataKirim,
+            {
+              headers: {
+                Authorization: `Bearer ${accessToken}`,
+              },
+            }
+          );
+          openSuccessSB();
+          // console.log("berhasil input");
+          setData([]);
+          setCatatan("");
+          setGudangAwal(null);
+          setGudangTujuan(null);
+          setinputMasukJumlah("");
+          setBatch("");
+          setdatePicker(null);
+        } catch (error) {
+          openErrorSB();
+          console.error("Terjadi kesalahan saat mengambil input data Barang keluar:", error);
+        }
       }
     }
   };
@@ -212,8 +216,8 @@ function GenerateMutasi() {
   // End API
 
   const handleAdd = () => {
-    if (isInputInvalid) {
-      alert("Tidak bisa melakukan input row");
+    if (isInputInvalid || inputBarangId == null || batch == "" || inputMasukJumlah == "") {
+      alert("Tidak bisa melakukan input row field barang ada yang kosong");
     } else {
       const barangId = parseInt(inputBarangId);
 
@@ -249,8 +253,10 @@ function GenerateMutasi() {
       setInputBarangNama(null);
       setInputBarangStok(null);
       setinputMasukJumlah("");
+      setDetailBarangByBatch([]);
+      setDetailBarang([]);
       setBatch("");
-      console.log(dataToSubmit);
+      // console.log(dataToSubmit);
     }
   };
 
@@ -416,8 +422,9 @@ function GenerateMutasi() {
                   disablePortal
                   id="combo-box-demo"
                   options={gudangs}
+                  value={gudangs.find((gudang) => gudang.gudang_id === gudangTujuan) || null}
                   getOptionLabel={(option) =>
-                    `${option.gudang_nama} (${option.jenis_gudang.jenis_gudang_nama})`
+                    `${option.gudang_nama} (${option.jenis_gudang.jenis_gudang_nama || "gamuncul"})`
                   }
                   fullWidth
                   renderInput={(params) => <TextField {...params} label="Gudang Tujuan" />}
@@ -473,8 +480,9 @@ function GenerateMutasi() {
                 <Autocomplete
                   disablePortal
                   id="combo-box-demo"
+                  value={barangs.find((barang) => barang.barang_id === inputBarangId) || null}
                   options={barangs}
-                  getOptionLabel={(option) => `${option.barang_nama}`}
+                  getOptionLabel={(option) => `${option.barang_nama || "Gamuncul"}`}
                   onChange={(event, newValue) => {
                     if (newValue) {
                       setInputBarangId(newValue.barang_id);

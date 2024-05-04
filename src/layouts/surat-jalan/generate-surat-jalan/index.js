@@ -54,6 +54,7 @@ function GenerateSuratJalan() {
   const [detailSuratJalan, setDetailSuratJalan] = useState([]);
   const [datePicker, setdatePicker] = useState(null);
   const [datePickerTransfer, setDatePickerTransfer] = useState(null);
+  const [idHkeluar, setIdHkeluar] = useState(null);
 
   // state untuk notification
   const [successSB, setSuccessSB] = useState(false);
@@ -212,26 +213,32 @@ function GenerateSuratJalan() {
             jumlah_kirim: jumlahKirimByItem[item.dkeluar_id],
           }));
 
-        setDetailSuratJalan(selectedBarang);
-        const dataToSend = {
-          suratjalan_tanggalkirim: datePicker,
-          hkeluar_id: selectedHkeluar.hkeluar_id,
-          detail_suratjalan: selectedBarang,
-        };
+        if (selectedBarang.length === 0) {
+          alert("tidak ada barang yang dikirim!");
+        } else {
+          setDetailSuratJalan(selectedBarang);
+          const dataToSend = {
+            suratjalan_tanggalkirim: datePicker,
+            hkeluar_id: selectedHkeluar.hkeluar_id,
+            detail_suratjalan: selectedBarang,
+          };
 
-        const response = await axios.post(
-          "http://127.0.0.1:8000/api/suratjalan/generate-surat-jalan",
-          dataToSend,
-          { headers: { Authorization: `Bearer ${accessToken}` } }
-        );
+          const response = await axios.post(
+            "http://127.0.0.1:8000/api/suratjalan/generate-surat-jalan",
+            dataToSend,
+            { headers: { Authorization: `Bearer ${accessToken}` } }
+          );
 
-        console.log("data to send: ", dataToSend);
-        openSuccessSB();
-        setSelectedHkeluar(null);
-        setListBarang([]);
-        setJumlahKirimByItem({});
-        setIsInputInvalid({});
-        getHkeluar();
+          console.log("data to send: ", dataToSend);
+          openSuccessSB();
+          setSelectedHkeluar(null);
+          setListBarang([]);
+          setJumlahKirimByItem({});
+          setIsInputInvalid({});
+          setIdHkeluar(null);
+          setdatePicker(null);
+          getHkeluar();
+        }
       } catch (error) {
         openErrorSB();
         console.error("Terjadi kesalahan saat menambahkan data Surat Jalan:", error);
@@ -494,10 +501,15 @@ function GenerateSuratJalan() {
                       disablePortal
                       id="combo-box-demo"
                       options={hkeluar}
-                      getOptionLabel={(option) => `${option.hkeluar_nota}`}
+                      getOptionLabel={(option) => `${option.hkeluar_nota || "kosong"}`}
+                      value={hkeluar.find((hkel) => hkel.hkeluar_id === idHkeluar) || null}
                       onChange={(event, newValue) => {
-                        //   setGudangPick(newValue.gudang_id);
                         handleChange(newValue);
+                        if (newValue) {
+                          setIdHkeluar(newValue.hkeluar_id);
+                        } else {
+                          setIdHkeluar(null);
+                        }
                       }}
                       fullWidth
                       renderInput={(params) => <TextField {...params} label="Nomor Nota " />}

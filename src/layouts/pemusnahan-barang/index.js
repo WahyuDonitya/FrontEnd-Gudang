@@ -120,35 +120,40 @@ function PemusnahanBarang() {
 
   const addPemusnahanBarang = async () => {
     if (window.confirm("Apakah data yang anda masukkan sudah benar?")) {
-      try {
-        // console.log("nota supplier", notaSupplier);
-        const dataKirim = {
-          hpemusnahan_tanggal: datePicker,
-          hpemusnahan_catatan: catatan,
-          detail_pemusnahan: dataToSubmit,
-        };
+      if (datePicker == null || data.length == 0) {
+        alert("Tanggal dan dynamic table tidak boleh kosong");
+      } else {
+        try {
+          // console.log("nota supplier", notaSupplier);
+          const dataKirim = {
+            hpemusnahan_tanggal: datePicker,
+            hpemusnahan_catatan: catatan,
+            detail_pemusnahan: dataToSubmit,
+          };
 
-        console.log("hasil data kirim ", dataKirim);
-        const response = await axios.post(
-          "http://127.0.0.1:8000/api/pemusnahan-barang/add-pemusnahan-barang",
-          dataKirim,
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          }
-        );
-        openSuccessSB();
-        console.log("berhasil input");
-        setData([]);
-        setDataToSubmit([]);
-        setCatatan("");
-        setinputMasukJumlah("");
-        setBatch("");
-        setDetailBarang([]);
-      } catch (error) {
-        openErrorSB();
-        console.error("Terjadi kesalahan saat mengambil input data Barang keluar:", error);
+          console.log("hasil data kirim ", dataKirim);
+          const response = await axios.post(
+            "http://127.0.0.1:8000/api/pemusnahan-barang/add-pemusnahan-barang",
+            dataKirim,
+            {
+              headers: {
+                Authorization: `Bearer ${accessToken}`,
+              },
+            }
+          );
+          openSuccessSB();
+          console.log("berhasil input");
+          setData([]);
+          setDataToSubmit([]);
+          setCatatan("");
+          setinputMasukJumlah("");
+          setBatch("");
+          setdatePicker(null);
+          setDetailBarang([]);
+        } catch (error) {
+          openErrorSB();
+          console.error("Terjadi kesalahan saat mengambil input data Barang keluar:", error);
+        }
       }
     }
   };
@@ -191,7 +196,7 @@ function PemusnahanBarang() {
   // End API
 
   const handleAdd = () => {
-    if (isInputInvalid) {
+    if (isInputInvalid || inputBarangId == null || batch == "") {
       alert("Tidak bisa melakukan input row");
     } else {
       const barangId = parseInt(inputBarangId);
@@ -224,11 +229,12 @@ function PemusnahanBarang() {
 
       setData([...data, newData]);
 
-      // setInputBarangId(null);
-      // setInputBarangNama(null);
+      setInputBarangId(null);
+      setInputBarangNama(null);
       setInputBarangStok(null);
       setinputMasukJumlah("");
       setBatch("");
+      setDetailBarang([]);
       console.log(dataToSubmit);
     }
   };
@@ -458,7 +464,8 @@ function PemusnahanBarang() {
                   disablePortal
                   id="combo-box-demo"
                   options={barangs}
-                  getOptionLabel={(option) => `${option.barang_nama}`}
+                  getOptionLabel={(option) => `${option.barang_nama || "Gamuncul"}`}
+                  value={barangs.find((barang) => barang.barang_id === inputBarangId) || null}
                   onChange={(event, newValue) => {
                     if (newValue) {
                       setInputBarangId(newValue.barang_id);

@@ -139,17 +139,10 @@ function DetailStokOpname() {
         return;
       }
       try {
-        const datatosend = {
-          dataId: dataId,
-          hmasuk_comment: rejectReason,
-        };
-        console.log(datatosend);
-        const response = await axios.post(
-          "http://127.0.0.1:8000/api/detailbarang/reject-barang-masuk",
-          datatosend,
-          {
-            headers: { Authorization: `Bearer ${accessToken}` },
-          }
+        const res = await axios.post(
+          `http://127.0.0.1:8000/api/stok-opname/reject-stok-opname`,
+          { opname_id: headerBarangMasuk.opname_id },
+          { headers: { Authorization: `Bearer ${accessToken}` } }
         );
 
         // console.log(response);
@@ -272,7 +265,7 @@ function DetailStokOpname() {
       color="success"
       icon="check"
       title="Notifikasi Berhasil"
-      content="Berhasil Melakukan approve Surat Jalan"
+      content="Berhasil Melakukan approve Stok opname"
       dateTime="Baru Saja"
       open={successSB}
       onClose={closeSuccessSB}
@@ -286,7 +279,7 @@ function DetailStokOpname() {
       color="error"
       icon="warning"
       title="Notifikasi Error"
-      content="Error Melakukan approve Surat Jalan"
+      content="Error Melakukan approve stok opname"
       dateTime="Baru Saja"
       open={errorSB}
       onClose={closeErrorSB}
@@ -300,7 +293,7 @@ function DetailStokOpname() {
       color="success"
       icon="check"
       title="Notifikasi Berhasil"
-      content="Berhasil Melakukan Reject Surat Jalan"
+      content="Berhasil Melakukan Reject stok opname"
       dateTime="Baru Saja"
       open={successRejectSB}
       onClose={closeSuccessRejectSB}
@@ -314,7 +307,7 @@ function DetailStokOpname() {
       color="error"
       icon="warning"
       title="Notifikasi Error"
-      content="Error Melakukan Reject Surat Jalan"
+      content="Error Melakukan Reject stok opname"
       dateTime="Baru Saja"
       open={errorRejectSB}
       onClose={closeErrorRejectSB}

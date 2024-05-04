@@ -48,8 +48,10 @@ function MasterPengguna() {
   const [confirmpasswordPengguna, setConfirmPasswordPengguna] = useState("");
   const [gudang, setGudang] = useState([]);
   const [gudangIdPick, setGudangIdPick] = useState(null);
+  const [gudangId, setGudangId] = useState(null);
   const [role, setRole] = useState([]);
   const [rolePick, setRolePick] = useState(null);
+  const [roleId, setRoleId] = useState(null);
   const [errorMessages, setErrorMessages] = useState({});
   const navigate = useNavigate();
 
@@ -102,11 +104,11 @@ function MasterPengguna() {
     if (window.confirm("Apakah data sudah benar?")) {
       try {
         if (
-          namaPengguna == "" &&
-          usernamePengguna == "" &&
-          passwordPengguna == "" &&
-          emailPengguna == "" &&
-          rolePick == null &&
+          namaPengguna == "" ||
+          usernamePengguna == "" ||
+          passwordPengguna == "" ||
+          emailPengguna == "" ||
+          rolePick == null ||
           gudangIdPick == null
         ) {
           alert("data tidak boleh kosong");
@@ -126,10 +128,18 @@ function MasterPengguna() {
             headers: { Authorization: `Bearer ${accessToken}` },
           });
           openSuccessSB();
-          setTimeout(() => {
-            // Refresh halaman
-            window.location.reload();
-          }, 2000);
+          setNamaPengguna("");
+          setUsernamePengguna("");
+          setPasswordPengguna("");
+          setEmailPengguna("");
+          setRolePick(null);
+          setGudangIdPick(null);
+          setGudangId(null);
+          setRoleId(null);
+          // setTimeout(() => {
+          //   // Refresh halaman
+          //   window.location.reload();
+          // }, 2000);
         }
       } catch (error) {
         openErrorSB();
@@ -200,7 +210,7 @@ function MasterPengguna() {
         </MDBox>
         <MDBox pt={2} px={2} lineHeight={1.25}>
           <MDTypography variant="h6" fontWeight="medium">
-            Form Master Gudang
+            Form Master Pengguna
           </MDTypography>
           <Grid container pt={3} spacing={7}>
             <Grid item xs={6}>
@@ -221,9 +231,15 @@ function MasterPengguna() {
                   disablePortal
                   id="combo-box-demo"
                   options={gudang}
-                  getOptionLabel={(option) => `${option.gudang_nama}`}
+                  value={gudang.find((gud) => gud.gudang_id === gudangId) || null}
+                  getOptionLabel={(option) => `${option.gudang_nama || "kosong"}`}
                   onChange={(event, newValue) => {
                     handleChangeGudang(newValue);
+                    if (newValue) {
+                      setGudangId(newValue.gudang_id);
+                    } else {
+                      setGudangId(null);
+                    }
                   }}
                   fullWidth
                   renderInput={(params) => <TextField {...params} label="Karyawan Gudang" />}
@@ -275,9 +291,15 @@ function MasterPengguna() {
                   disablePortal
                   id="combo-box-demo"
                   options={role}
+                  value={role.find((r) => r.role_id === roleId) || null}
                   getOptionLabel={(option) => `${option.role_nama}`}
                   onChange={(event, newValue) => {
                     handleChangeRole(newValue);
+                    if (newValue) {
+                      setRoleId(newValue.role_id);
+                    } else {
+                      setRoleId(null);
+                    }
                   }}
                   fullWidth
                   renderInput={(params) => <TextField {...params} label="Pilih Role" />}

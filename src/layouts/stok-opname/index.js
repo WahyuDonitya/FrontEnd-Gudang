@@ -62,7 +62,6 @@ function StokOpname() {
     } else {
       if (window.confirm("Apakah data yang anda masukkan sudah benar?")) {
         try {
-          // console.log("nota supplier", notaSupplier);
           const dataKirim = {
             datePickerstart: datePickerstart,
             datePickerend: datePickerend,
@@ -96,40 +95,52 @@ function StokOpname() {
   const addFormOpname = async () => {
     if (window.confirm("Apakah data yang anda masukkan sudah benar? ")) {
       try {
-        const selectedBarang = detaiBarangOpname.map((item) => ({
-          detailbarangopname_id: item.detailbarangopname_id,
-          detailbarangopname_jumlahaktual: jumlahAktualByItem[item.detailbarangopname_id],
-          detailbarangopname_jumlahdifference: jumlahDifferenceByItem[item.detailbarangopname_id],
-          detailbarangopname_catatan:
-            keteranganByItem[item.detailbarangopname_id] || "Tidak Ada Keterangan",
-        }));
+        let isInputValid = true;
 
-        const datakirim = {
-          detailbarang_opname: selectedBarang,
-          opname_id: opnameId,
-        };
+        if (
+          detaiBarangOpname.some((item) => jumlahAktualByItem[item.detailbarangopname_id] == null)
+        ) {
+          isInputValid = false;
+        }
 
-        console.log(datakirim);
+        if (!isInputValid) {
+          alert("Ada jumlah aktual yang belum diisi");
+        } else {
+          const selectedBarang = detaiBarangOpname.map((item) => ({
+            detailbarangopname_id: item.detailbarangopname_id,
+            detailbarangopname_jumlahaktual: jumlahAktualByItem[item.detailbarangopname_id],
+            detailbarangopname_jumlahdifference: jumlahDifferenceByItem[item.detailbarangopname_id],
+            detailbarangopname_catatan:
+              keteranganByItem[item.detailbarangopname_id] || "Tidak Ada Keterangan",
+          }));
 
-        const response = await axios.post(
-          "http://127.0.0.1:8000/api/stok-opname/stok-opname-form",
-          datakirim,
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          }
-        );
+          const datakirim = {
+            detailbarang_opname: selectedBarang,
+            opname_id: opnameId,
+          };
 
-        console.log("ini response : ", response.data);
-        openSuccessSB();
-        setOpnameId(null);
-        setKeteranganByItem({});
-        setJumlahAktualByItem({});
-        setJumlahDifferenceByItem({});
-        setDetailBarangOpname([]);
-        setHeaderOpname([]);
-        getHeaderOpname();
+          console.log(datakirim);
+
+          const response = await axios.post(
+            "http://127.0.0.1:8000/api/stok-opname/stok-opname-form",
+            datakirim,
+            {
+              headers: {
+                Authorization: `Bearer ${accessToken}`,
+              },
+            }
+          );
+
+          console.log("ini response : ", response.data);
+          openSuccessSB();
+          setOpnameId(null);
+          setKeteranganByItem({});
+          setJumlahAktualByItem({});
+          setJumlahDifferenceByItem({});
+          setDetailBarangOpname([]);
+          getHeaderOpname();
+          getDataStokOpname();
+        }
       } catch (error) {
         console.log("terdapat error saat menjalankan stok opname ", error);
         openErrorSB();
@@ -316,7 +327,7 @@ function StokOpname() {
     aktual: (
       <MDInput
         type="number"
-        value={jumlahAktualByItem[item.detailbarangopname_id] || 0}
+        value={jumlahAktualByItem[item.detailbarangopname_id]}
         onChange={(e) =>
           handleChangeJumlahAktual(
             item.detailbarangopname_id,

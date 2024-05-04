@@ -57,7 +57,7 @@ function GeneratePackaging() {
   const [pelaku, setPelaku] = useState("");
 
   // ini untuk inputan dynamic table
-  const [inputBarangId, setInputBarangId] = useState(null);
+  const [inputHmasukId, setInputHmasukId] = useState(null);
   const [inputBarangNama, setInputBarangNama] = useState(null);
   const [inputJumlahPacking, setInputJumlahPacking] = useState("");
 
@@ -119,8 +119,8 @@ function GeneratePackaging() {
   };
 
   const handleAdd = async () => {
-    if (isInputRusakInvalid) {
-      alert("Barang Yang anda kelebihan");
+    if (isInputRusakInvalid || pelaku == "") {
+      alert("Barang Yang anda masukkan kelebihan atau field pelaku masih kosong");
     } else {
       if (window.confirm("Apakah data yang anda masukkan sudah benar?")) {
         try {
@@ -141,6 +141,8 @@ function GeneratePackaging() {
           setDetailBarang([]);
           setSelectedHMasuk(null);
           setStokBarang(0);
+          setInputHmasukId(null);
+          setPelaku("");
           openSuccessSB();
           closeRusakModalHandler();
         } catch (error) {
@@ -316,7 +318,8 @@ function GeneratePackaging() {
                   disablePortal
                   id="combo-box-demo"
                   options={hmasuk}
-                  getOptionLabel={(option) => `${option.hmasuk_nota}`}
+                  getOptionLabel={(option) => `${option.hmasuk_nota || "kosong"}`}
+                  value={hmasuk.find((hmas) => hmas.hmasuk_id === inputHmasukId) || null}
                   fullWidth
                   renderInput={(params) => (
                     <TextField {...params} label="Pilih Nota Masuk Barang" />
@@ -324,8 +327,10 @@ function GeneratePackaging() {
                   onChange={(event, newValue) => {
                     if (newValue) {
                       setSelectedHMasuk(newValue.hmasuk_nota);
+                      setInputHmasukId(newValue.hmasuk_id);
                       handleChange(newValue);
                     } else {
+                      setInputHmasukId(null);
                       setSelectedHMasuk(null);
                       setDetailBarang([]);
                     }

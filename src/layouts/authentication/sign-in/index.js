@@ -42,11 +42,17 @@ import BasicLayout from "layouts/authentication/components/BasicLayout";
 // Images
 import bgImage from "assets/images/bg-sign-in-basic.jpeg";
 import { jwtDecode } from "jwt-decode";
+import MDSnackbar from "components/MDSnackbar";
 
 function Basic() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [token, setToken] = useState("");
+
+  // State notification
+  const [errorSB, setErrorSB] = useState(false);
+  const openErrorSB = () => setErrorSB(true);
+  const closeErrorSB = () => setErrorSB(false);
 
   const handleUsernameChange = (event) => {
     setUsername(event.target.value);
@@ -57,23 +63,28 @@ function Basic() {
   };
 
   const handleLogin = async () => {
-    try {
-      const response = await axios.post("http://127.0.0.1:8000/api/login", {
-        pengguna_username: username,
-        password: password,
-      });
+    if (!username || !password) {
+      alert("terdapat field yang kosong");
+    } else {
+      try {
+        const response = await axios.post("http://127.0.0.1:8000/api/login", {
+          pengguna_username: username,
+          password: password,
+        });
 
-      // console.log("Response dari API:", response.data.access_token);
-      setToken(response.data.access_token);
-      localStorage.setItem("access_token", response.data.access_token);
-      localStorage.setItem("role_id", response.data.role_id);
+        // console.log("Response dari API:", response.data.access_token);
+        setToken(response.data.access_token);
+        localStorage.setItem("access_token", response.data.access_token);
+        localStorage.setItem("role_id", response.data.role_id);
 
-      // jika bukan admin atau manager maka yang akan dimunculkan hanya informasi mengenai gudang nya saja
-      if (response.data.role_id == 1) {
-        localStorage.setItem("gudang_id", response.data.gudang_id);
+        // jika bukan admin atau manager maka yang akan dimunculkan hanya informasi mengenai gudang nya saja
+        if (response.data.role_id == 1) {
+          localStorage.setItem("gudang_id", response.data.gudang_id);
+        }
+      } catch (error) {
+        openErrorSB();
+        console.error("Terjadi kesalahan:", error);
       }
-    } catch (error) {
-      console.error("Terjadi kesalahan:", error);
     }
   };
 
@@ -86,6 +97,22 @@ function Basic() {
       return <Navigate to="/dashboard-admin" />;
     }
   }
+
+  // render Notification
+
+  const renderErrorSB = (
+    <MDSnackbar
+      color="error"
+      icon="warning"
+      title="Notifikasi Error"
+      content="Username atau password salah"
+      dateTime="Baru Saja"
+      open={errorSB}
+      onClose={closeErrorSB}
+      close={closeErrorSB}
+      bgWhite
+    />
+  );
 
   return (
     <BasicLayout image={bgImage}>
@@ -136,6 +163,11 @@ function Basic() {
           </MDBox>
         </MDBox>
       </Card>
+      <MDBox p={2}>
+        <Grid container spacing={6}>
+          {renderErrorSB}
+        </Grid>
+      </MDBox>
     </BasicLayout>
   );
 }

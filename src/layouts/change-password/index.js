@@ -69,20 +69,24 @@ function ChangePassword() {
       if (isInputInvalid == true || isInputInvalidLength == true) {
         alert("Masih terdapat error");
       } else {
-        try {
-          const response = await axios.post(
-            `http://127.0.0.1:8000/api/change-password`,
-            {
-              password: newPassword,
-            },
-            { headers: { Authorization: `Bearer ${accessToken}` } }
-          );
-          setNewPassword("");
-          setRetypePassword("");
-          openSuccessSB();
-        } catch (error) {
-          openErrorSB();
-          console.log("terdapat kesalahan saat melakukan update password");
+        if (setNewPassword == "" || setRetypePassword == "") {
+          alert("field harus diisi");
+        } else {
+          try {
+            const response = await axios.post(
+              `http://127.0.0.1:8000/api/change-password`,
+              {
+                password: newPassword,
+              },
+              { headers: { Authorization: `Bearer ${accessToken}` } }
+            );
+            setNewPassword("");
+            setRetypePassword("");
+            openSuccessSB();
+          } catch (error) {
+            openErrorSB();
+            console.log("terdapat kesalahan saat melakukan update password");
+          }
         }
       }
     }

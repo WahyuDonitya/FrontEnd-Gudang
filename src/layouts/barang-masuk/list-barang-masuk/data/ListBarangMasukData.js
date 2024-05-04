@@ -5,6 +5,7 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import MDBadge from "components/MDBadge";
 import MDBox from "components/MDBox";
+import dayjs from "dayjs";
 
 export default function data() {
   const accessToken = localStorage.getItem("access_token");
@@ -40,12 +41,14 @@ export default function data() {
       { Header: "Pembuat", accessor: "pengguna_generate.pengguna_nama", align: "center" },
       { Header: "Pemberi Keputusan", accessor: "pengguna_action.pengguna_nama", align: "center" },
       { Header: "Comment", accessor: "hmasuk_comment", align: "center" },
+      { Header: "Dibuat tanggal", accessor: "tanggal", align: "center" },
       { Header: "Action", accessor: "action", align: "center" },
       //   { Header: "Print Surat Jalan", accessor: "action_print", align: "center" },
     ],
 
     rows: approvalList.map((item) => ({
       hmasuk_nota: item.hmasuk_nota,
+      tanggal: dayjs(item.created_at).format("DD-MM-YYYY"),
       hmasuk_notasupplier: item.hmasuk_notasupplier,
       pengguna_generate: { pengguna_nama: item.pengguna_generate?.pengguna_nama || "-" },
       pengguna_action: { pengguna_nama: item.pengguna_action?.pengguna_nama || "-" },

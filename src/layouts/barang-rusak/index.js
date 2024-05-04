@@ -105,36 +105,40 @@ function GenerateBarangRusak() {
 
   const addBarangRusak = async () => {
     if (window.confirm("Apakah data yang anda masukkan sudah benar?")) {
-      try {
-        // console.log("nota supplier", notaSupplier);
-        const dataKirim = {
-          hbarangrusak_kronologi: catatan,
-          hbarangrusak_pelaku: pelaku,
-          // file_foto: selectedFile,
-          detailrusak: dataToSubmit,
-        };
+      if (catatan == "" || pelaku == "" || data.length == 0) {
+        alert("Lengkapi form terlebih dahulu!");
+      } else {
+        try {
+          // console.log("nota supplier", notaSupplier);
+          const dataKirim = {
+            hbarangrusak_kronologi: catatan,
+            hbarangrusak_pelaku: pelaku,
+            // file_foto: selectedFile,
+            detailrusak: dataToSubmit,
+          };
 
-        console.log("hasil data kirim ", dataKirim);
-        const response = await axios.post(
-          "http://127.0.0.1:8000/api/barang-rusak/add-barang-rusak",
-          dataKirim,
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          }
-        );
-        openSuccessSB();
-        console.log(response);
-        setData([]);
-        setCatatan("");
-        setPelaku("");
-        setBarangs([]);
-        setinputMasukJumlah("");
-        setBatch("");
-      } catch (error) {
-        openErrorSB();
-        console.error("Terjadi kesalahan saat mengambil input data Barang keluar:", error);
+          console.log("hasil data kirim ", dataKirim);
+          const response = await axios.post(
+            "http://127.0.0.1:8000/api/barang-rusak/add-barang-rusak",
+            dataKirim,
+            {
+              headers: {
+                Authorization: `Bearer ${accessToken}`,
+              },
+            }
+          );
+          openSuccessSB();
+          console.log(response);
+          setData([]);
+          setCatatan("");
+          setPelaku("");
+          setBarangs([]);
+          setinputMasukJumlah("");
+          setBatch("");
+        } catch (error) {
+          openErrorSB();
+          console.error("Terjadi kesalahan saat mengambil input data Barang keluar:", error);
+        }
       }
     }
   };
@@ -197,8 +201,8 @@ function GenerateBarangRusak() {
 
   const handleAdd = () => {
     // console.log(batch);
-    if (isInputInvalid) {
-      alert("Tidak bisa melakukan input row");
+    if (isInputInvalid || inputBarangId == null || batch == "" || inputMasukJumlah == "") {
+      alert("Terdapat field yang belum diisi");
     } else {
       const barangId = parseInt(inputBarangId);
 
@@ -251,6 +255,8 @@ function GenerateBarangRusak() {
       setPenempatanId(null);
       setinputMasukJumlah("");
       setBatch("");
+      setDetailBarang([]);
+      setPenempatanBarang([]);
       console.log(dataToSubmit);
     }
   };
@@ -451,7 +457,8 @@ function GenerateBarangRusak() {
                   disablePortal
                   id="combo-box-demo"
                   options={barangs}
-                  getOptionLabel={(option) => `${option.barang_nama}`}
+                  value={barangs.find((barang) => barang.barang_id === inputBarangId) || null}
+                  getOptionLabel={(option) => `${option.barang_nama || "gaada nama"}`}
                   onChange={(event, newValue) => {
                     if (newValue) {
                       setInputBarangId(newValue.barang_id);
@@ -521,7 +528,7 @@ function GenerateBarangRusak() {
                     }
                   }}
                   fullWidth
-                  renderInput={(params) => <TextField {...params} label="Batch Barang" />}
+                  renderInput={(params) => <TextField {...params} label="Penempatan Barang" />}
                 />
               ) : (
                 <p>Data Penempatan tidak ditemukan...</p>

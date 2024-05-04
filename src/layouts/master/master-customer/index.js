@@ -63,25 +63,34 @@ function MasterCustomer() {
           );
           setCustomerIdEdit(null);
         } else {
-          const add = await axios.post(
-            `http://127.0.0.1:8000/api/customer`,
-            {
-              customer_nama: customer_nama,
-              customer_alamat: customer_alamat,
-              customer_telepon: customer_telepon,
-              gudang_id: gudangPick,
-            },
-            {
-              headers: { Authorization: `Bearer ${accessToken}` },
-            }
-          );
+          if (
+            customer_nama == "" ||
+            customer_alamat == "" ||
+            customer_telepon == "" ||
+            gudangPick == null
+          ) {
+            alert("terdapat inputan yang kosong");
+          } else {
+            const add = await axios.post(
+              `http://127.0.0.1:8000/api/customer`,
+              {
+                customer_nama: customer_nama,
+                customer_alamat: customer_alamat,
+                customer_telepon: customer_telepon,
+                gudang_id: gudangPick,
+              },
+              {
+                headers: { Authorization: `Bearer ${accessToken}` },
+              }
+            );
+            setCustomerAlamat("");
+            setCustomerNama("");
+            setCustomerTelepon("");
+            openSuccessSB();
+            getCustomer();
+            setGudangPick(null);
+          }
         }
-        setCustomerAlamat("");
-        setCustomerNama("");
-        setCustomerTelepon("");
-        openSuccessSB();
-        getCustomer();
-        setGudangPick(null);
       } catch (error) {
         openErrorSB();
         console.error("Terjadi kesalahan saat menghapus barang:", error);
@@ -323,7 +332,8 @@ function MasterCustomer() {
                   disablePortal
                   id="combo-box-demo"
                   options={gudangs}
-                  getOptionLabel={(option) => `${option.gudang_nama}`}
+                  value={gudangs.find((gud) => gud.gudang_id === gudangPick) || null}
+                  getOptionLabel={(option) => `${option.gudang_nama || "Gaada"}`}
                   onChange={(event, newValue) => {
                     if (newValue) {
                       setGudangPick(newValue.gudang_id);

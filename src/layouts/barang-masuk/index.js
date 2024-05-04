@@ -37,6 +37,7 @@ function BarangMasuk() {
   const [batch, setBatch] = useState("");
   const [notaSupplier, setNotaSupplier] = useState("");
   const [barangRusak, setBarangRusak] = useState(0);
+  const [selectedBarang, setSelectedBarang] = useState(null);
 
   // ini untuk inputan dynamic table
   const [inputBarangId, setInputBarangId] = useState(null);
@@ -119,27 +120,35 @@ function BarangMasuk() {
 
   const addBarangMasuk = async () => {
     if (window.confirm("Apakah data yang anda masukkan sudah benar?")) {
-      try {
-        // console.log("nota supplier", notaSupplier);
-        const dataKirim = {
-          hmasuk_notasupplier: notaSupplier,
-          supplier_id: parseInt(supplierPick),
-          barang_masuk: dataToSubmit,
-        };
+      if (notaSupplier != "" && data.length > 0) {
+        try {
+          // console.log("nota supplier", notaSupplier);
+          const dataKirim = {
+            hmasuk_notasupplier: notaSupplier,
+            supplier_id: parseInt(supplierPick),
+            barang_masuk: dataToSubmit,
+          };
 
-        const response = await axios.post("http://127.0.0.1:8000/api/detailbarang/add", dataKirim, {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        });
-        openSuccessSB();
-        console.log("berhasil input");
-        setData([]);
-        setDataToSubmit([]);
-        setNotaSupplier("");
-      } catch (error) {
-        openErrorSB();
-        console.error("Terjadi kesalahan saat mengambil input data Barang keluar:", error);
+          const response = await axios.post(
+            "http://127.0.0.1:8000/api/detailbarang/add",
+            dataKirim,
+            {
+              headers: {
+                Authorization: `Bearer ${accessToken}`,
+              },
+            }
+          );
+          openSuccessSB();
+          console.log("berhasil input");
+          setData([]);
+          setDataToSubmit([]);
+          setNotaSupplier("");
+        } catch (error) {
+          openErrorSB();
+          console.error("Terjadi kesalahan saat mengambil input data Barang keluar:", error);
+        }
+      } else {
+        alert("input nota supplier atau tidak ada data yang diinput");
       }
     }
   };
@@ -147,7 +156,12 @@ function BarangMasuk() {
   // End API
 
   const handleAdd = () => {
-    if (isInputInvalid == false) {
+    if (
+      isInputInvalid == false &&
+      inputBarangNama != null &&
+      inputMasukJumlah != null &&
+      datePicker != null
+    ) {
       const barangId = parseInt(inputBarangId);
 
       const newBarangMasuk = {
@@ -371,8 +385,9 @@ function BarangMasuk() {
                 <Autocomplete
                   disablePortal
                   id="combo-box-demo"
+                  value={barangs.find((barang) => barang.barang_id === inputBarangId) || null}
                   options={barangs}
-                  getOptionLabel={(option) => `${option.barang_nama}`}
+                  getOptionLabel={(option) => `${option.barang_nama || "Gamuncul"}`}
                   onChange={(event, newValue) => {
                     if (newValue) {
                       setInputBarangId(newValue.barang_id);
@@ -405,6 +420,7 @@ function BarangMasuk() {
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DatePicker
                   fullWidth
+                  disablePast
                   sx={{ width: "100%" }}
                   value={datePicker}
                   onChange={(newValue) => {

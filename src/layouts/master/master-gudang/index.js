@@ -34,6 +34,7 @@ function MasterGudang() {
   const [jenisGudang, setJenisGudang] = useState([]);
   const [jenisGudangPickID, setJenisGudangPickId] = useState(null);
   const [gudangEditId, setGudangEditId] = useState(null);
+  const [jenisGudangId, setJenisGudangId] = useState(null);
 
   // state untuk notification
   const [successSB, setSuccessSB] = useState(false);
@@ -114,15 +115,21 @@ function MasterGudang() {
           );
           setGudangEditId(null);
         } else {
-          const datakirim = {
-            gudang_nama: gudang_nama,
-            jenis_gudang_id: parseInt(jenisGudangPickID),
-          };
-          const add = await axios.post(`http://127.0.0.1:8000/api/gudang`, datakirim, {
-            headers: { Authorization: `Bearer ${accessToken}` },
-          });
+          if (gudang_nama == "" || jenisGudangPickID == null) {
+            alert("Data tidak boleh kosong!");
+          } else {
+            const datakirim = {
+              gudang_nama: gudang_nama,
+              jenis_gudang_id: parseInt(jenisGudangPickID),
+            };
+            const add = await axios.post(`http://127.0.0.1:8000/api/gudang`, datakirim, {
+              headers: { Authorization: `Bearer ${accessToken}` },
+            });
+          }
         }
         setGudangNama("");
+        setJenisGudangId(null);
+        setJenisGudangPickId(null);
         openSuccessSB();
         getGudang();
       } catch (error) {
@@ -283,8 +290,14 @@ function MasterGudang() {
                   id="combo-box-demo"
                   options={jenisGudang}
                   getOptionLabel={(option) => `${option.jenis_gudang_nama}`}
+                  value={jenisGudang.find((gudang) => gudang.gudang_id === jenisGudangId) || null}
                   onChange={(event, newValue) => {
                     handleChangeJenisGudang(newValue);
+                    if (newValue) {
+                      setJenisGudangId(newValue.gudang_id);
+                    } else {
+                      setJenisGudangId(null);
+                    }
                   }}
                   fullWidth
                   renderInput={(params) => <TextField {...params} label="Jenis Gudang " />}

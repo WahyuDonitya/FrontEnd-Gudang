@@ -53,6 +53,7 @@ function MasterPositioning() {
   const [selectedRows, setSelectedRows] = useState(null);
   const [namaRak, setNamaRak] = useState(0);
   const [level, setLevel] = useState(0);
+  const [rowsId, setRowsId] = useState(null);
 
   // state untuk notification
   const [successSB, setSuccessSB] = useState(false);
@@ -103,17 +104,21 @@ function MasterPositioning() {
 
   const addRows = async () => {
     if (window.confirm("apakah data yang anda masukkan sudah benar")) {
-      try {
-        const response = await axios.post(
-          `http://127.0.0.1:8000/api/positioning/add-rows`,
-          { row_name: namaRows },
-          { headers: { Authorization: `Bearer ${accessToken}` } }
-        );
-        setNamaRows("");
-        openSuccessSB();
-      } catch (error) {
-        console.log("terjadi kesalahan saat menambahkan data ", error);
-        openErrorSB();
+      if (namaRows == "") {
+        alert("rows yang ingin dimasukkan masih kosong");
+      } else {
+        try {
+          const response = await axios.post(
+            `http://127.0.0.1:8000/api/positioning/add-rows`,
+            { row_name: namaRows },
+            { headers: { Authorization: `Bearer ${accessToken}` } }
+          );
+          setNamaRows("");
+          openSuccessSB();
+        } catch (error) {
+          console.log("terjadi kesalahan saat menambahkan data ", error);
+          openErrorSB();
+        }
       }
     }
   };
@@ -232,12 +237,15 @@ function MasterPositioning() {
                 disablePortal
                 id="combo-box-demo"
                 options={row}
-                getOptionLabel={(option) => `${option.row_name}`}
+                value={row.find((r) => r.row_id === rowsId) || null}
+                getOptionLabel={(option) => `${option.row_name || "kosong"}`}
                 onChange={(event, newValue) => {
                   if (newValue) {
                     handleChangeRows(newValue);
+                    setRowsId(newValue.row_id);
                   } else {
                     setSelectedRows(null);
+                    setRowsId(null);
                   }
                 }}
                 fullWidth

@@ -65,13 +65,17 @@ function MasterBarang() {
           console.log("Berhasil melakukan update data barang");
           setBarangIdEdit(null);
         } else {
-          const add = await axios.post(
-            `http://127.0.0.1:8000/api/barang`,
-            { barang_nama },
-            {
-              headers: { Authorization: `Bearer ${accessToken}` },
-            }
-          );
+          if (barang_nama == "") {
+            alert("Field barang nama kosong");
+          } else {
+            const add = await axios.post(
+              `http://127.0.0.1:8000/api/barang`,
+              { barang_nama },
+              {
+                headers: { Authorization: `Bearer ${accessToken}` },
+              }
+            );
+          }
         }
         setNamaBarang("");
         openSuccessSB();

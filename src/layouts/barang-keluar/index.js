@@ -48,6 +48,7 @@ function BarangKeluar() {
   const [customerPick, setCustomerPick] = useState("");
   const [gudangPick, setGudangPick] = useState(null);
   const [datePicker, setdatePicker] = useState(null);
+  const [customerId, setCustomerId] = useState(null);
 
   // ini untuk inputan dynamic table
   const [inputBarangId, setInputBarangId] = useState("");
@@ -121,35 +122,44 @@ function BarangKeluar() {
 
   const addBarangKeluar = async () => {
     if (window.confirm("Apakah data yang anda masukkan sudah benar?")) {
-      try {
-        const customerId = parseInt(customerPick);
+      if (customerPick == "" || datePicker == null) {
+        alert("Mohon isi semua form");
+      } else {
+        if (data.length > 0) {
+          try {
+            const customerId = parseInt(customerPick);
 
-        const dataToSend = {
-          gudang_id: gudangPick,
-          customer_id: customerId,
-          hkeluar_tanggal: datePicker,
-          detail_transaksi: dataToSubmit,
-        };
+            const dataToSend = {
+              gudang_id: gudangPick,
+              customer_id: customerId,
+              hkeluar_tanggal: datePicker,
+              detail_transaksi: dataToSubmit,
+            };
 
-        console.log("value data to send: ", dataToSend);
+            console.log("value data to send: ", dataToSend);
 
-        const response = await axios.post(
-          "http://127.0.0.1:8000/api/transaksi-barang-keluar",
-          dataToSend,
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
+            const response = await axios.post(
+              "http://127.0.0.1:8000/api/transaksi-barang-keluar",
+              dataToSend,
+              {
+                headers: {
+                  Authorization: `Bearer ${accessToken}`,
+                },
+              }
+            );
+            console.log("berhasil input");
+            openSuccessSB();
+            setData([]);
+            setDataToSubmit([]);
+            setdatePicker(null);
+            setCustomerId(null);
+          } catch (error) {
+            openErrorSB();
+            console.error("Terjadi kesalahan saat mengambil input data Barang keluar:", error);
           }
-        );
-        console.log("berhasil input");
-        openSuccessSB();
-        setData([]);
-        setDataToSubmit([]);
-        setdatePicker(null);
-      } catch (error) {
-        openErrorSB();
-        console.error("Terjadi kesalahan saat mengambil input data Barang keluar:", error);
+        } else {
+          alert("data yang akan dimasukkan kosong");
+        }
       }
     }
   };
@@ -157,39 +167,43 @@ function BarangKeluar() {
   // End API
 
   const handleAdd = () => {
-    const barangId = parseInt(inputBarangId);
+    if (inputBarangNama == "" || inputKeluarJumlah == "") {
+      alert("Mohon isi semua field");
+    } else {
+      const barangId = parseInt(inputBarangId);
 
-    const existingItemIndex = dataToSubmit.findIndex((item) => item.barang_id === barangId);
+      const existingItemIndex = dataToSubmit.findIndex((item) => item.barang_id === barangId);
 
-    if (existingItemIndex !== -1) {
-      alert(
-        "Barang sudah ditambahkan sebelumnya! Jika ingin melakukan update harap hapus data yang ada pada Table"
-      );
-      return;
+      if (existingItemIndex !== -1) {
+        alert(
+          "Barang sudah ditambahkan sebelumnya! Jika ingin melakukan update harap hapus data yang ada pada Table"
+        );
+        return;
+      }
+
+      const newDetailTransaksi = {
+        barang_id: barangId,
+        dkeluar_jumlah: parseInt(inputKeluarJumlah),
+        dkeluar_harga: parseFloat(hargakeluar),
+      };
+      dataToSubmit.push(newDetailTransaksi);
+
+      // ini untuk memunculkan ke dynamic table
+      const newData = {
+        inputBarangNama,
+        inputKeluarJumlah: inputKeluarJumlah.toString(),
+        hargakeluar: hargakeluar.toString(),
+      };
+
+      setData([...data, newData]);
+
+      setInputBarangId("");
+      setInputBarangNama("");
+      setInputBarangStok("");
+      setinputKeluarJumlah("");
+      setHargaKeluar("");
+      // console.log(dataToSubmit);
     }
-
-    const newDetailTransaksi = {
-      barang_id: barangId,
-      dkeluar_jumlah: parseInt(inputKeluarJumlah),
-      dkeluar_harga: parseFloat(hargakeluar),
-    };
-    dataToSubmit.push(newDetailTransaksi);
-
-    // ini untuk memunculkan ke dynamic table
-    const newData = {
-      inputBarangNama,
-      inputKeluarJumlah: inputKeluarJumlah.toString(),
-      hargakeluar: hargakeluar.toString(),
-    };
-
-    setData([...data, newData]);
-
-    setInputBarangId("");
-    setInputBarangNama("");
-    setInputBarangStok("");
-    setinputKeluarJumlah("");
-    setHargaKeluar("");
-    // console.log(dataToSubmit);
   };
 
   const handleInputChange = (e) => {
@@ -219,6 +233,7 @@ function BarangKeluar() {
   };
 
   const handleCustomerInputChange = (event, newValue) => {
+    // console.log(newValue);
     // Pemisahan string berdasarkan tanda kurung buka dan tutup
     const parts = newValue.split("(");
     if (parts.length > 1) {
@@ -341,8 +356,18 @@ function BarangKeluar() {
                   disablePortal
                   id="combo-box-demo"
                   options={customer}
-                  getOptionLabel={(option) => `${option.customer_nama} (${option.customer_id})`}
+                  value={customer.find((cust) => cust.customer_id === customerId) || null}
+                  getOptionLabel={(option) =>
+                    `${option.customer_nama} (${option.customer_id || "gamuncul"})`
+                  }
                   onInputChange={handleCustomerInputChange}
+                  onChange={(event, newValue) => {
+                    if (newValue) {
+                      setCustomerId(newValue.customer_id);
+                    } else {
+                      setCustomerId(null);
+                    }
+                  }}
                   fullWidth
                   renderInput={(params) => <TextField {...params} label="Customer" />}
                 />
@@ -395,9 +420,9 @@ function BarangKeluar() {
                 <Autocomplete
                   disablePortal
                   id="combo-box-demo"
-                  // value={inputBarang}
+                  value={barangs.find((barang) => barang.barang_id === inputBarangId) || null}
                   options={barangs}
-                  getOptionLabel={(option) => `${option.barang_nama}`}
+                  getOptionLabel={(option) => `${option.barang_nama || "Gamuncul"}`}
                   onChange={(event, newValue) => {
                     if (newValue) {
                       setInputBarangId(newValue.barang_id);
@@ -405,9 +430,9 @@ function BarangKeluar() {
                       handleInputChangeBarang(newValue.barang_id);
                       // setInputBarangStok(newValue.barang_stok);
                     } else {
-                      setInputBarangId(null);
-                      setInputBarangNama(null);
-                      setInputBarangStok(null);
+                      setInputBarangId("");
+                      setInputBarangNama("");
+                      setInputBarangStok("");
                     }
 
                     console.log(barangs);
