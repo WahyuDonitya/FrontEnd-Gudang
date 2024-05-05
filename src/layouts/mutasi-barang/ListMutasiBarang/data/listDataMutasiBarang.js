@@ -96,7 +96,7 @@ export default function data() {
       { Header: "Diputus Oleh", accessor: "pengguna_action.pengguna_nama", align: "center" },
       { Header: "Comment", accessor: "htransfer_comment", align: "center" },
       { Header: "Action", accessor: "action", align: "center" },
-      //   { Header: "Print Surat Jalan", accessor: "action_print", align: "center" },
+      { Header: "List Surat Jalan", accessor: "list", align: "center" },
     ],
 
     rows: approvalList.map((item) => ({
@@ -148,14 +148,13 @@ export default function data() {
           </MDTypography>
         </Link>
       ),
-      //   action_print:
-      //     item.suratjalan_status === 3 ? (
-      //       <Link to={`/detailsurat-jalan/${item.suratjalan_nota}`}>
-      //         <MDTypography variant="caption" color="text" fontWeight="medium">
-      //           Print
-      //         </MDTypography>
-      //       </Link>
-      //     ) : null,
+      list: (
+        <Link to={`/list-suratjalan-by-htransfer/${item.htransfer_barang_nota}`}>
+          <MDTypography variant="caption" color="text" fontWeight="medium">
+            Show
+          </MDTypography>
+        </Link>
+      ),
     })),
   };
 }

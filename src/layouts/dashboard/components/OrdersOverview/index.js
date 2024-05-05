@@ -33,6 +33,7 @@ function OrdersOverview() {
   const [countPemusnahanToday, setCountPemusnahanToday] = useState([]);
   const [countHbarangrusak, setHbarangrusak] = useState(0);
   const [countHbarangKeluaresok, setCountHbarangKeluaresok] = useState(0);
+  const [countSuratJalanTransfer, setCountSuratJalanTransfer] = useState(0);
 
   // API
   const getCountSuratJalan = async () => {
@@ -77,6 +78,19 @@ function OrdersOverview() {
         "http://127.0.0.1:8000/api/transaksi-barang/barang-keluar-send-tommorow",
         { headers: { Authorization: `Bearer ${accessToken}` } }
       );
+      setCountHbarangKeluaresok(response.data);
+    } catch (error) {
+      console.log("gagal saat ingin mengambil data hbarang keluar");
+    }
+  };
+
+  const getcountSuratJalanTransfer = async () => {
+    try {
+      const response = await axios.get(
+        "http://127.0.0.1:8000/api/suratjalan/get-suratjalan-transfer-send-today",
+        { headers: { Authorization: `Bearer ${accessToken}` } }
+      );
+      setCountSuratJalanTransfer(response.data);
     } catch (error) {
       console.log("gagal saat ingin mengambil data hbarang keluar");
     }
@@ -87,6 +101,8 @@ function OrdersOverview() {
     getCountSuratJalan();
     getCountPemusnahan();
     getCountHbarangRusak();
+    getcountHbarangKeluarBesok();
+    getcountSuratJalanTransfer();
   }, []);
 
   const today = new Date();
@@ -118,6 +134,12 @@ function OrdersOverview() {
           dateTime={formattedDate}
         />
         <TimelineItem
+          color="primary"
+          icon={<Icon>local_shipping</Icon>}
+          title={`${countSuratJalanTransfer} Surat Jalan Transfer harus dikirim`}
+          dateTime={formattedDate}
+        />
+        <TimelineItem
           color="error"
           icon={<Icon>delete</Icon>}
           title={`${countPemusnahanToday} Harus dimusnahkan`}
@@ -133,12 +155,6 @@ function OrdersOverview() {
           color="warning"
           icon="payment"
           title={`${countHbarangKeluaresok} Barang keluar untuk besok`}
-          dateTime={formattedDate}
-        />
-        <TimelineItem
-          color="primary"
-          icon="vpn_key"
-          title="New card added for order #4395133"
           dateTime={formattedDate}
           lastItem
         />

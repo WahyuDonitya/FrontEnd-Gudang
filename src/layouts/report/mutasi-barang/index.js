@@ -21,9 +21,10 @@ import { useEffect, useState } from "react";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 import MDButton from "components/MDButton";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import { format } from "date-fns";
 import { navigateAndClearTokenKepalaGudang } from "navigationUtils/navigationUtilsKepalaGudang";
+import { jwtDecode } from "jwt-decode";
 
 function PergerakanBarang() {
   //   state
@@ -34,6 +35,15 @@ function PergerakanBarang() {
   const [kartuStok, setKartuStok] = useState([]);
 
   const accessToken = localStorage.getItem("access_token");
+  if (!accessToken) {
+    return <Navigate to="/authentication/sign-in" />;
+  }
+
+  const decodedToken = jwtDecode(accessToken);
+  if (decodedToken.role_id !== 2) {
+    localStorage.removeItem("access_token");
+    return <Navigate to="/authentication/sign-in" />;
+  }
 
   //   Pemanggilan API
   const getBarang = async () => {

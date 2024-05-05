@@ -43,6 +43,7 @@ export default function data() {
       { Header: "Status", accessor: "status", align: "center" },
       { Header: "Pembuat", accessor: "pengguna_generate.pengguna_nama", align: "center" },
       { Header: "Diputus Oleh", accessor: "pengguna_action.pengguna_nama", align: "center" },
+      { Header: "pengirim", accessor: "pengirim", align: "center" },
       { Header: "Comment", accessor: "suratjalan_comment", align: "center" },
       { Header: "Action", accessor: "action", align: "center" },
     ],
@@ -59,6 +60,7 @@ export default function data() {
       },
       suratjalan_tanggalkirim: dayjs(item.suratjalan_tanggalkirim).format("DD-MM-YYYY"),
       suratjalan_comment: item.suratjalan_comment || "-",
+      pengirim: item.suratjalan_pengirim || "-",
       status:
         item.suratjalan_status === 1 ? (
           <MDBox ml={-1}>

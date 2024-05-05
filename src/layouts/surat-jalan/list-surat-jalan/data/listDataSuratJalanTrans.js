@@ -67,6 +67,7 @@ export default function data() {
       { Header: "Status", accessor: "status", align: "center" },
       { Header: "Pembuat", accessor: "pengguna_generate.pengguna_nama", align: "center" },
       { Header: "Diputus Oleh", accessor: "pengguna_action.pengguna_nama", align: "center" },
+      { Header: "Pengirim", accessor: "pengirim", align: "center" },
       { Header: "Comment", accessor: "suratjalantransfer_comment", align: "center" },
       { Header: "Action", accessor: "action", align: "center" },
     ],
@@ -83,6 +84,7 @@ export default function data() {
       ),
       pengguna_generate: { pengguna_nama: item.pengguna_generate?.pengguna_nama || "-" },
       pengguna_action: { pengguna_nama: item.pengguna_action?.pengguna_nama || "-" },
+      pengirim: item.suratjalantransfer_pengirim || "-",
       status:
         item.suratjalantransfer_status === 0 ? (
           <MDBox ml={-1}>

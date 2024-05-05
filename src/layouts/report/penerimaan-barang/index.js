@@ -21,12 +21,13 @@ import { useEffect, useState } from "react";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 import MDButton from "components/MDButton";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import { format } from "date-fns";
 import ComplexStatisticsCard from "examples/Cards/StatisticsCards/ComplexStatisticsCard";
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
 import { navigateAndClearTokenUser } from "navigationUtils/navigationUtilsUser";
+import { jwtDecode } from "jwt-decode";
 
 function PenerimaanBarang() {
   //   state
@@ -37,11 +38,21 @@ function PenerimaanBarang() {
 
   const accessToken = localStorage.getItem("access_token");
 
-  const navigate = useNavigate();
+  if (!accessToken) {
+    return <Navigate to="/authentication/sign-in" />;
+  }
 
-  useEffect(() => {
-    navigateAndClearTokenUser(navigate);
-  }, [navigate]);
+  const decodedToken = jwtDecode(accessToken);
+  if (decodedToken.role_id == 3) {
+    localStorage.removeItem("access_token");
+    return <Navigate to="/authentication/sign-in" />;
+  }
+
+  // const navigate = useNavigate();
+
+  // useEffect(() => {
+  //   navigateAndClearTokenUser(navigate);
+  // }, [navigate]);
 
   //   Pemanggilan API
 
@@ -82,8 +93,12 @@ function PenerimaanBarang() {
     { Header: "No. ", accessor: "nomor", align: "center" },
     { Header: "Nota Masuk ", accessor: "hmasuk_nota", align: "center" },
     { Header: "Nota Supplier", accessor: "hmasuk_notasupplier", align: "center" },
-    // { Header: "Pengguna Generate ", accessor: "pengguna_generate", align: "center" },
-    // { Header: "Pengguna Keputusan ", accessor: "pengguna_keputusan", align: "center" },
+    { Header: "Pengguna Generate ", accessor: "pengguna_generate.pengguna_nama", align: "center" },
+    {
+      Header: "Pengguna Keputusan ",
+      accessor: "pengguna_action.pengguna_nama",
+      align: "center",
+    },
     { Header: "Status ", accessor: "status", align: "center" },
     { Header: "Detail Barang ", accessor: "detail", align: "center" },
   ];
@@ -92,8 +107,8 @@ function PenerimaanBarang() {
     nomor: index + 1,
     hmasuk_nota: item.hmasuk_nota,
     hmasuk_notasupplier: item.hmasuk_notasupplier,
-    // pengguna_generate: item.pengguna_generate.pengguna_username || "-",
-    // pengguna_keputusan: item.pengguna_action.pengguna_username || "-",
+    pengguna_generate: { pengguna_nama: item.pengguna_generate?.pengguna_username || "-" },
+    pengguna_action: { pengguna_nama: item.pengguna_action.pengguna_username || "-" },
     status:
       item.hmasuk_status == 0
         ? "Ditolak"

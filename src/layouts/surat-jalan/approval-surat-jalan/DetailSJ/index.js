@@ -75,6 +75,18 @@ function DetailSJ() {
     setOpenRejectModal(false);
     setRejectReason(""); // Clear reject reason when modal is closed
   };
+
+  const [openNamaModal, setOpenNamaModal] = useState(false);
+  const [nama, setNama] = useState("");
+
+  const openNamaModalHandler = () => {
+    setOpenNamaModal(true);
+  };
+
+  const closeNamaModalHandler = () => {
+    setOpenNamaModal(false);
+    setNama(""); // Clear reject reason when modal is closed
+  };
   // End Handle modal
 
   const accessToken = localStorage.getItem("access_token");
@@ -171,28 +183,36 @@ function DetailSJ() {
 
   const handlePrint = async () => {
     try {
-      const response = await axios.post(
-        `http://127.0.0.1:8000/api/suratjalan/kirim-suratjalan`,
-        {
-          suratjalan_nota: headerSuratJalan.suratjalan_nota,
-        },
-        { headers: { Authorization: `Bearer ${accessToken}` } }
-      );
-      const printableContent = document.getElementById("printable-content");
-      const printWindow = window.open("", "_blank");
-      printWindow.document.write(`
-      <html>
-        <head>
-          <title>Print</title>
-        </head>
-        <body>${printableContent.innerHTML}</body>
-      </html>
-    `);
-      printWindow.document.close();
-      printWindow.print();
-      printWindow.onafterprint = () => printWindow.close();
-      getId();
+      if (nama == "") {
+        alert("nama harus diisi");
+      } else {
+        const response = await axios.post(
+          `http://127.0.0.1:8000/api/suratjalan/kirim-suratjalan`,
+          {
+            suratjalan_nota: headerSuratJalan.suratjalan_nota,
+            nama_pengirim: nama,
+          },
+          { headers: { Authorization: `Bearer ${accessToken}` } }
+        );
+        const printableContent = document.getElementById("printable-content");
+        const printWindow = window.open("", "_blank");
+        printWindow.document.write(`
+        <html>
+          <head>
+            <title>Print</title>
+          </head>
+          <body>${printableContent.innerHTML}</body>
+        </html>
+      `);
+        printWindow.document.close();
+        printWindow.print();
+        printWindow.onafterprint = () => printWindow.close();
+        getId();
+        closeNamaModalHandler();
+        openSuccessSB();
+      }
     } catch (error) {
+      openErrorSB();
       console.log("Terdapat kesalahan saat melakukan print dan kirim surat jalan : ", error);
     }
   };
@@ -445,7 +465,12 @@ function DetailSJ() {
               {headerSuratJalan.suratjalan_status === 3 && (
                 <Grid container pt={5} spacing={7} px={3} mb={4}>
                   <Grid item xs={12}>
-                    <MDButton variant="gradient" color="info" fullWidth onClick={handlePrint}>
+                    <MDButton
+                      variant="gradient"
+                      color="info"
+                      fullWidth
+                      onClick={openNamaModalHandler}
+                    >
                       Kirim dan Print Nota
                     </MDButton>
                   </Grid>
@@ -512,6 +537,28 @@ function DetailSJ() {
           </MDButton>
           <MDButton color="success" onClick={handleReject}>
             Reject
+          </MDButton>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog open={openNamaModal} onClose={closeNamaModalHandler}>
+        <DialogTitle>Nama Pengirim</DialogTitle>
+        <DialogContent>
+          <MDInput
+            fullWidth
+            rows={4}
+            variant="outlined"
+            label="Isi Nama pengirim"
+            value={nama}
+            onChange={(e) => setNama(e.target.value)}
+          />
+        </DialogContent>
+        <DialogActions>
+          <MDButton color="error" onClick={closeNamaModalHandler}>
+            Cancel
+          </MDButton>
+          <MDButton color="success" onClick={handlePrint}>
+            Kirim
           </MDButton>
         </DialogActions>
       </Dialog>

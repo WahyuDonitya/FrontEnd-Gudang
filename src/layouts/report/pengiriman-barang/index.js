@@ -21,9 +21,10 @@ import { useEffect, useState } from "react";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 import MDButton from "components/MDButton";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import { format } from "date-fns";
 import { navigateAndClearTokenUser } from "navigationUtils/navigationUtilsUser";
+import { jwtDecode } from "jwt-decode";
 
 function PengirimanBarang() {
   //   state
@@ -33,6 +34,15 @@ function PengirimanBarang() {
   const [laporanPengiriman, setLaporanPengiriman] = useState([]);
 
   const accessToken = localStorage.getItem("access_token");
+  if (!accessToken) {
+    return <Navigate to="/authentication/sign-in" />;
+  }
+
+  const decodedToken = jwtDecode(accessToken);
+  if (decodedToken.role_id == 3) {
+    localStorage.removeItem("access_token");
+    return <Navigate to="/authentication/sign-in" />;
+  }
 
   //   Pemanggilan API
   const getBarang = async () => {
@@ -69,11 +79,11 @@ function PengirimanBarang() {
     getBarang();
   }, []);
 
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
-  useEffect(() => {
-    navigateAndClearTokenUser(navigate);
-  }, [navigate]);
+  // useEffect(() => {
+  //   navigateAndClearTokenUser(navigate);
+  // }, [navigate]);
 
   // const navigate = useNavigate();
 

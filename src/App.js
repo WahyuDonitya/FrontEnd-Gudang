@@ -63,6 +63,7 @@ import DetailReportPengirimanBarang from "layouts/report/pengiriman-barang/Detai
 import DetailBarangByGudang from "layouts/dashboard/dashboard-admin/detailBarangByGudang";
 import DetailListBarangRusak from "layouts/barang-rusak/detail-list-rusak";
 import DetailPenyesuaian from "layouts/stok-opname/detail-penyesuaian";
+import ListSuratJalanByHtransfer from "layouts/surat-jalan/list-surat-jalan-by-htransfer";
 
 import BillingInformation from "layouts/billing/components/BillingInformation";
 
@@ -214,6 +215,10 @@ export default function App() {
           <Route path="/detailsurat-jalan/transferbarang/:dataId" element={<DetailSJTrans />} />
           <Route path="/list-detailbarang-masuk/:dataId" element={<ListDetailBarangMasuk />} />
           <Route path="/list-suratjalan-by-hkeluar/:dataId" element={<ListSuratJalanByHkeluar />} />
+          <Route
+            path="/list-suratjalan-by-htransfer/:dataId"
+            element={<ListSuratJalanByHtransfer />}
+          />
           <Route path="/detail-pemusnahan-barang/:dataId" element={<DetailBarangPemusnahan />} />
           <Route path="/list-tempat-barang/:dataId/:gudangId?" element={<ListTempatBarang />} />
           <Route path="/detail-stok-opname/:dataId" element={<DetailStokOpname />} />

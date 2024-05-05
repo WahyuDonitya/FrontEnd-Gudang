@@ -23,9 +23,10 @@ import { useEffect, useState } from "react";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 import MDButton from "components/MDButton";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import { format } from "date-fns";
 import { navigateAndClearTokenKepalaGudang } from "navigationUtils/navigationUtilsKepalaGudang";
+import { jwtDecode } from "jwt-decode";
 
 function KartuStok() {
   //   state
@@ -38,6 +39,15 @@ function KartuStok() {
   const [stokAwal, setStokAwal] = useState(0);
 
   const accessToken = localStorage.getItem("access_token");
+  if (!accessToken) {
+    return <Navigate to="/authentication/sign-in" />;
+  }
+
+  const decodedToken = jwtDecode(accessToken);
+  if (decodedToken.role_id !== 2) {
+    localStorage.removeItem("access_token");
+    return <Navigate to="/authentication/sign-in" />;
+  }
 
   //   Pemanggilan API
   const getBarang = async () => {
@@ -58,11 +68,10 @@ function KartuStok() {
     getBarang();
   }, []);
 
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    navigateAndClearTokenKepalaGudang(navigate);
-  }, [navigate]);
+  // const navigate = useNavigate();
+  // useEffect(() => {
+  //   navigateAndClearTokenKepalaGudang(navigate);
+  // }, [navigate]);
 
   //   function
   const handleChange = async (newValue) => {
@@ -154,14 +163,6 @@ function KartuStok() {
         </MDTypography>
       </Link>
     ),
-    //   action_print:
-    //     item.suratjalan_status === 3 ? (
-    //       <Link to={`/detailsurat-jalan/${item.suratjalan_nota}`}>
-    //         <MDTypography variant="caption" color="text" fontWeight="medium">
-    //           Print
-    //         </MDTypography>
-    //       </Link>
-    //     ) : null,
   }));
 
   // Handle Excel
@@ -303,38 +304,9 @@ function KartuStok() {
                     </MDButton>
                   </Grid>
                 )}
-
-                {/* <Grid item xs={12} px={2} pb={3} pt={5}></Grid> */}
               </MDBox>
             </Card>
           </Grid>
-          {/* <Grid item xs={12}>
-            <Card>
-              <MDBox
-                mx={2}
-                mt={-3}
-                py={3}
-                px={2}
-                variant="gradient"
-                bgColor="info"
-                borderRadius="lg"
-                coloredShadow="info"
-              >
-                <MDTypography variant="h6" color="white">
-                  Projects Table
-                </MDTypography>
-              </MDBox>
-              <MDBox pt={3}>
-                <DataTable
-                  table={{ columns: pColumns, rows: pRows }}
-                  isSorted={false}
-                  entriesPerPage={false}
-                  showTotalEntries={false}
-                  noEndBorder
-                />
-              </MDBox>
-            </Card>
-          </Grid> */}
         </Grid>
       </MDBox>
     </DashboardLayout>
