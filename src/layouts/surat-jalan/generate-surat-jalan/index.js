@@ -358,6 +358,7 @@ function GenerateSuratJalan() {
     { Header: "Jumlah Barang", accessor: "dkeluar_jumlah", align: "center" },
     { Header: "Jumlah Sisa", accessor: "dkeluar_sisa", align: "center" },
     { Header: "Jumlah Menunggu Approve", accessor: "dkeluar_needapprovekirim", align: "center" },
+    { Header: "Jumlah Rusak", accessor: "rusak", align: "center" },
     { Header: "Jumlah Terkirim", accessor: "dkeluar_terkirim", align: "center" },
     { Header: "Jumlah Kirim", accessor: "jumlah_kirim", align: "center" },
     { Header: "Status Barang", accessor: "dkeluar_status", align: "center" },
@@ -368,6 +369,7 @@ function GenerateSuratJalan() {
     d_barang: item.d_barang.detailbarang_batch,
     dkeluar_jumlah: item.dkeluar_jumlah,
     dkeluar_sisa: item.dkeluar_sisa,
+    rusak: item.dkeluar_rusak,
     dkeluar_needapprovekirim: item.dkeluar_needapprovekirim,
     dkeluar_terkirim: item.dkeluar_terkirim,
     jumlah_kirim: (

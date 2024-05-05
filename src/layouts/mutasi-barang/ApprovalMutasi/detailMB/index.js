@@ -34,6 +34,7 @@ import { Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material
 import MDInput from "components/MDInput";
 import PrintableFormMutasiBarang from "./PrintableFormMutasiBarang";
 import { jwtDecode } from "jwt-decode";
+import dayjs from "dayjs";
 // import projectsTableData from "layouts/tables/data/projectsTableData";
 
 function DetailMB() {
@@ -288,7 +289,8 @@ function DetailMB() {
   const rows = detailMutasiBarang.map((item) => ({
     barang: { barang_nama: item?.barang?.barang_nama || "N/A" },
     barang_detail: {
-      detailbarang_expdate: item?.barang_detail?.detailbarang_expdate || "N/A",
+      detailbarang_expdate:
+        dayjs(item?.barang_detail?.detailbarang_expdate).format("DD-MM-YYYY") || "N/A",
       detailbarang_batch: item?.barang_detail?.detailbarang_batch || "N/A",
     },
     dtransfer_barang_jumlah: item.dtransfer_barang_jumlah,

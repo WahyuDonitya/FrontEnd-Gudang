@@ -64,15 +64,6 @@ function KartuStok() {
     navigateAndClearTokenKepalaGudang(navigate);
   }, [navigate]);
 
-  // const navigate = useNavigate();
-
-  // useEffect(() => {
-  //   const hasToken = !!localStorage.getItem("access_token");
-  //   if (!hasToken) {
-  //     navigate("/authentication/sign-in");
-  //   }
-  // }, [navigate]);
-
   //   function
   const handleChange = async (newValue) => {
     if (newValue) {

@@ -93,7 +93,17 @@ export default function data() {
             <MDBadge badgeContent="Ditolak" color="danger" variant="gradient" size="sm" />
           </MDBox>
         ) : item.suratjalantransfer_status === 2 ? (
-          "Menunggu Approval"
+          <MDBox ml={-1}>
+            <MDBadge badgeContent="Menunggu Approval" color="info" variant="gradient" size="sm" />
+          </MDBox>
+        ) : item.suratjalantransfer_status === 4 ? (
+          <MDBox ml={-1}>
+            <MDBadge badgeContent="Proses Pengiriman" color="info" variant="gradient" size="sm" />
+          </MDBox>
+        ) : item.suratjalantransfer_status === 5 ? (
+          <MDBox ml={-1}>
+            <MDBadge badgeContent="Rusak" color="error" variant="gradient" size="sm" />
+          </MDBox>
         ) : (
           <MDBox ml={-1}>
             <MDBadge badgeContent="Proses Pengiriman" color="info" variant="gradient" size="sm" />

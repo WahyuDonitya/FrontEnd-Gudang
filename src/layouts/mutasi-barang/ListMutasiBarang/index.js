@@ -36,7 +36,7 @@ function ListMutasiBarang() {
                 coloredShadow="info"
               >
                 <MDTypography variant="h6" color="white">
-                  List Barang Masuk
+                  List Mutasi Barang
                 </MDTypography>
               </MDBox>
               <MDBox pt={3}>

@@ -40,6 +40,8 @@ import { navigateAndClearTokenUser } from "navigationUtils/navigationUtilsUser";
 function DetailSJ() {
   const [detailSuratJalan, setDetailSuratJalan] = useState([]);
   const [headerSuratJalan, setHeaderlSuratJalan] = useState([]);
+  const [jumlahRusakByItem, setJumlahRusakByItem] = useState({});
+  const [isInputInvalid, setIsInputInvalid] = useState({});
   const { dataId } = useParams();
 
   // state untuk notification
@@ -195,6 +197,106 @@ function DetailSJ() {
     }
   };
 
+  const handleSelesai = async () => {
+    try {
+      const response = await axios.post(
+        `http://127.0.0.1:8000/api/suratjalan/selesai-suratjalan`,
+        {
+          suratjalan_nota: headerSuratJalan.suratjalan_nota,
+        },
+        { headers: { Authorization: `Bearer ${accessToken}` } }
+      );
+      getId();
+      openSuccessSB();
+    } catch (error) {
+      openErrorSB();
+      console.log("Terdapat kesalahan saat melakukan print dan kirim surat jalan : ", error);
+    }
+  };
+
+  const handleBarangRusak = async () => {
+    if (window.confirm("apakah data yang anda masukkan sudah benar?")) {
+      try {
+        const selectedBarang = detailSuratJalan
+          .filter((item) => jumlahRusakByItem[item.dsuratjalan_id] > 0)
+          .map((item) => ({
+            dsuratjalan_id: item.dsuratjalan_id,
+            jumlah_rusak: jumlahRusakByItem[item.dsuratjalan_id],
+          }));
+
+        if (selectedBarang.length === 0) {
+          alert("Barang rusak tidak ada yang diisi");
+          return;
+        }
+
+        console.log(selectedBarang);
+
+        const hasInvalidInput = Object.values(isInputInvalid).some((value) => value === true);
+
+        if (hasInvalidInput) {
+          alert("Ada input yang tidak valid. Silakan periksa kembali sebelum melanjutkan.");
+          return;
+        }
+
+        const res = await axios.post(
+          `http://127.0.0.1:8000/api/suratjalan/surat-jalan-rusak`,
+          {
+            barang_rusak: selectedBarang,
+            dataId: dataId,
+          },
+          { headers: { Authorization: `Bearer ${accessToken}` } }
+        );
+        getId();
+        setJumlahRusakByItem({});
+        setIsInputInvalid({});
+        openSuccessSB();
+        console.log(res.data);
+      } catch (error) {
+        openErrorSB();
+        console.error("terdapat error pada saat pelaporan barang rusak ", error);
+      }
+    }
+  };
+
+  const handleChangeJumlahKirim = (itemId, newValue) => {
+    const currentItem = detailSuratJalan.find((item) => item.dsuratjalan_id === itemId);
+
+    // Create a copy of the existing isInputInvalid state
+    const updatedIsInputInvalid = { ...isInputInvalid };
+
+    // Update the validity for the current item
+    if (newValue > currentItem.dsuratjalan_jumlah) {
+      updatedIsInputInvalid[itemId] = true;
+    } else {
+      updatedIsInputInvalid[itemId] = false;
+    }
+
+    setIsInputInvalid(updatedIsInputInvalid);
+
+    if (!updatedIsInputInvalid[itemId]) {
+      setJumlahRusakByItem((prev) => ({
+        ...prev,
+        [itemId]: parseInt(newValue),
+      }));
+    }
+  };
+
+  const handlePrintNota = () => {
+    const printableContent = document.getElementById("printable-content");
+    const printWindow = window.open("", "_blank");
+    printWindow.document.write(`
+      <html>
+        <head>
+          <title>Print</title>
+        </head>
+        <body>${printableContent.innerHTML}</body>
+      </html>
+    `);
+    printWindow.document.close();
+    printWindow.print();
+    printWindow.onafterprint = () => printWindow.close();
+  };
+
   // END API
 
   useEffect(() => {
@@ -211,14 +313,32 @@ function DetailSJ() {
     { Header: "Nama Barang", accessor: "barang.barang_nama", width: "10%", align: "left" },
     { Header: "Batch Barang", accessor: "d_barang.detailbarang_batch", align: "center" },
     { Header: "Jumlah Dikirim", accessor: "dsuratjalan_jumlah", align: "center" },
-    { Header: "Jumlah Barang", accessor: "jumlah", align: "center" },
+    // { Header: "Jumlah Barang", accessor: "jumlah", align: "center" },
+    { Header: "Jumlah Barang Rusak", accessor: "rusak", align: "center" },
+    { Header: "Jumlah Terkirim", accessor: "terkirim", align: "center" },
+    { Header: "Jumlah rusak", accessor: "jumlah_rusak", align: "center" },
   ];
 
   const rows = detailSuratJalan.map((item) => ({
     barang: { barang_nama: item.d_keluar.barang.barang_nama },
     d_barang: { detailbarang_batch: item.d_keluar.d_barang.detailbarang_batch },
     dsuratjalan_jumlah: item.dsuratjalan_jumlah,
-    jumlah: item.d_keluar.dkeluar_jumlah,
+    // jumlah: item.d_keluar.dkeluar_jumlah,
+    rusak: item.dsuratjalan_rusak,
+    terkirim: item.dsuratjalan_terkirim,
+    jumlah_rusak: (
+      <MDInput
+        type="number"
+        value={jumlahRusakByItem[item.dsuratjalan_id] || 0}
+        inputProps={{ min: 0 }}
+        error={isInputInvalid[item.dsuratjalan_id]}
+        helperText={isInputInvalid[item.dsuratjalan_id] ? "Jumlah melebihi stok yang tersedia" : ""}
+        onChange={(e) => handleChangeJumlahKirim(item.dsuratjalan_id, e.target.value)}
+        sx={{
+          "& .MuiInput-root": { borderColor: isInputInvalid[item.dsuratjalan_id] ? "red" : "" },
+        }}
+      ></MDInput>
+    ),
   }));
 
   const renderSuccessSB = (
@@ -226,7 +346,7 @@ function DetailSJ() {
       color="success"
       icon="check"
       title="Notifikasi Berhasil"
-      content="Berhasil Melakukan approve Surat Jalan"
+      content="Berhasil Melakukan transaksi Surat Jalan"
       dateTime="Baru Saja"
       open={successSB}
       onClose={closeSuccessSB}
@@ -240,7 +360,7 @@ function DetailSJ() {
       color="error"
       icon="warning"
       title="Notifikasi Error"
-      content="Error Melakukan approve Surat Jalan"
+      content="Error Melakukan transaksi Surat Jalan"
       dateTime="Baru Saja"
       open={errorSB}
       onClose={closeErrorSB}
@@ -322,13 +442,41 @@ function DetailSJ() {
                 </Grid>
               )}
 
-              {headerSuratJalan.suratjalan_status !== 2 && (
+              {headerSuratJalan.suratjalan_status === 3 && (
                 <Grid container pt={5} spacing={7} px={3} mb={4}>
                   <Grid item xs={12}>
                     <MDButton variant="gradient" color="info" fullWidth onClick={handlePrint}>
-                      {headerSuratJalan.suratjalan_status === 0
-                        ? "Print Nota"
-                        : "Kirim dan Print Nota"}
+                      Kirim dan Print Nota
+                    </MDButton>
+                  </Grid>
+                </Grid>
+              )}
+
+              {headerSuratJalan.suratjalan_status === 4 && (
+                <Grid container pt={5} spacing={7} px={3} mb={4}>
+                  <Grid item xs={12}>
+                    <MDButton variant="gradient" color="info" fullWidth onClick={handleSelesai}>
+                      Selesai
+                    </MDButton>
+                  </Grid>
+                </Grid>
+              )}
+
+              {headerSuratJalan.suratjalan_status === 0 && (
+                <Grid container pt={5} spacing={7} px={3} mb={4}>
+                  <Grid item xs={6}>
+                    <MDButton
+                      variant="gradient"
+                      color="error"
+                      fullWidth
+                      onClick={handleBarangRusak}
+                    >
+                      Lapor barang rusak
+                    </MDButton>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <MDButton variant="gradient" color="info" fullWidth onClick={handlePrintNota}>
+                      Print nota
                     </MDButton>
                   </Grid>
                 </Grid>
