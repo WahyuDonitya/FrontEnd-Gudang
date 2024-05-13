@@ -52,7 +52,7 @@ const PrintableDetailStokOpname = ({ detailKeluar, headerKeluar, detailBarang })
         </div>
       </div>
 
-      <h2>List Barang </h2>
+      <h2>List Pergerakan Barang </h2>
       <table style={{ width: "100%", borderCollapse: "collapse", marginTop: "20px" }}>
         <thead>
           <tr>

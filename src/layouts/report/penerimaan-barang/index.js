@@ -35,18 +35,21 @@ function PenerimaanBarang() {
   const [datePickerAkhir, setdatePickerAkhir] = useState(null);
   const [laporanPenerimaan, setLaporanPenerimaan] = useState([]);
   const [dataBarang, setDataBarang] = useState([]);
+  const [gudangs, setGudangs] = useState([]);
+  const [GudangPick, setGudangPick] = useState(null);
 
   const accessToken = localStorage.getItem("access_token");
-
-  if (!accessToken) {
-    return <Navigate to="/authentication/sign-in" />;
-  }
-
   const decodedToken = jwtDecode(accessToken);
-  if (decodedToken.role_id == 3) {
-    localStorage.removeItem("access_token");
-    return <Navigate to="/authentication/sign-in" />;
-  }
+
+  // if (!accessToken) {
+  //   return <Navigate to="/authentication/sign-in" />;
+  // }
+
+  // const decodedToken = jwtDecode(accessToken);
+  // if (decodedToken.role_id == 3) {
+  //   localStorage.removeItem("access_token");
+  //   return <Navigate to="/authentication/sign-in" />;
+  // }
 
   // const navigate = useNavigate();
 
@@ -59,12 +62,23 @@ function PenerimaanBarang() {
   const handleSubmit = async () => {
     // console.log(datePickerAwal);
     try {
-      const response = await axios.get(
-        `http://127.0.0.1:8000/api/report/get-report-penerimaan/${datePickerAwal}/${datePickerAkhir}`,
-        {
-          headers: { Authorization: `Bearer ${accessToken}` },
-        }
-      );
+      let response;
+      if (GudangPick == null) {
+        response = await axios.get(
+          `http://127.0.0.1:8000/api/report/get-report-penerimaan/${datePickerAwal}/${datePickerAkhir}`,
+          {
+            headers: { Authorization: `Bearer ${accessToken}` },
+          }
+        );
+      } else {
+        response = await axios.get(
+          `http://127.0.0.1:8000/api/report/get-report-penerimaan/${datePickerAwal}/${datePickerAkhir}/${GudangPick}`,
+          {
+            headers: { Authorization: `Bearer ${accessToken}` },
+          }
+        );
+      }
+
       //   console.log(response.data.datahbarang);
 
       setLaporanPenerimaan(response.data);
@@ -74,9 +88,23 @@ function PenerimaanBarang() {
     }
   };
 
-  //   useEffect(() => {
-  //     getBarang();
-  //   }, []);
+  const getGudang = async () => {
+    try {
+      const response = await axios.get("http://127.0.0.1:8000/api/gudang/", {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      // console.log("Data Customer:", response.data);
+      setGudangs(response.data);
+    } catch (error) {
+      console.error("Terjadi kesalahan saat mengambil data Gudang:", error);
+    }
+  };
+
+  useEffect(() => {
+    getGudang();
+  }, []);
 
   //   const navigate = useNavigate();
 
@@ -174,6 +202,40 @@ function PenerimaanBarang() {
                   Laporan Penerimaan Barang
                 </MDTypography>
               </MDBox>
+              {decodedToken.role_id === 3 ? (
+                <Grid container>
+                  <Grid item xs={12} pt={4} px={2}>
+                    {Array.isArray(gudangs) && gudangs.length > 0 ? (
+                      <Autocomplete
+                        disablePortal
+                        id="combo-box-demo"
+                        options={gudangs}
+                        value={gudangs.find((gudang) => gudang.gudang_id === GudangPick) || null}
+                        getOptionLabel={(option) =>
+                          `${option.gudang_nama} (${
+                            option.jenis_gudang.jenis_gudang_nama || "gamuncul"
+                          })`
+                        }
+                        fullWidth
+                        renderInput={(params) => <TextField {...params} label="Pilih Gudang" />}
+                        onChange={(event, newValue) => {
+                          if (newValue) {
+                            setGudangPick(newValue.gudang_id);
+                            // getBarangWithGudang(newValue);
+                          } else {
+                            setGudangPick(null);
+                            // setBarang([]);
+                          }
+                        }}
+                      />
+                    ) : (
+                      <p>Loading customer data...</p>
+                    )}
+                  </Grid>
+                </Grid>
+              ) : (
+                <></>
+              )}
               <Grid container>
                 <Grid item xs={6} pt={4} px={2}>
                   <LocalizationProvider dateAdapter={AdapterDayjs}>

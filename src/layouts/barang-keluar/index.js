@@ -39,6 +39,7 @@ import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
 import { navigateAndClearTokenUser } from "navigationUtils/navigationUtilsUser";
 import DataTable from "examples/Tables/DataTable";
+import MDInput from "components/MDInput";
 
 function BarangKeluar() {
   // State
@@ -126,6 +127,13 @@ function BarangKeluar() {
         alert("Mohon isi semua form");
       } else {
         if (data.length > 0) {
+          const selectedBarang = dataToSubmit.filter(
+            (item) => item.dkeluar_jumlah == 0 || Number.isNaN(item.dkeluar_jumlah)
+          );
+          if (selectedBarang.length > 0) {
+            alert("Terdapat data yang kosong pada table");
+            return;
+          }
           try {
             const customerId = parseInt(customerPick);
 
@@ -193,6 +201,7 @@ function BarangKeluar() {
         inputBarangNama,
         inputKeluarJumlah: inputKeluarJumlah.toString(),
         hargakeluar: hargakeluar.toString(),
+        barang_stok: parseInt(inputBarangStok),
       };
 
       setData([...data, newData]);
@@ -264,6 +273,24 @@ function BarangKeluar() {
     }
   };
 
+  const handleChangeJumlahKeluar = async (index, newValue, stok) => {
+    // Salin data dari data dan dataToSubmit
+    const updatedData = [...data];
+    const updatedDataToSubmit = [...dataToSubmit];
+
+    if (newValue > stok) {
+      alert("Jumlah melebihi stok yang dimaksud");
+      return;
+    }
+
+    updatedData[index].inputKeluarJumlah = newValue;
+    updatedDataToSubmit[index].dkeluar_jumlah = newValue;
+
+    setData(updatedData);
+
+    console.log(dataToSubmit);
+  };
+
   useEffect(() => {
     getCustomer();
     getBarang();
@@ -315,6 +342,7 @@ function BarangKeluar() {
     { Header: "No. ", accessor: "index", width: "10%", align: "left" },
     { Header: "Nama Barang ", accessor: "nama", align: "center" },
     { Header: "Jumlah Barang ", accessor: "jumlah", align: "center" },
+    { Header: "Stok Barang", accessor: "stokbarang", align: "center" },
     { Header: "Action ", accessor: "action", align: "center" },
   ];
 
@@ -322,7 +350,17 @@ function BarangKeluar() {
     return {
       index: index + 1,
       nama: item.inputBarangNama,
-      jumlah: item.inputKeluarJumlah,
+      jumlah: (
+        <MDInput
+          type="number"
+          value={item.inputKeluarJumlah || 0}
+          onChange={(e) =>
+            handleChangeJumlahKeluar(index, parseInt(e.target.value), item.barang_stok)
+          }
+          inputProps={{ min: 0 }}
+        />
+      ),
+      stokbarang: item.barang_stok,
       action: (
         <IconButton aria-label="delete" size="large" onClick={() => handleDelete(index)}>
           <Icon fontSize="small">delete</Icon>

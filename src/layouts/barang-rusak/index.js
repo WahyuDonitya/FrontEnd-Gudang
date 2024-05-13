@@ -233,6 +233,7 @@ function GenerateBarangRusak() {
         inputBarangNama,
         detailbarang_stok: inputMasukJumlah.toString(),
         detailbarang_batch: batch,
+        stok: detailBarangStok,
       };
 
       setData([...data, newData]);
@@ -256,6 +257,7 @@ function GenerateBarangRusak() {
       setinputMasukJumlah("");
       setBatch("");
       setDetailBarang([]);
+      setDetailBarangStok(null);
       setPenempatanBarang([]);
       console.log(dataToSubmit);
     }
@@ -311,6 +313,24 @@ function GenerateBarangRusak() {
       setDetailBarangStok(newValue.penempatanproduk_jumlah);
       setPenempatanId(newValue.penempatanproduk_id);
     }
+  };
+
+  const handleChangeJumlahKeluar = async (index, newValue, stok) => {
+    // Salin data dari data dan dataToSubmit
+    const updatedData = [...data];
+    const updatedDataToSubmit = [...dataToSubmit];
+
+    if (newValue > stok) {
+      alert("Jumlah melebihi stok yang dimaksud");
+      return;
+    }
+
+    updatedData[index].detailbarang_stok = newValue;
+    updatedDataToSubmit[index].detailbarang_jumlahrusak = newValue;
+
+    setData(updatedData);
+
+    console.log(dataToSubmit);
   };
 
   useEffect(() => {
@@ -383,6 +403,7 @@ function GenerateBarangRusak() {
     { Header: "Nama Barang ", accessor: "nama", align: "center" },
     { Header: "Jumlah Barang ", accessor: "jumlah", align: "center" },
     { Header: "Batch ", accessor: "batch", align: "center" },
+    { Header: "Stok Barang ", accessor: "stok", align: "center" },
     { Header: "Action", accessor: "action", align: "center" },
   ];
 
@@ -390,8 +411,16 @@ function GenerateBarangRusak() {
     return {
       index: index + 1,
       nama: item.inputBarangNama,
-      jumlah: item.detailbarang_stok,
+      jumlah: (
+        <MDInput
+          type="number"
+          value={item.detailbarang_stok || 0}
+          onChange={(e) => handleChangeJumlahKeluar(index, parseInt(e.target.value), item.stok)}
+          inputProps={{ min: 0 }}
+        />
+      ),
       batch: item.detailbarang_batch,
+      stok: item.stok,
       action: (
         <IconButton aria-label="delete" size="large" onClick={() => handleDelete(index)}>
           <Icon fontSize="small">delete</Icon>

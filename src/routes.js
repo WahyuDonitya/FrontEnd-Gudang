@@ -502,7 +502,7 @@ const routes = [
         icon: <Icon fontSize="small">receipt</Icon>,
         route: "/kartu-stok",
         component: <KartuStok />,
-        roles: ["2"],
+        roles: ["2", "3"],
       },
       {
         type: "collapse",
@@ -511,7 +511,7 @@ const routes = [
         icon: <Icon fontSize="small">timeline</Icon>,
         route: "/pergerakan-barang",
         component: <PergerakanBarang />,
-        roles: ["2"],
+        roles: ["2", "3"],
       },
       {
         type: "collapse",
@@ -520,7 +520,7 @@ const routes = [
         icon: <Icon fontSize="small">access_time</Icon>,
         route: "/inventory-aging",
         component: <InventoryAging />,
-        roles: ["2", "1"],
+        roles: ["2", "1", "3"],
       },
       {
         type: "collapse",
@@ -529,7 +529,7 @@ const routes = [
         icon: <Icon fontSize="small">send</Icon>,
         route: "/pengiriman-barang",
         component: <PengirimanBarang />,
-        roles: ["2", "1"],
+        roles: ["2", "1", "3"],
       },
       {
         type: "collapse",
@@ -538,7 +538,7 @@ const routes = [
         icon: <Icon fontSize="small">archive</Icon>,
         route: "/penerimaan-barang",
         component: <PenerimaanBarang />,
-        roles: ["2", "1"],
+        roles: ["2", "1", "3"],
       },
     ],
   },

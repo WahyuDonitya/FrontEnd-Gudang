@@ -142,6 +142,13 @@ function GenerateMutasi() {
       if (gudangTujuan == null || datePicker == null || data.length == 0) {
         alert("Gudang tujuan atau date picker belum diisi");
       } else {
+        const selectedBarang = dataToSubmit.filter(
+          (item) => item.dtransfer_barang_jumlah == 0 || Number.isNaN(item.dtransfer_barang_jumlah)
+        );
+        if (selectedBarang.length > 0) {
+          alert("Terdapat data yang kosong pada table");
+          return;
+        }
         try {
           // console.log("nota supplier", notaSupplier);
           const dataKirim = {
@@ -166,11 +173,12 @@ function GenerateMutasi() {
           // console.log("berhasil input");
           setData([]);
           setCatatan("");
-          setGudangAwal(null);
+          // setGudangAwal(null);
           setGudangTujuan(null);
           setinputMasukJumlah("");
           setBatch("");
           setdatePicker(null);
+          setDataToSubmit([]);
         } catch (error) {
           openErrorSB();
           console.error("Terjadi kesalahan saat mengambil input data Barang keluar:", error);
@@ -245,6 +253,7 @@ function GenerateMutasi() {
         inputBarangNama,
         detailbarang_stok: inputMasukJumlah.toString(),
         detailbarang_batch: batch,
+        stok: detailBarangStok,
       };
 
       setData([...data, newData]);
@@ -303,6 +312,24 @@ function GenerateMutasi() {
     // }
   };
 
+  const handleChangeJumlahKirim = async (index, newValue, stok) => {
+    // Salin data dari data dan dataToSubmit
+    const updatedData = [...data];
+    const updatedDataToSubmit = [...dataToSubmit];
+
+    if (newValue > stok) {
+      alert("Jumlah melebihi stok yang dimaksud");
+      return;
+    }
+
+    updatedData[index].detailbarang_stok = newValue;
+    updatedDataToSubmit[index].dtransfer_barang_jumlah = newValue;
+
+    setData(updatedData);
+
+    console.log(dataToSubmit);
+  };
+
   useEffect(() => {
     getGudang();
     getBarang();
@@ -354,6 +381,7 @@ function GenerateMutasi() {
     { Header: "No. ", accessor: "index", width: "10%", align: "left" },
     { Header: "Nama Barang ", accessor: "nama", align: "center" },
     { Header: "Jumlah Barang ", accessor: "jumlah", align: "center" },
+    { Header: "stok Barang ", accessor: "stok", align: "center" },
     { Header: "Batch ", accessor: "batch", align: "center" },
     { Header: "Action", accessor: "action", align: "center" },
   ];
@@ -362,8 +390,16 @@ function GenerateMutasi() {
     return {
       index: index + 1,
       nama: item.inputBarangNama,
-      jumlah: item.detailbarang_stok,
+      jumlah: (
+        <MDInput
+          type="number"
+          value={item.detailbarang_stok || 0}
+          onChange={(e) => handleChangeJumlahKirim(index, parseInt(e.target.value), item.stok)}
+          inputProps={{ min: 0 }}
+        />
+      ),
       batch: item.detailbarang_batch,
+      stok: item.stok,
       action: (
         <IconButton aria-label="delete" size="large" onClick={() => handleDelete(index)}>
           <Icon fontSize="small">delete</Icon>

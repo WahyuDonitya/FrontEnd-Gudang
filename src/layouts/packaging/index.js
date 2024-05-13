@@ -145,6 +145,7 @@ function GeneratePackaging() {
           setPelaku("");
           openSuccessSB();
           closeRusakModalHandler();
+          getHmasuk();
         } catch (error) {
           openErrorSB();
           console.log("Terjadi Kesalahan saat menambahkan data packaging : ", error);

@@ -33,17 +33,20 @@ function PergerakanBarang() {
   const [datePickerAwal, setdatePickerAwal] = useState(null);
   const [datePickerAkhir, setdatePickerAkhir] = useState(null);
   const [kartuStok, setKartuStok] = useState([]);
+  const [gudangs, setGudangs] = useState([]);
+  const [GudangPick, setGudangPick] = useState(null);
 
   const accessToken = localStorage.getItem("access_token");
-  if (!accessToken) {
-    return <Navigate to="/authentication/sign-in" />;
-  }
-
   const decodedToken = jwtDecode(accessToken);
-  if (decodedToken.role_id !== 2) {
-    localStorage.removeItem("access_token");
-    return <Navigate to="/authentication/sign-in" />;
-  }
+  // if (!accessToken) {
+  //   return <Navigate to="/authentication/sign-in" />;
+  // }
+
+  // const decodedToken = jwtDecode(accessToken);
+  // if (decodedToken.role_id !== 2) {
+  //   localStorage.removeItem("access_token");
+  //   return <Navigate to="/authentication/sign-in" />;
+  // }
 
   //   Pemanggilan API
   const getBarang = async () => {
@@ -60,22 +63,29 @@ function PergerakanBarang() {
     }
   };
 
+  const getGudang = async () => {
+    try {
+      const response = await axios.get("http://127.0.0.1:8000/api/gudang/", {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      // console.log("Data Customer:", response.data);
+      setGudangs(response.data);
+    } catch (error) {
+      console.error("Terjadi kesalahan saat mengambil data Gudang:", error);
+    }
+  };
+
   useEffect(() => {
     getBarang();
+    getGudang();
   }, []);
 
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    navigateAndClearTokenKepalaGudang(navigate);
-  }, [navigate]);
   // const navigate = useNavigate();
 
   // useEffect(() => {
-  //   const hasToken = !!localStorage.getItem("access_token");
-  //   if (!hasToken) {
-  //     navigate("/authentication/sign-in");
-  //   }
+  //   navigateAndClearTokenKepalaGudang(navigate);
   // }, [navigate]);
 
   //   function
@@ -90,21 +100,40 @@ function PergerakanBarang() {
   const handleSubmit = async () => {
     try {
       let response = null;
-      if (datePickerAkhir != null) {
-        response = await axios.get(
-          `http://127.0.0.1:8000/api/report/get-pergerakan-barang/${barangId}/${datePickerAwal}/${datePickerAkhir}`,
-          {
-            headers: { Authorization: `Bearer ${accessToken}` },
-          }
-        );
+      if (GudangPick == null) {
+        if (datePickerAkhir != null) {
+          response = await axios.get(
+            `http://127.0.0.1:8000/api/report/get-pergerakan-barang/${barangId}/${datePickerAwal}/${datePickerAkhir}`,
+            {
+              headers: { Authorization: `Bearer ${accessToken}` },
+            }
+          );
+        } else {
+          response = await axios.get(
+            `http://127.0.0.1:8000/api/report/get-pergerakan-barang/${barangId}/${datePickerAwal}`,
+            {
+              headers: { Authorization: `Bearer ${accessToken}` },
+            }
+          );
+        }
       } else {
-        response = await axios.get(
-          `http://127.0.0.1:8000/api/report/get-pergerakan-barang/${barangId}/${datePickerAwal}`,
-          {
-            headers: { Authorization: `Bearer ${accessToken}` },
-          }
-        );
+        if (datePickerAkhir != null) {
+          response = await axios.get(
+            `http://127.0.0.1:8000/api/report/get-pergerakan-barang/${barangId}/${datePickerAwal}/${datePickerAkhir}/${GudangPick}`,
+            {
+              headers: { Authorization: `Bearer ${accessToken}` },
+            }
+          );
+        } else {
+          response = await axios.get(
+            `http://127.0.0.1:8000/api/report/get-pergerakan-barang/${barangId}/${datePickerAwal}/${GudangPick}`,
+            {
+              headers: { Authorization: `Bearer ${accessToken}` },
+            }
+          );
+        }
       }
+
       setKartuStok(response.data);
       console.log(response.data);
     } catch (error) {
@@ -133,10 +162,9 @@ function PergerakanBarang() {
   const columns = [
     { Header: "No. Nota Keluar", accessor: "hkeluar_nota", align: "center" },
     { Header: "No. Nota Masuk", accessor: "hmasuk_nota", align: "center" },
-    { Header: "No. Nota Supplier", accessor: "hmasuk_notasupplier", align: "center" },
     { Header: "No. Nota Transfer", accessor: "htransfer_barang_nota", align: "center" },
-    { Header: "Nama Customer", accessor: "customer.customer_nama", align: "center" },
-    { Header: "Catatan", accessor: "hmasuk_comment", align: "center" },
+    { Header: "No. Nota Pemusnahan", accessor: "hmasuk_notapemusnahan", align: "center" },
+    { Header: "No. Nota Barang Rusak", accessor: "barangrusak", align: "center" },
     { Header: "Tanggal dibuat", accessor: "created_at", align: "center" },
     { Header: "Jenis Transaksi", accessor: "jenistransaksi", align: "center" },
     { Header: "Action", accessor: "action", align: "center" },
@@ -145,9 +173,9 @@ function PergerakanBarang() {
   const rows = kartuStok.map((item) => ({
     hkeluar_nota: item.hkeluar_nota ? item.hkeluar_nota : "-",
     hmasuk_nota: item.hmasuk_nota ? item.hmasuk_nota : "-",
-    hmasuk_notasupplier: item.hmasuk_notasupplier ? item.hmasuk_notasupplier : "-",
+    hmasuk_notapemusnahan: item.hpemusnahan_nota ? item.hpemusnahan_nota : "-",
     htransfer_barang_nota: item.htransfer_barang_nota ? item.htransfer_barang_nota : "-",
-    customer: { customer_nama: item.customer?.customer_nama },
+    barangrusak: item.hbarangrusak_nota ? item.hbarangrusak_nota : "-",
     hmasuk_comment: item.hmasuk_comment ? item.hmasuk_comment : "-",
     created_at: item.created_at ? format(new Date(item.created_at), "dd-MM-yyyy") : "-",
     jenistransaksi: item.hmasuk_id
@@ -156,6 +184,10 @@ function PergerakanBarang() {
       ? "Barang Keluar"
       : item.htransfer_barang_id
       ? "Transfer Internal"
+      : item.hpemusnahan_id
+      ? "Pemusnahan Barang"
+      : item.hbarangrusak_id
+      ? `Barang Rusak`
       : "Belum ada",
     action: (
       <Link
@@ -166,6 +198,10 @@ function PergerakanBarang() {
             ? `/detail/${item.hkeluar_nota}`
             : item.htransfer_barang_id
             ? `/detailmutasi-barang/${item.htransfer_barang_id}`
+            : item.hpemusnahan_id
+            ? `/detail-pemusnahan-barang/${item.hpemusnahan_nota}`
+            : item.hbarangrusak_id
+            ? `/detail-list-barang-rusak/${item.hbarangrusak_nota}`
             : ""
         }
       >
@@ -200,26 +236,75 @@ function PergerakanBarang() {
                   Table Pergerakan Barang
                 </MDTypography>
               </MDBox>
-              <Grid container>
-                <Grid item xs={12} pt={4} px={2}>
-                  {Array.isArray(barang) && barang.length > 0 ? (
-                    <Autocomplete
-                      disablePortal
-                      id="combo-box-demo"
-                      options={barang}
-                      getOptionLabel={(option) => `${option.barang_nama}`}
-                      onChange={(event, newValue) => {
-                        //   setGudangPick(newValue.gudang_id);
-                        handleChange(newValue);
-                      }}
-                      fullWidth
-                      renderInput={(params) => <TextField {...params} label="Pilih Barang " />}
-                    />
-                  ) : (
-                    <p>Loading customer data...</p>
-                  )}
+              {decodedToken.role_id === 3 ? (
+                <Grid container>
+                  <Grid item xs={6} pt={4} px={2}>
+                    {Array.isArray(barang) && barang.length > 0 ? (
+                      <Autocomplete
+                        disablePortal
+                        id="combo-box-demo"
+                        options={barang}
+                        getOptionLabel={(option) => `${option.barang_nama}`}
+                        onChange={(event, newValue) => {
+                          //   setGudangPick(newValue.gudang_id);
+                          handleChange(newValue);
+                        }}
+                        fullWidth
+                        renderInput={(params) => <TextField {...params} label="Pilih Barang " />}
+                      />
+                    ) : (
+                      <p>Loading customer data...</p>
+                    )}
+                  </Grid>
+                  <Grid item xs={6} pt={4} px={2}>
+                    {Array.isArray(gudangs) && gudangs.length > 0 ? (
+                      <Autocomplete
+                        disablePortal
+                        id="combo-box-demo"
+                        options={gudangs}
+                        value={gudangs.find((gudang) => gudang.gudang_id === GudangPick) || null}
+                        getOptionLabel={(option) =>
+                          `${option.gudang_nama} (${
+                            option.jenis_gudang.jenis_gudang_nama || "gamuncul"
+                          })`
+                        }
+                        fullWidth
+                        renderInput={(params) => <TextField {...params} label="Pilih Gudang" />}
+                        onChange={(event, newValue) => {
+                          if (newValue) {
+                            setGudangPick(newValue.gudang_id);
+                          } else {
+                            setGudangPick(null);
+                          }
+                        }}
+                      />
+                    ) : (
+                      <p>Loading customer data...</p>
+                    )}
+                  </Grid>
                 </Grid>
-              </Grid>
+              ) : (
+                <Grid container>
+                  <Grid item xs={12} pt={4} px={2}>
+                    {Array.isArray(barang) && barang.length > 0 ? (
+                      <Autocomplete
+                        disablePortal
+                        id="combo-box-demo"
+                        options={barang}
+                        getOptionLabel={(option) => `${option.barang_nama}`}
+                        onChange={(event, newValue) => {
+                          //   setGudangPick(newValue.gudang_id);
+                          handleChange(newValue);
+                        }}
+                        fullWidth
+                        renderInput={(params) => <TextField {...params} label="Pilih Barang " />}
+                      />
+                    ) : (
+                      <p>Loading customer data...</p>
+                    )}
+                  </Grid>
+                </Grid>
+              )}
               <Grid container>
                 <Grid item xs={6} pt={4} px={2}>
                   <LocalizationProvider dateAdapter={AdapterDayjs}>

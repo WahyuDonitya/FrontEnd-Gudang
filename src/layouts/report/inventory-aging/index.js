@@ -21,15 +21,27 @@ import { useEffect, useState } from "react";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 import MDButton from "components/MDButton";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import { format } from "date-fns";
 import { navigateAndClearTokenUser } from "navigationUtils/navigationUtilsUser";
+import { jwtDecode } from "jwt-decode";
 
 function InventoryAging() {
   //   state
   const [barang, setBarang] = useState([]);
+  const [gudangs, setGudangs] = useState([]);
+  const [GudangPick, setGudangPick] = useState(null);
 
   const accessToken = localStorage.getItem("access_token");
+  if (!accessToken) {
+    return <Navigate to="/authentication/sign-in" />;
+  }
+
+  const decodedToken = jwtDecode(accessToken);
+  // if (decodedToken.role_id == 1) {
+  //   localStorage.removeItem("access_token");
+  //   return <Navigate to="/authentication/sign-in" />;
+  // }
 
   //   Pemanggilan API
   const getBarang = async () => {
@@ -46,35 +58,53 @@ function InventoryAging() {
     }
   };
 
+  const getBarangWithGudang = async (newValue) => {
+    try {
+      const response = await axios.get(
+        `http://127.0.0.1:8000/api/report/inventory-aging/${newValue.gudang_id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      console.log(response.data);
+      console.log(GudangPick);
+      setBarang(response.data);
+    } catch (error) {
+      console.error("Terjadi kesalahan saat mengambil data Barang :", error);
+    }
+  };
+
+  const getGudang = async () => {
+    try {
+      const response = await axios.get("http://127.0.0.1:8000/api/gudang/", {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      // console.log("Data Customer:", response.data);
+      setGudangs(response.data);
+    } catch (error) {
+      console.error("Terjadi kesalahan saat mengambil data Gudang:", error);
+    }
+  };
+
   useEffect(() => {
-    getBarang();
+    if (decodedToken.role_id === 3) {
+      getGudang();
+    } else {
+      getBarang();
+    }
   }, []);
 
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
-  useEffect(() => {
-    navigateAndClearTokenUser(navigate);
-  }, [navigate]);
+  // useEffect(() => {
+  //   navigateAndClearTokenUser(navigate);
+  // }, [navigate]);
 
   //   function
-
-  //   const handlePrint = () => {
-  //     // console.log(headerKeluar);
-  //     const printableContent = document.getElementById("printable-content");
-
-  //     const printWindow = window.open("", "_blank");
-  //     printWindow.document.write(`
-  //       <html>
-  //         <head>
-  //           <title>Print</title>
-  //         </head>
-  //         <body>${printableContent.innerHTML}</body>
-  //       </html>
-  //     `);
-  //     printWindow.document.close();
-  //     printWindow.print();
-  //     printWindow.onafterprint = () => printWindow.close();
-  //   };
 
   const columns = [
     { Header: "No. ", accessor: "nomor", align: "center" },
@@ -99,9 +129,6 @@ function InventoryAging() {
         <Grid container spacing={6}>
           <Grid item xs={12}>
             <Card>
-              {/* <div id="printable-content" style={{ display: "none" }}>
-                <PrintAbleKartuStok kartuStok={kartuStok} />
-              </div> */}
               <MDBox
                 mx={2}
                 mt={-3}
@@ -117,6 +144,40 @@ function InventoryAging() {
                 </MDTypography>
               </MDBox>
               <MDBox pt={3}>
+                {decodedToken.role_id === 3 ? (
+                  <Grid container>
+                    <Grid item xs={12} pt={4} px={2}>
+                      {Array.isArray(gudangs) && gudangs.length > 0 ? (
+                        <Autocomplete
+                          disablePortal
+                          id="combo-box-demo"
+                          options={gudangs}
+                          value={gudangs.find((gudang) => gudang.gudang_id === GudangPick) || null}
+                          getOptionLabel={(option) =>
+                            `${option.gudang_nama} (${
+                              option.jenis_gudang.jenis_gudang_nama || "gamuncul"
+                            })`
+                          }
+                          fullWidth
+                          renderInput={(params) => <TextField {...params} label="Pilih Gudang" />}
+                          onChange={(event, newValue) => {
+                            if (newValue) {
+                              setGudangPick(newValue.gudang_id);
+                              getBarangWithGudang(newValue);
+                            } else {
+                              setGudangPick(null);
+                              setBarang([]);
+                            }
+                          }}
+                        />
+                      ) : (
+                        <p>Loading customer data...</p>
+                      )}
+                    </Grid>
+                  </Grid>
+                ) : (
+                  <></>
+                )}
                 <DataTable
                   table={{ columns, rows }}
                   isSorted={false}
@@ -125,41 +186,9 @@ function InventoryAging() {
                   canSearch
                   noEndBorder
                 />
-                {/* <Grid item xs={12} px={2} pb={3} pt={5}>
-                  <MDButton variant="gradient" color="success" onClick={handleSubmit}>
-                    Print
-                  </MDButton>
-                </Grid> */}
               </MDBox>
             </Card>
           </Grid>
-          {/* <Grid item xs={12}>
-            <Card>
-              <MDBox
-                mx={2}
-                mt={-3}
-                py={3}
-                px={2}
-                variant="gradient"
-                bgColor="info"
-                borderRadius="lg"
-                coloredShadow="info"
-              >
-                <MDTypography variant="h6" color="white">
-                  Projects Table
-                </MDTypography>
-              </MDBox>
-              <MDBox pt={3}>
-                <DataTable
-                  table={{ columns: pColumns, rows: pRows }}
-                  isSorted={false}
-                  entriesPerPage={false}
-                  showTotalEntries={false}
-                  noEndBorder
-                />
-              </MDBox>
-            </Card>
-          </Grid> */}
         </Grid>
       </MDBox>
     </DashboardLayout>

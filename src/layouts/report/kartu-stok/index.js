@@ -36,6 +36,8 @@ function KartuStok() {
   const [datePickerAwal, setdatePickerAwal] = useState(null);
   const [datePickerAkhir, setdatePickerAkhir] = useState(null);
   const [kartuStok, setKartuStok] = useState([]);
+  const [gudangs, setGudangs] = useState([]);
+  const [GudangPick, setGudangPick] = useState(null);
   const [stokAwal, setStokAwal] = useState(0);
 
   const accessToken = localStorage.getItem("access_token");
@@ -44,7 +46,7 @@ function KartuStok() {
   }
 
   const decodedToken = jwtDecode(accessToken);
-  if (decodedToken.role_id !== 2) {
+  if (decodedToken.role_id == 1) {
     localStorage.removeItem("access_token");
     return <Navigate to="/authentication/sign-in" />;
   }
@@ -64,8 +66,23 @@ function KartuStok() {
     }
   };
 
+  const getGudang = async () => {
+    try {
+      const response = await axios.get("http://127.0.0.1:8000/api/gudang/", {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      // console.log("Data Customer:", response.data);
+      setGudangs(response.data);
+    } catch (error) {
+      console.error("Terjadi kesalahan saat mengambil data Gudang:", error);
+    }
+  };
+
   useEffect(() => {
     getBarang();
+    getGudang();
   }, []);
 
   // const navigate = useNavigate();
@@ -88,12 +105,22 @@ function KartuStok() {
   const handleSubmit = async () => {
     // console.log(datePickerAwal);
     try {
-      const response = await axios.get(
-        `http://127.0.0.1:8000/api/report/get-kartu-stok/${barangId}/${datePickerAwal}/${datePickerAkhir}`,
-        {
-          headers: { Authorization: `Bearer ${accessToken}` },
-        }
-      );
+      let response;
+      if (GudangPick == null) {
+        response = await axios.get(
+          `http://127.0.0.1:8000/api/report/get-kartu-stok/${barangId}/${datePickerAwal}/${datePickerAkhir}`,
+          {
+            headers: { Authorization: `Bearer ${accessToken}` },
+          }
+        );
+      } else {
+        response = await axios.get(
+          `http://127.0.0.1:8000/api/report/get-kartu-stok/${barangId}/${datePickerAwal}/${datePickerAkhir}/${GudangPick}`,
+          {
+            headers: { Authorization: `Bearer ${accessToken}` },
+          }
+        );
+      }
 
       setKartuStok(response.data.data);
       // setStokAwal(response.data.data_sebelumnya);
@@ -155,6 +182,10 @@ function KartuStok() {
         ? "Transfer internal"
         : item.hpenyesuaian_id !== null
         ? "Penyesuaian Barang"
+        : item.hbarangrusak_id !== null
+        ? "Barang rusak"
+        : item.hpemusnahan_id !== null
+        ? "Pemusnahan Barang"
         : "Belum ada",
     action: (
       <Link to={`/detailbarang-masuk/${item.hmasuk_nota}`}>
@@ -218,26 +249,77 @@ function KartuStok() {
                   Table Kartu Stok
                 </MDTypography>
               </MDBox>
-              <Grid container>
-                <Grid item xs={12} pt={4} px={2}>
-                  {Array.isArray(barang) && barang.length > 0 ? (
-                    <Autocomplete
-                      disablePortal
-                      id="combo-box-demo"
-                      options={barang}
-                      getOptionLabel={(option) => `${option.barang_nama}`}
-                      onChange={(event, newValue) => {
-                        //   setGudangPick(newValue.gudang_id);
-                        handleChange(newValue);
-                      }}
-                      fullWidth
-                      renderInput={(params) => <TextField {...params} label="Pilih Barang " />}
-                    />
-                  ) : (
-                    <p>Loading customer data...</p>
-                  )}
+              {/* <Grid container> */}
+              {decodedToken.role_id === 3 ? (
+                <Grid container>
+                  <Grid item xs={6} pt={4} px={2}>
+                    {Array.isArray(barang) && barang.length > 0 ? (
+                      <Autocomplete
+                        disablePortal
+                        id="combo-box-demo"
+                        options={barang}
+                        getOptionLabel={(option) => `${option.barang_nama}`}
+                        onChange={(event, newValue) => {
+                          //   setGudangPick(newValue.gudang_id);
+                          handleChange(newValue);
+                        }}
+                        fullWidth
+                        renderInput={(params) => <TextField {...params} label="Pilih Barang " />}
+                      />
+                    ) : (
+                      <p>Loading customer data...</p>
+                    )}
+                  </Grid>
+                  <Grid item xs={6} pt={4} px={2}>
+                    {Array.isArray(gudangs) && gudangs.length > 0 ? (
+                      <Autocomplete
+                        disablePortal
+                        id="combo-box-demo"
+                        options={gudangs}
+                        value={gudangs.find((gudang) => gudang.gudang_id === GudangPick) || null}
+                        getOptionLabel={(option) =>
+                          `${option.gudang_nama} (${
+                            option.jenis_gudang.jenis_gudang_nama || "gamuncul"
+                          })`
+                        }
+                        fullWidth
+                        renderInput={(params) => <TextField {...params} label="Pilih Gudang" />}
+                        onChange={(event, newValue) => {
+                          if (newValue) {
+                            setGudangPick(newValue.gudang_id);
+                          } else {
+                            setGudangPick(null);
+                          }
+                        }}
+                      />
+                    ) : (
+                      <p>Loading customer data...</p>
+                    )}
+                  </Grid>
                 </Grid>
-              </Grid>
+              ) : (
+                <Grid container>
+                  <Grid item xs={12} pt={4} px={2}>
+                    {Array.isArray(barang) && barang.length > 0 ? (
+                      <Autocomplete
+                        disablePortal
+                        id="combo-box-demo"
+                        options={barang}
+                        getOptionLabel={(option) => `${option.barang_nama}`}
+                        onChange={(event, newValue) => {
+                          //   setGudangPick(newValue.gudang_id);
+                          handleChange(newValue);
+                        }}
+                        fullWidth
+                        renderInput={(params) => <TextField {...params} label="Pilih Barang " />}
+                      />
+                    ) : (
+                      <p>Loading customer data...</p>
+                    )}
+                  </Grid>
+                </Grid>
+              )}
+              {/* </Grid> */}
               <Grid container>
                 <Grid item xs={6} pt={4} px={2}>
                   <LocalizationProvider dateAdapter={AdapterDayjs}>

@@ -26,6 +26,7 @@ import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
 import { navigateAndClearTokenUser } from "navigationUtils/navigationUtilsUser";
 import DataTable from "examples/Tables/DataTable";
+import MDInput from "components/MDInput";
 
 function BarangMasuk() {
   const [gudangs, setGudangs] = useState([]);
@@ -121,6 +122,14 @@ function BarangMasuk() {
   const addBarangMasuk = async () => {
     if (window.confirm("Apakah data yang anda masukkan sudah benar?")) {
       if (notaSupplier != "" && data.length > 0) {
+        const selectedBarang = dataToSubmit.filter(
+          (item) => item.detailbarang_stok == 0 || Number.isNaN(item.detailbarang_stok)
+        );
+        if (selectedBarang.length > 0) {
+          alert("Terdapat data yang kosong pada table");
+          return;
+        }
+
         try {
           // console.log("nota supplier", notaSupplier);
           const dataKirim = {
@@ -213,6 +222,34 @@ function BarangMasuk() {
     console.log(dataToSubmit);
   };
 
+  const handleChangeJumlahMasuk = (index, newJumlah) => {
+    // Salin data dari data dan dataToSubmit
+    const updatedData = [...data];
+    const updatedDataToSubmit = [...dataToSubmit];
+
+    updatedData[index].detailbarang_stok = newJumlah;
+    updatedDataToSubmit[index].detailbarang_stok = newJumlah;
+
+    // console.log(dataToSubmit);
+
+    setData(updatedData);
+  };
+
+  const handleChangeJumlahRusak = (index, newJumlah) => {
+    const updatedData = [...data];
+    const updatedDataToSubmit = [...dataToSubmit];
+
+    if (updatedData[index].detailbarang_stok <= newJumlah) {
+      alert("Tidak Boleh melebihi stok saat ini");
+    } else {
+      updatedData[index].jumlahrusak = newJumlah;
+      updatedDataToSubmit[index].detailbarang_jumlahrusakmasuk = newJumlah;
+      setData(updatedData);
+    }
+
+    console.log(dataToSubmit);
+  };
+
   const handleCustomerInputChange = (event, newValue) => {
     // Pemisahan string berdasarkan tanda kurung buka dan tutup
     const parts = newValue.split("(");
@@ -260,10 +297,25 @@ function BarangMasuk() {
     return {
       index: index + 1,
       barang: item.inputBarangNama,
-      jumlahmasuk: item.detailbarang_stok,
+      // jumlahmasuk: item.detailbarang_stok,
       batch: item.detailbarang_batch,
       exp: item.detailbarang_expdate,
-      jumlahrusak: item.jumlahrusak,
+      jumlahrusak: (
+        <MDInput
+          type="number"
+          value={item.jumlahrusak || 0}
+          onChange={(e) => handleChangeJumlahRusak(index, parseInt(e.target.value))}
+          inputProps={{ min: 0 }}
+        />
+      ),
+      jumlahmasuk: (
+        <MDInput
+          type="number"
+          value={item.detailbarang_stok || 0}
+          onChange={(e) => handleChangeJumlahMasuk(index, parseInt(e.target.value))}
+          inputProps={{ min: 0 }}
+        />
+      ),
       action: (
         <IconButton aria-label="delete" size="large" onClick={() => handleDelete(index)}>
           <Icon fontSize="small">delete</Icon>
@@ -452,48 +504,6 @@ function BarangMasuk() {
               </MDButton>
             </Grid>
             <Grid item xs={12}>
-              {/* {data.length > 0 ? ( */}
-              {/* <TableContainer>
-                <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                  <TableHead>
-                    <TableRow>
-                      <TableCell style={{ width: "20%", minWidth: "20%" }}>Nama Barang</TableCell>
-                      <TableCell style={{ width: "15%", minWidth: "15%" }}>
-                        Jumlah barang masuk
-                      </TableCell>
-                      <TableCell style={{ width: "15%", minWidth: "15%" }}>Batch Barang</TableCell>
-                      <TableCell style={{ width: "20%", minWidth: "20%" }}>
-                        Barang Exp Date
-                      </TableCell>
-                      <TableCell style={{ width: "15%", minWidth: "15%" }}>Jumlah Rusak</TableCell>
-                      <TableCell style={{ width: "15%", minWidth: "15%" }}>Action</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {data.map((item, index) => (
-                      <TableRow key={index}>
-                        <TableCell style={{ width: "20%" }}>{item.inputBarangNama}</TableCell>
-                        <TableCell style={{ width: "15%" }}>{item.detailbarang_stok}</TableCell>
-                        <TableCell style={{ width: "15%" }}>{item.detailbarang_batch}</TableCell>
-                        <TableCell style={{ width: "20%" }}>{item.detailbarang_expdate}</TableCell>
-                        <TableCell style={{ width: "15%" }}>{item.jumlahrusak}</TableCell>
-                        <TableCell style={{ width: "15%" }}>
-                          <IconButton
-                            aria-label="delete"
-                            size="large"
-                            onClick={() => handleDelete(index)}
-                          >
-                            <Icon fontSize="small">delete</Icon>
-                          </IconButton>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </TableContainer> */}
-              {/* ) : (
-                <p>No data available</p>
-              )} */}
               <MDBox pt={3}>
                 <DataTable
                   table={{ columns, rows }}

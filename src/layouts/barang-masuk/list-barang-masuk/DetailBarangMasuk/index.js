@@ -306,7 +306,7 @@ function ListDetailBarangMasuk() {
                   />
                 </Grid>
               </Grid>
-              {headerBarangMasuk.hmasuk_status === 2 && (
+              {/* {headerBarangMasuk.hmasuk_status === 2 && (
                 <Grid container pt={5} spacing={7} px={3} mb={4}>
                   <Grid item xs={6}>
                     <MDButton
@@ -329,7 +329,7 @@ function ListDetailBarangMasuk() {
                     </MDButton>
                   </Grid>
                 </Grid>
-              )}
+              )} */}
             </Card>
           </Grid>
         </Grid>
@@ -343,7 +343,7 @@ function ListDetailBarangMasuk() {
         </Grid>
       </MDBox>
 
-      <Dialog open={openRejectModal} onClose={closeRejectModalHandler}>
+      {/* <Dialog open={openRejectModal} onClose={closeRejectModalHandler}>
         <DialogTitle>Reason for Rejection</DialogTitle>
         <DialogContent>
           <MDInput
@@ -387,7 +387,7 @@ function ListDetailBarangMasuk() {
             Approve
           </MDButton>
         </DialogActions>
-      </Dialog>
+      </Dialog> */}
     </DashboardLayout>
   );
 }

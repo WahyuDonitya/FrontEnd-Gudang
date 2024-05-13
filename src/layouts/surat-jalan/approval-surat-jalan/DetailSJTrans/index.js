@@ -83,6 +83,18 @@ function DetailSJTrans() {
     decode = jwtDecode(accessToken);
   }
 
+  const [openNamaModal, setOpenNamaModal] = useState(false);
+  const [nama, setNama] = useState("");
+
+  const openNamaModalHandler = () => {
+    setOpenNamaModal(true);
+  };
+
+  const closeNamaModalHandler = () => {
+    setOpenNamaModal(false);
+    setNama(""); // Clear reject reason when modal is closed
+  };
+
   // API
 
   const getId = async () => {
@@ -173,6 +185,7 @@ function DetailSJTrans() {
         `http://127.0.0.1:8000/api/suratjalan/kirim-suratjalan-transfer`,
         {
           suratjalantransfer_nota: headerSuratJalan.suratjalantransfer_nota,
+          nama_pengirim: nama,
         },
         { headers: { Authorization: `Bearer ${accessToken}` } }
       );
@@ -191,6 +204,8 @@ function DetailSJTrans() {
       printWindow.print();
       printWindow.onafterprint = () => printWindow.close();
       getId();
+      closeNamaModalHandler();
+      openSuccessSB();
     } catch (error) {
       console.log("terdapat kesalahan saat mengirim surat jalan");
     }
@@ -466,7 +481,12 @@ function DetailSJTrans() {
               {headerSuratJalan.suratjalantransfer_status === 3 && (
                 <Grid container pt={5} spacing={7} px={3} mb={4}>
                   <Grid item xs={12}>
-                    <MDButton variant="gradient" color="info" fullWidth onClick={handlePrint}>
+                    <MDButton
+                      variant="gradient"
+                      color="info"
+                      fullWidth
+                      onClick={openNamaModalHandler}
+                    >
                       kirim dan print nota
                     </MDButton>
                   </Grid>
@@ -533,6 +553,28 @@ function DetailSJTrans() {
           </MDButton>
           <MDButton color="success" onClick={handleReject}>
             Reject
+          </MDButton>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog open={openNamaModal} onClose={closeNamaModalHandler}>
+        <DialogTitle>Nama Pengirim</DialogTitle>
+        <DialogContent>
+          <MDInput
+            fullWidth
+            rows={4}
+            variant="outlined"
+            label="Isi Nama pengirim"
+            value={nama}
+            onChange={(e) => setNama(e.target.value)}
+          />
+        </DialogContent>
+        <DialogActions>
+          <MDButton color="error" onClick={closeNamaModalHandler}>
+            Cancel
+          </MDButton>
+          <MDButton color="success" onClick={handlePrint}>
+            Kirim
           </MDButton>
         </DialogActions>
       </Dialog>

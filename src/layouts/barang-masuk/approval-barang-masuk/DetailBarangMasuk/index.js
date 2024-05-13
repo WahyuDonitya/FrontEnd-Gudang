@@ -9,7 +9,7 @@ import MDTypography from "components/MDTypography";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import DataTable from "examples/Tables/DataTable";
-import { useParams } from "react-router-dom";
+import { Navigate, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import MDButton from "components/MDButton";
@@ -26,6 +26,7 @@ import {
 } from "@mui/material";
 import MDInput from "components/MDInput";
 import { jwtDecode } from "jwt-decode";
+import { navigateAndClearTokenKepalaGudang } from "navigationUtils/navigationUtilsKepalaGudang";
 // import projectsTableData from "layouts/tables/data/projectsTableData";
 
 function DetailBarangMasuk() {
@@ -75,6 +76,11 @@ function DetailBarangMasuk() {
     setIsPackaging(null);
   };
   // end Handle modal
+
+  const navigate = useNavigate();
+  useEffect(() => {
+    navigateAndClearTokenKepalaGudang(navigate);
+  }, [navigate]);
 
   const accessToken = localStorage.getItem("access_token");
   let decode = null;

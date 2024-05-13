@@ -71,11 +71,20 @@ function DetailListBarangRusak() {
   ];
 
   const rows = dataDrusak.map((item, index) => {
+    const rack = item.penempatan_produk?.get_rack;
+    const rowName = rack?.get_rows?.row_name;
+    const rackBay = rack?.rack_bay;
+    const rackLevel = rack?.rack_level;
+
+    const tempat =
+      rowName || rackBay || rackLevel
+        ? `Rows ${rowName}, Sel ${rackBay}, Level ${rackLevel}`
+        : "bulk";
     return {
       index: index + 1,
       barang: item.detail_barang.barang.barang_nama,
       batch: item.detail_barang.detailbarang_batch,
-      tempat: `Rows ${item.penempatan_produk?.get_rack?.get_rows?.row_name}, Sel ${item.penempatan_produk?.get_rack?.rack_bay}, Level ${item.penempatan_produk?.get_rack?.rack_level}`,
+      tempat: tempat,
       dbarangrusak_jumlah: item.dbarangrusak_jumlah,
       // Tombol view gambar
       action: item.file_foto && ( // Menambahkan pengecekan di sini

@@ -28,46 +28,59 @@ import { jwtDecode } from "jwt-decode";
 
 function PengirimanBarang() {
   //   state
-  const [barang, setBarang] = useState([]);
   const [datePickerAwal, setdatePickerAwal] = useState(null);
   const [datePickerAkhir, setdatePickerAkhir] = useState(null);
   const [laporanPengiriman, setLaporanPengiriman] = useState([]);
+  const [gudangs, setGudangs] = useState([]);
+  const [GudangPick, setGudangPick] = useState(null);
 
   const accessToken = localStorage.getItem("access_token");
-  if (!accessToken) {
-    return <Navigate to="/authentication/sign-in" />;
-  }
-
   const decodedToken = jwtDecode(accessToken);
-  if (decodedToken.role_id == 3) {
-    localStorage.removeItem("access_token");
-    return <Navigate to="/authentication/sign-in" />;
-  }
+  // if (!accessToken) {
+  //   return <Navigate to="/authentication/sign-in" />;
+  // }
+
+  // const decodedToken = jwtDecode(accessToken);
+  // if (decodedToken.role_id == 3) {
+  //   localStorage.removeItem("access_token");
+  //   return <Navigate to="/authentication/sign-in" />;
+  // }
 
   //   Pemanggilan API
-  const getBarang = async () => {
+
+  const getGudang = async () => {
     try {
-      const response = await axios.get("http://127.0.0.1:8000/api/report/inventory-aging", {
+      const response = await axios.get("http://127.0.0.1:8000/api/gudang/", {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
       });
-
-      setBarang(response.data);
+      // console.log("Data Customer:", response.data);
+      setGudangs(response.data);
     } catch (error) {
-      console.error("Terjadi kesalahan saat mengambil data Barang :", error);
+      console.error("Terjadi kesalahan saat mengambil data Gudang:", error);
     }
   };
 
   const handleSubmit = async () => {
     // console.log(datePickerAwal);
     try {
-      const response = await axios.get(
-        `http://127.0.0.1:8000/api/report/get-report-pengiriman-barang/${datePickerAwal}/${datePickerAkhir}`,
-        {
-          headers: { Authorization: `Bearer ${accessToken}` },
-        }
-      );
+      let response;
+      if (GudangPick == null) {
+        response = await axios.get(
+          `http://127.0.0.1:8000/api/report/get-report-pengiriman-barang/${datePickerAwal}/${datePickerAkhir}`,
+          {
+            headers: { Authorization: `Bearer ${accessToken}` },
+          }
+        );
+      } else {
+        response = await axios.get(
+          `http://127.0.0.1:8000/api/report/get-report-pengiriman-barang/${datePickerAwal}/${datePickerAkhir}/${GudangPick}`,
+          {
+            headers: { Authorization: `Bearer ${accessToken}` },
+          }
+        );
+      }
 
       setLaporanPengiriman(response.data);
     } catch (error) {
@@ -76,7 +89,7 @@ function PengirimanBarang() {
   };
 
   useEffect(() => {
-    getBarang();
+    getGudang();
   }, []);
 
   // const navigate = useNavigate();
@@ -160,6 +173,39 @@ function PengirimanBarang() {
                   Laporan Pengiriman Barang
                 </MDTypography>
               </MDBox>
+              {decodedToken.role_id === 3 ? (
+                <Grid container>
+                  <Grid item xs={12} pt={4} px={2}>
+                    {Array.isArray(gudangs) && gudangs.length > 0 ? (
+                      <Autocomplete
+                        disablePortal
+                        id="combo-box-demo"
+                        options={gudangs}
+                        value={gudangs.find((gudang) => gudang.gudang_id === GudangPick) || null}
+                        getOptionLabel={(option) =>
+                          `${option.gudang_nama} (${
+                            option.jenis_gudang.jenis_gudang_nama || "gamuncul"
+                          })`
+                        }
+                        fullWidth
+                        renderInput={(params) => <TextField {...params} label="Pilih Gudang" />}
+                        onChange={(event, newValue) => {
+                          if (newValue) {
+                            setGudangPick(newValue.gudang_id);
+                            // getBarangWithGudang(newValue);
+                          } else {
+                            setGudangPick(null);
+                          }
+                        }}
+                      />
+                    ) : (
+                      <p>Loading customer data...</p>
+                    )}
+                  </Grid>
+                </Grid>
+              ) : (
+                <></>
+              )}
               <Grid container>
                 <Grid item xs={6} pt={4} px={2}>
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
