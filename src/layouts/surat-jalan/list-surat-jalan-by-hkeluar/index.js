@@ -15,6 +15,7 @@ import DataTable from "examples/Tables/DataTable";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import MDBadge from "components/MDBadge";
 
 function ListSuratJalanByHkeluar() {
   const accessToken = localStorage.getItem("access_token");
@@ -73,13 +74,31 @@ function ListSuratJalanByHkeluar() {
     suratjalan_tanggalkirim: item.suratjalan_tanggalkirim,
     suratjalan_comment: item.suratjalan_comment || "-",
     status:
-      item.suratjalan_status === 1
-        ? "Ditolak"
-        : item.suratjalan_status === 2
-        ? "Menunggu Approval"
-        : item.suratjalan_status === 3
-        ? "Proses Pengiriman"
-        : "Terkirim",
+      item.suratjalan_status === 1 ? (
+        <MDBox ml={-1}>
+          <MDBadge badgeContent="Dtiolak" color="error" variant="gradient" size="sm" />
+        </MDBox>
+      ) : item.suratjalan_status === 2 ? (
+        <MDBox ml={-1}>
+          <MDBadge badgeContent="Menunggu Approval" color="info" variant="gradient" size="sm" />
+        </MDBox>
+      ) : item.suratjalan_status === 3 ? (
+        <MDBox ml={-1}>
+          <MDBadge badgeContent="Menunggu Pengiriman" color="info" variant="gradient" size="sm" />
+        </MDBox>
+      ) : item.suratjalan_status === 4 ? (
+        <MDBox ml={-1}>
+          <MDBadge badgeContent="Proses Pengiriman" color="info" variant="gradient" size="sm" />
+        </MDBox>
+      ) : item.suratjalan_status === 5 ? (
+        <MDBox ml={-1}>
+          <MDBadge badgeContent="Rusak" color="error" variant="gradient" size="sm" />
+        </MDBox>
+      ) : (
+        <MDBox ml={-1}>
+          <MDBadge badgeContent="Terkirim" color="success" variant="gradient" size="sm" />
+        </MDBox>
+      ),
     pengguna_generate: { pengguna_nama: item.pengguna_generate?.pengguna_nama || "-" },
     pengguna_action: { pengguna_nama: item.pengguna_action?.pengguna_nama || "-" },
     action: (

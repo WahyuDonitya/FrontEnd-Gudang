@@ -128,7 +128,7 @@ function BarangKeluar() {
       } else {
         if (data.length > 0) {
           const selectedBarang = dataToSubmit.filter(
-            (item) => item.dkeluar_jumlah == 0 || Number.isNaN(item.dkeluar_jumlah)
+            (item) => item.dkeluar_jumlah == 0 || Number.isNaN(item.detailbarang_stok)
           );
           if (selectedBarang.length > 0) {
             alert("Terdapat data yang kosong pada table");

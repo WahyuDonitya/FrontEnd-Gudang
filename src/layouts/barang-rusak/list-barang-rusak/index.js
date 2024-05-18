@@ -14,6 +14,9 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import MDBadge from "components/MDBadge";
+import { DatePicker } from "@mui/x-date-pickers";
+import MDButton from "components/MDButton";
+import { TextField } from "@mui/material";
 
 // Data
 // import listpemusnahan from "./data";
@@ -22,7 +25,10 @@ import MDBadge from "components/MDBadge";
 
 function ListBarangRusak() {
   const [dataHrusak, setHrusak] = useState([]);
+  const [filteredDataHrusak, setFilteredDataHrusak] = useState([]);
   const accessToken = localStorage.getItem("access_token");
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
   // API
   const getHbarangRusak = async () => {
     try {
@@ -30,6 +36,7 @@ function ListBarangRusak() {
         headers: { Authorization: `Bearer ${accessToken}` },
       });
       setHrusak(response.data);
+      setFilteredDataHrusak(response.data);
     } catch (error) {
       console.log("terjadi kesalahan saat mengambil data barang rusak ", error);
     }
@@ -52,6 +59,27 @@ function ListBarangRusak() {
     getHbarangRusak();
   }, []);
 
+  const handleFilterByDate = () => {
+    if (!startDate || !endDate) return;
+
+    const filteredData = dataHrusak.filter((item) => {
+      const itemDate = new Date(item.created_at);
+      return itemDate >= startDate && itemDate <= endDate;
+    });
+
+    setFilteredDataHrusak(filteredData);
+  };
+
+  useEffect(() => {
+    handleFilterByDate();
+  }, [startDate, endDate]);
+
+  const handleClick = () => {
+    setStartDate(null);
+    setEndDate(null);
+    setFilteredDataHrusak(dataHrusak);
+  };
+
   const columns = [
     { Header: "No. ", accessor: "index", width: "10%", align: "left" },
     { Header: "Nota Barang Rusak", accessor: "nota", align: "center" },
@@ -62,7 +90,7 @@ function ListBarangRusak() {
     { Header: "Detail", accessor: "detail", align: "center" },
   ];
 
-  const rows = dataHrusak.map((item, index) => {
+  const rows = filteredDataHrusak.map((item, index) => {
     return {
       index: index + 1,
       nota: item.hbarangrusak_nota,
@@ -118,6 +146,25 @@ function ListBarangRusak() {
                 <MDTypography variant="h6" color="white">
                   List Pemusnahan Barang
                 </MDTypography>
+              </MDBox>
+              <MDBox pt={3} sx={{ display: "flex", justifyContent: "flex-end" }} mr={2}>
+                <DatePicker
+                  label="Tanggal Mulai"
+                  value={startDate}
+                  onChange={(newValue) => setStartDate(newValue)}
+                  renderInput={(params) => <TextField {...params} />}
+                  sx={{ marginRight: 2 }}
+                />
+                <DatePicker
+                  label="Tanggal Akhir"
+                  value={endDate}
+                  onChange={(newValue) => setEndDate(newValue)}
+                  renderInput={(params) => <TextField {...params} />}
+                  sx={{ marginRight: 2 }}
+                />
+                <MDButton variant="gradient" color="info" onClick={handleClick}>
+                  Reset
+                </MDButton>
               </MDBox>
               <MDBox pt={3}>
                 <DataTable

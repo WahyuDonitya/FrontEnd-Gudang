@@ -1,18 +1,3 @@
-/**
-=========================================================
-* Material Dashboard 2 React - v2.2.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/material-dashboard-react
-* Copyright 2023 Creative Tim (https://www.creative-tim.com)
-
-Coded by www.creative-tim.com
-
- =========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
-// Material Dashboard 2 React layouts
 import Dashboard from "layouts/dashboard";
 import BarangKeluar from "layouts/barang-keluar";
 import SignIn from "layouts/authentication/sign-in";
@@ -45,6 +30,7 @@ import DashboardAdmin from "layouts/dashboard/dashboard-admin";
 import ChangePassword from "layouts/change-password";
 import GenerateBarangRusak from "layouts/barang-rusak";
 import ListBarangRusak from "layouts/barang-rusak/list-barang-rusak";
+import ShoppingBasketIcon from "@mui/icons-material/ShoppingBasket";
 import SignUp from "layouts/authentication/sign-up";
 
 // @mui iconsππ
@@ -53,6 +39,8 @@ import PemusnahanBarang from "layouts/pemusnahan-barang";
 import SidenavCollapse from "examples/Sidenav/SidenavCollapse";
 // import SidenavCollapseBuatan from "examples/Sidenav/SidenavCollapseBuatan";
 import { Shop } from "@mui/icons-material";
+import GeneratePermintaanBarang from "layouts/permintaan-barang/generate-permintaan-barang";
+import ListPermintaanBarang from "layouts/permintaan-barang/list-permintaan-barang";
 
 const routes = [
   {
@@ -136,6 +124,7 @@ const routes = [
     ],
   },
 
+  // Barang Keluar
   {
     type: "collapse",
     name: "Barang Keluar",
@@ -145,7 +134,7 @@ const routes = [
       {
         type: "collapse",
         name: "Generate Barang Keluar",
-        key: "barang-keluar",
+        key: "generate-barang-keluar",
         icon: <Icon fontSize="small">add_box</Icon>,
         route: "/barang-keluar",
         component: <BarangKeluar />,
@@ -171,6 +160,37 @@ const routes = [
       },
     ],
   },
+
+  {
+    type: "route",
+    name: "Barang Keluar",
+    key: "barang-keluar-routes",
+    icon: <Icon fontSize="small">inventory</Icon>,
+    route: "/barang-keluar",
+    component: <BarangKeluar />,
+    roles: ["2", "1"],
+  },
+  {
+    type: "route",
+    name: "Approval Barang Keluar",
+    key: "approval-barang-keluar-routes",
+    icon: <Icon fontSize="small">check_circle</Icon>,
+    route: "/approval-barang-keluar",
+    component: <ApprovalBarangKeluar />,
+    roles: ["2"],
+  },
+
+  {
+    type: "route",
+    name: "List Barang Keluar",
+    key: "list-barang-keluar-routes",
+    icon: <Icon fontSize="small">format_list_bulleted</Icon>,
+    route: "/list-barang-keluar",
+    component: <ListBarangKeluar />,
+    roles: ["1", "2"],
+  },
+
+  // End Barang Keluar
 
   {
     type: "collapse",
@@ -206,6 +226,52 @@ const routes = [
         roles: ["1", "2"],
       },
     ],
+  },
+
+  {
+    type: "collapse",
+    name: "Permintaan Barang",
+    key: "permintaan-barang",
+    icon: <ShoppingBasketIcon fontSize="small" />,
+    children: [
+      {
+        type: "collapse",
+        name: "Permintaan Barang",
+        key: "generate-permintaan-barang",
+        icon: <Icon fontSize="small">add_box</Icon>,
+        route: "/generate-permintaan-barang",
+        component: <GeneratePermintaanBarang />,
+        roles: ["2"],
+      },
+      {
+        type: "collapse",
+        name: "List Permintaan Barang",
+        key: "list-permintaan-barang",
+        icon: <Icon fontSize="small">format_list_bulleted</Icon>,
+        route: "/list-permintaan-barang",
+        component: <ListPermintaanBarang />,
+        roles: ["2"],
+      },
+    ],
+  },
+
+  {
+    type: "route",
+    name: "Request Barang",
+    key: "generate-permintaan-barang",
+    icon: <Icon fontSize="small">add_box</Icon>,
+    route: "/generate-permintaan-barang",
+    component: <GeneratePermintaanBarang />,
+    roles: ["2"],
+  },
+  {
+    type: "route",
+    name: "List Permintaan Barang",
+    key: "list-permintaan-barang",
+    icon: <Icon fontSize="small">add_box</Icon>,
+    route: "/list-permintaan-barang",
+    component: <ListPermintaanBarang />,
+    roles: ["2"],
   },
 
   {
@@ -309,15 +375,6 @@ const routes = [
 
   {
     type: "route",
-    name: "Barang Keluar",
-    key: "barang-keluar-routes",
-    icon: <Icon fontSize="small">inventory</Icon>,
-    route: "/barang-keluar",
-    component: <BarangKeluar />,
-    roles: ["2", "1"],
-  },
-  {
-    type: "route",
     name: "Barang Masuk",
     key: "barang-masuk",
     icon: <Icon fontSize="small">warehouse</Icon>,
@@ -334,6 +391,7 @@ const routes = [
     component: <GenerateMutasi />,
     roles: ["2", "1"],
   },
+
   {
     type: "collapse",
     name: "Packaging",
@@ -379,15 +437,7 @@ const routes = [
     component: <GenerateBarangRusak />,
     roles: ["2", "1"],
   },
-  {
-    type: "route",
-    name: "Approval Barang Keluar",
-    key: "approval-barang-keluar-routes",
-    icon: <Icon fontSize="small">check_circle</Icon>,
-    route: "/approval-barang-keluar",
-    component: <ApprovalBarangKeluar />,
-    roles: ["2"],
-  },
+
   {
     type: "route",
     name: "Approval Surat Jalan",
@@ -433,15 +483,7 @@ const routes = [
     component: <ListBarangMasuk />,
     roles: ["1", "2"],
   },
-  {
-    type: "route",
-    name: "List Barang Keluar",
-    key: "list-barang-keluar-routes",
-    icon: <Icon fontSize="small">format_list_bulleted</Icon>,
-    route: "/list-barang-keluar",
-    component: <ListBarangKeluar />,
-    roles: ["1", "2"],
-  },
+
   {
     type: "route",
     name: "List Surat Jalan",

@@ -66,6 +66,7 @@ import DetailPenyesuaian from "layouts/stok-opname/detail-penyesuaian";
 import ListSuratJalanByHtransfer from "layouts/surat-jalan/list-surat-jalan-by-htransfer";
 
 import BillingInformation from "layouts/billing/components/BillingInformation";
+import DetailPermintaanBarang from "layouts/permintaan-barang/list-permintaan-barang/detail-permintaan-barang";
 
 // const getFilteredRoutes = (allRoutes, userRole) => {
 //   const filteredRoutes = allRoutes.filter((route) => {
@@ -229,6 +230,7 @@ export default function App() {
           />
           <Route path="/detail-list-barang-rusak/:dataId" element={<DetailListBarangRusak />} />
           <Route path="/detail-penyesuaian/:dataId" element={<DetailPenyesuaian />} />
+          <Route path="/detail-permintaan-barang/:dataId" element={<DetailPermintaanBarang />} />
         </Routes>
       </ThemeProvider>
     </LocalizationProvider>

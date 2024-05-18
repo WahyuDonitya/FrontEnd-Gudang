@@ -377,7 +377,7 @@ function DetailBarang() {
                 id="combo-box-demo"
                 options={positionAvailable}
                 getOptionLabel={(option) =>
-                  `Baris : ${option.get_rows.row_name}, Sel : ${option.rack_bay}, Level : ${option.rack_level}`
+                  `Baris : ${option.get_rows.row_name}, Sel : ${option.rack_bay}, Level : ${option.rack_level} (${option.rack_ketersediaan})`
                 }
                 fullWidth
                 renderInput={(params) => <TextField {...params} label="Pilih Posisi" />}

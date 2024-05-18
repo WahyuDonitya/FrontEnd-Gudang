@@ -21,7 +21,7 @@ export default function data() {
       });
 
       setApprovalList(response.data);
-      console.log(approvalList);
+      // console.log(approvalList);
     } catch (error) {
       console.error("Terjadi kesalahan saat mengambil data Gudang:", error);
     }
