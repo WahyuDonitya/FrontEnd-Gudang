@@ -20,6 +20,8 @@ import dayjs from "dayjs";
 import { DatePicker } from "@mui/x-date-pickers";
 import { TextField } from "@mui/material";
 import MDButton from "components/MDButton";
+import Echo from "laravel-echo";
+import Pusher from "pusher-js";
 
 function ListBarangKeluar() {
   const accessToken = localStorage.getItem("access_token");
@@ -27,6 +29,28 @@ function ListBarangKeluar() {
   const [filteredApprovalList, setFilteredApprovalList] = useState([]);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
+
+  window.Pusher = Pusher;
+
+  const echo = new Echo({
+    broadcaster: "pusher",
+    key: "683ba5d4db6280a1434b",
+    cluster: "ap1",
+    forceTLS: true,
+  });
+
+  useEffect(() => {
+    echo.channel("gudang-real-time").listen(".RealTimeBarangKeluar", (event) => {
+      console.log("Real-time event received:", event);
+      setApprovalList((prevList) => [event.data, ...prevList]);
+      setFilteredApprovalList((prevList) => [event.data, ...prevList]);
+    });
+
+    return () => {
+      echo.leaveChannel("gudang-real-time");
+    };
+  }, []);
+
   const getApprovalList = async () => {
     try {
       const response = await axios.get(

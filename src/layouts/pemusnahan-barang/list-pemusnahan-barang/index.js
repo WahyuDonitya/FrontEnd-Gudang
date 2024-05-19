@@ -36,6 +36,8 @@ import dayjs from "dayjs";
 import { TextField } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers";
 import MDButton from "components/MDButton";
+import Echo from "laravel-echo";
+import Pusher from "pusher-js";
 // import rejectedSJ from "./data/listRejectSuratJalan";
 // import projectsTableData from "layouts/tables/data/projectsTableData";
 
@@ -46,6 +48,27 @@ function ListPemusnahanBarang() {
   const accessToken = localStorage.getItem("access_token");
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
+
+  window.Pusher = Pusher;
+
+  const echo = new Echo({
+    broadcaster: "pusher",
+    key: "683ba5d4db6280a1434b",
+    cluster: "ap1",
+    forceTLS: true,
+  });
+
+  useEffect(() => {
+    echo.channel("gudang-real-time").listen(".RealTimePemusnahanBarang", (event) => {
+      console.log("Real-time event received:", event);
+      setPemusnahanList((prevList) => [event.data, ...prevList]);
+      setFilteredpemusnahanlist((prevList) => [event.data, ...prevList]);
+    });
+
+    return () => {
+      echo.leaveChannel("gudang-real-time");
+    };
+  }, []);
 
   const getApprovalList = async () => {
     try {

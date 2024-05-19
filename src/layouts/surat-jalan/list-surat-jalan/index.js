@@ -23,6 +23,8 @@ import axios from "axios";
 import { TextField } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers";
 import MDButton from "components/MDButton";
+import Echo from "laravel-echo";
+import Pusher from "pusher-js";
 
 function ListSuratJalan() {
   // const { columns, rows } = dataListSj();
@@ -36,6 +38,39 @@ function ListSuratJalan() {
   const [startDate2, setStartDate2] = useState(null);
   const [endDate2, setEndDate2] = useState(null);
   // const { columns2, rows2 } = dataListSjTrans();
+
+  window.Pusher = Pusher;
+
+  const echo = new Echo({
+    broadcaster: "pusher",
+    key: "683ba5d4db6280a1434b",
+    cluster: "ap1",
+    forceTLS: true,
+  });
+
+  useEffect(() => {
+    echo.channel("gudang-real-time").listen(".RealTimeSuratJalan", (event) => {
+      console.log("Real-time event received:", event);
+      setApprovalList((prevList) => [event.data, ...prevList]);
+      setFilteredApprovalList((prevList) => [event.data, ...prevList]);
+    });
+
+    return () => {
+      echo.leaveChannel("gudang-real-time");
+    };
+  }, []);
+
+  useEffect(() => {
+    echo.channel("gudang-real-time").listen(".RealTimeSuratJalanTransfer", (event) => {
+      console.log("Real-time event received:", event);
+      setApprovalList2((prevList) => [event.data, ...prevList]);
+      setFilteredApprovalList2((prevList) => [event.data, ...prevList]);
+    });
+
+    return () => {
+      echo.leaveChannel("gudang-real-time");
+    };
+  }, []);
 
   //    API
   const getApprovalList = async () => {

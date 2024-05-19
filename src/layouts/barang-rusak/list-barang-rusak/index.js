@@ -17,6 +17,8 @@ import MDBadge from "components/MDBadge";
 import { DatePicker } from "@mui/x-date-pickers";
 import MDButton from "components/MDButton";
 import { TextField } from "@mui/material";
+import Echo from "laravel-echo";
+import Pusher from "pusher-js";
 
 // Data
 // import listpemusnahan from "./data";
@@ -29,6 +31,28 @@ function ListBarangRusak() {
   const accessToken = localStorage.getItem("access_token");
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
+
+  window.Pusher = Pusher;
+
+  const echo = new Echo({
+    broadcaster: "pusher",
+    key: "683ba5d4db6280a1434b",
+    cluster: "ap1",
+    forceTLS: true,
+  });
+
+  useEffect(() => {
+    echo.channel("gudang-real-time").listen(".RealTimeBarangRusak", (event) => {
+      console.log("Real-time event received:", event);
+      setHrusak((prevList) => [event.data, ...prevList]);
+      setFilteredDataHrusak((prevList) => [event.data, ...prevList]);
+    });
+
+    return () => {
+      echo.leaveChannel("gudang-real-time");
+    };
+  }, []);
+
   // API
   const getHbarangRusak = async () => {
     try {
