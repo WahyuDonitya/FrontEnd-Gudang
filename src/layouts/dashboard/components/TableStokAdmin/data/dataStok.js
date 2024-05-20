@@ -65,7 +65,7 @@ export default function dataStokAdmin() {
       gudang: item.gudang.gudang_nama,
       total_stok: item.total_stok,
       detail: (
-        <Link to={`/detail-barang-by-gudang/${item.gudang_id}`}>
+        <Link to={`/dashboard-admin/${item.gudang_id}`}>
           <MDTypography variant="caption" color="text" fontWeight="medium">
             Detail
           </MDTypography>

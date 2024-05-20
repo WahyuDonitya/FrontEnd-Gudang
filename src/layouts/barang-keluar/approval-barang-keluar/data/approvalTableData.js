@@ -91,7 +91,7 @@ export default function data() {
       hkeluar_tanggal: item.hkeluar_tanggal,
       pengguna_generate: { pengguna_nama: item.pengguna_generate.pengguna_nama },
       action: (
-        <Link to={`/detail/${item.hkeluar_nota}`}>
+        <Link to={`/list-barang-keluar/${item.hkeluar_nota}`}>
           <MDTypography variant="caption" color="text" fontWeight="medium">
             {item.hkeluar_status === 2 ? "Print" : "Detail"}
           </MDTypography>

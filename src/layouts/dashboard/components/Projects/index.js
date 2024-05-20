@@ -77,10 +77,10 @@ function Projects() {
       <MDBox>
         <DataTable
           table={{ columns, rows }}
-          showTotalEntries={false}
+          showTotalEntries={true}
           isSorted={false}
           noEndBorder
-          entriesPerPage={false}
+          entriesPerPage={true}
           canSearch
         />
       </MDBox>

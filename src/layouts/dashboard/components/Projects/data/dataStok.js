@@ -40,7 +40,7 @@ export default function data() {
       );
 
       setStok(response.data);
-      console.log(stok);
+      console.log(response.data);
     } catch (error) {
       console.error("Terjadi kesalahan saat mengambil data Gudang:", error);
     }
@@ -55,7 +55,7 @@ export default function data() {
     columns: [
       {
         Header: "Nama Barang",
-        accessor: "barang.barang_nama",
+        accessor: "barang",
         width: "12%",
         align: "left",
       },
@@ -65,7 +65,7 @@ export default function data() {
     ],
 
     rows: stok.map((item) => ({
-      barang: { barang_nama: item.barang.barang_nama },
+      barang: item.barang_nama,
       status: (
         <>
           {item.total_stok < 50 && (
@@ -82,7 +82,7 @@ export default function data() {
       ),
       total_stok: item.total_stok,
       detail: (
-        <Link to={`/detail-barang/${item.barang.barang_id}`}>
+        <Link to={`/dashboard/${item.barang_id}`}>
           <MDTypography variant="caption" color="text" fontWeight="medium">
             Detail
           </MDTypography>

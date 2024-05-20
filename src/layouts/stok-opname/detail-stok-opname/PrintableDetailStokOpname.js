@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import dayjs from "dayjs";
 import { format } from "date-fns";
 
-const PrintableDetailStokOpname = ({ detailKeluar, headerKeluar, detailBarang }) => {
+const PrintableDetailStokOpname = ({ headerKeluar, detailBarang }) => {
   const createdAtDate = headerKeluar?.created_at ? new Date(headerKeluar.created_at) : null;
   const formattedDate = createdAtDate ? format(createdAtDate, "dd-MM-yyyy") : "";
   return (
@@ -52,7 +52,7 @@ const PrintableDetailStokOpname = ({ detailKeluar, headerKeluar, detailBarang })
         </div>
       </div>
 
-      <h2>List Pergerakan Barang </h2>
+      {/* <h2>List Pergerakan Barang </h2>
       <table style={{ width: "100%", borderCollapse: "collapse", marginTop: "20px" }}>
         <thead>
           <tr>
@@ -78,12 +78,6 @@ const PrintableDetailStokOpname = ({ detailKeluar, headerKeluar, detailBarang })
             <th style={{ border: "1px solid #ddd", padding: "8px", textAlign: "center" }}>
               Jumlah selisih
             </th>
-            {/* <th style={{ border: "1px solid #ddd", padding: "8px", textAlign: "center" }}>
-              Proses Approve
-            </th> */}
-            {/* <th style={{ border: "1px solid #ddd", padding: "8px", textAlign: "center" }}>
-              Tempat Barang
-            </th> */}
           </tr>
         </thead>
         <tbody>
@@ -113,41 +107,10 @@ const PrintableDetailStokOpname = ({ detailKeluar, headerKeluar, detailBarang })
               <td style={{ border: "1px solid #ddd", padding: "8px", textAlign: "center" }}>
                 {item.detailopname_difference}
               </td>
-              {/* <td style={{ border: "1px solid #ddd", padding: "8px", textAlign: "center" }}>
-                {item.dkeluar_needapprovekirim}
-              </td> */}
-              {/* <td style={{ border: "1px solid #ddd", padding: "8px", textAlign: "center" }}>
-                {item.get_penempatan_trans.map((penempatanTrans, index) => {
-                  console.log("penempatanTrans", penempatanTrans);
-
-                  if (penempatanTrans.get_penempatan) {
-                    console.log("get_penempatan", penempatanTrans.get_penempatan);
-
-                    if (penempatanTrans.get_penempatan.get_rack) {
-                      console.log("get_rack", penempatanTrans.get_penempatan.get_rack);
-
-                      return (
-                        <div key={penempatanTrans.penempatanproduk_trans_id}>
-                          Row : {penempatanTrans.get_penempatan.get_rack.get_rows.row_name}, sel :{" "}
-                          {penempatanTrans.get_penempatan.get_rack.rack_bay}, Level :{" "}
-                          {penempatanTrans.get_penempatan.get_rack.rack_level} .{" "}
-                          <strong>Jumlah: {penempatanTrans.penempatanproduk_trans_jumlah}</strong> ,
-                        </div>
-                      );
-                    } else {
-                      console.log("get_rack is undefined");
-                    }
-                  } else {
-                    console.log("get_penempatan is undefined");
-                  }
-
-                  return "Ambil Dari Bulk";
-                })}
-              </td> */}
             </tr>
           ))}
         </tbody>
-      </table>
+      </table> */}
 
       <h2>List Barang </h2>
       <table style={{ width: "100%", borderCollapse: "collapse", marginTop: "20px" }}>

@@ -146,7 +146,7 @@ function PenerimaanBarang() {
         ? "Menunggu Approval"
         : "",
     detail: (
-      <Link to={`/list-detailbarang-masuk/${item.hmasuk_nota}`}>
+      <Link to={`/penerimaan-barang/${item.hmasuk_nota}`}>
         <MDTypography variant="caption" color="text" fontWeight="medium">
           Detail
         </MDTypography>

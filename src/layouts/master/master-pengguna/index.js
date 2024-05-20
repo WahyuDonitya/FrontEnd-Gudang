@@ -53,7 +53,7 @@ function MasterPengguna() {
   const [rolePick, setRolePick] = useState(null);
   const [roleId, setRoleId] = useState(null);
   const [errorMessages, setErrorMessages] = useState({});
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   // state untuk notification
   const [successSB, setSuccessSB] = useState(false);
@@ -65,6 +65,13 @@ function MasterPengguna() {
   const closeErrorSB = () => setErrorSB(false);
 
   const accessToken = localStorage.getItem("access_token");
+  if (accessToken) {
+    const decodedToken = jwtDecode(accessToken);
+    if (decodedToken.role_id !== 3) {
+      localStorage.removeItem("access_token");
+      window.location.href = "/authentication/sign-in";
+    }
+  }
 
   // API
   const getAllGudang = async () => {
@@ -94,9 +101,9 @@ function MasterPengguna() {
     getAllRole();
   }, []);
 
-  useEffect(() => {
-    navigateAndClearTokenAdmin(navigate);
-  }, [navigate]);
+  // useEffect(() => {
+  //   navigateAndClearTokenAdmin(navigate);
+  // }, [navigate]);
 
   // End API
 

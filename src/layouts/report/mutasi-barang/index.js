@@ -193,15 +193,15 @@ function PergerakanBarang() {
       <Link
         to={
           item.hmasuk_id
-            ? `/detailbarang-masuk/${item.hmasuk_nota}`
+            ? `/list-barang-masuk/pergerakan-barang/${item.hmasuk_nota}`
             : item.hkeluar_id
-            ? `/detail/${item.hkeluar_nota}`
+            ? `/list-barang-keluar/pergerakan-barang/${item.hkeluar_nota}`
             : item.htransfer_barang_id
-            ? `/detailmutasi-barang/${item.htransfer_barang_id}`
+            ? `/list-mutasi-barang/pergerakan-barang/${item.htransfer_barang_id}`
             : item.hpemusnahan_id
-            ? `/detail-pemusnahan-barang/${item.hpemusnahan_nota}`
+            ? `/list-pemusnahan-barang/pergerakan-barang/${item.hpemusnahan_nota}`
             : item.hbarangrusak_id
-            ? `/detail-list-barang-rusak/${item.hbarangrusak_nota}`
+            ? `/list-barang-rusak/pergerakan-barang/${item.hbarangrusak_nota}`
             : ""
         }
       >

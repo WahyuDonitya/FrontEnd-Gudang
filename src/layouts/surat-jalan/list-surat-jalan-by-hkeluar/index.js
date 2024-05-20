@@ -102,7 +102,7 @@ function ListSuratJalanByHkeluar() {
     pengguna_generate: { pengguna_nama: item.pengguna_generate?.pengguna_nama || "-" },
     pengguna_action: { pengguna_nama: item.pengguna_action?.pengguna_nama || "-" },
     action: (
-      <Link to={`/detailsurat-jalan/${item.suratjalan_nota}`}>
+      <Link to={`/list-surat-jalan/${item.suratjalan_nota}`}>
         <MDTypography variant="caption" color="text" fontWeight="medium">
           {item.suratjalan_status === 3 ? "Print" : "Detail"}
         </MDTypography>

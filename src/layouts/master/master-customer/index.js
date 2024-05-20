@@ -18,7 +18,7 @@ import MDInput from "components/MDInput";
 import DataTable from "examples/Tables/DataTable";
 
 // data
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import { jwtDecode } from "jwt-decode";
@@ -45,6 +45,14 @@ function MasterCustomer() {
   const closeErrorSB = () => setErrorSB(false);
 
   const accessToken = localStorage.getItem("access_token");
+  // const navigate = useNavigate();
+  if (accessToken) {
+    const decodedToken = jwtDecode(accessToken);
+    if (decodedToken.role_id !== 3) {
+      localStorage.removeItem("access_token");
+      window.location.href = "/authentication/sign-in";
+    }
+  }
 
   // End API
 
@@ -235,11 +243,10 @@ function MasterCustomer() {
       </IconButton>
     ),
   }));
-  const navigate = useNavigate();
 
-  useEffect(() => {
-    navigateAndClearTokenAdmin(navigate);
-  }, [navigate]);
+  // useEffect(() => {
+  //   navigateAndClearTokenAdmin(navigate);
+  // }, [navigate]);
 
   useEffect(() => {
     getGudang();

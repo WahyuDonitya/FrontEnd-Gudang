@@ -279,7 +279,7 @@ function StokOpname() {
         ? "Opname Ditolak"
         : "Approved dan sudah dilakukan penyesuaian",
     action: (
-      <Link to={`/detail-stok-opname/${item.opname_nota}`}>
+      <Link to={`/stok-opname/${item.opname_nota}`}>
         <MDTypography variant="caption" color="text" fontWeight="medium">
           Detail
         </MDTypography>

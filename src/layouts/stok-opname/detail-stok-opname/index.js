@@ -325,12 +325,12 @@ function DetailStokOpname() {
             <Card>
               <div id="printable-content" style={{ display: "none" }}>
                 <PrintableDetailStokOpname
-                  detailKeluar={detailBarangMasuk}
+                  // detailKeluar={detailBarangMasuk}
                   headerKeluar={headerBarangMasuk}
                   detailBarang={detailBarang}
                 />
               </div>
-              <Grid container pt={4}>
+              {/* <Grid container pt={4}>
                 <Grid item xs={12}>
                   <DataTable
                     table={{ columns, rows }}
@@ -340,7 +340,7 @@ function DetailStokOpname() {
                     noEndBorder
                   />
                 </Grid>
-              </Grid>
+              </Grid> */}
               <Grid container pt={4}>
                 <Grid item xs={12}>
                   <DataTable
@@ -377,15 +377,18 @@ function DetailStokOpname() {
                 </Grid>
               )}
 
-              {headerBarangMasuk.opname_status === 0 && (
-                <Grid container pt={5} spacing={7} px={3} mb={4}>
-                  <Grid item xs={12}>
-                    <MDButton variant="gradient" color="info" fullWidth onClick={handlePrint}>
-                      Print dan Jalankan Stok Opname
-                    </MDButton>
+              {headerBarangMasuk.opname_status === 0 ||
+                (headerBarangMasuk.opname_status === 1 && (
+                  <Grid container pt={5} spacing={7} px={3} mb={4}>
+                    <Grid item xs={12}>
+                      <MDButton variant="gradient" color="info" fullWidth onClick={handlePrint}>
+                        {headerBarangMasuk.opname_status === 1
+                          ? "Print"
+                          : "Print dan Jalankan Stok Opname"}
+                      </MDButton>
+                    </Grid>
                   </Grid>
-                </Grid>
-              )}
+                ))}
 
               {headerBarangMasuk.opname_status === 4 && (
                 <Grid container pt={5} spacing={7} px={3} mb={4}>

@@ -22,6 +22,7 @@ import { TextField } from "@mui/material";
 import MDButton from "components/MDButton";
 import Echo from "laravel-echo";
 import Pusher from "pusher-js";
+import { jwtDecode } from "jwt-decode";
 
 function ListBarangKeluar() {
   const accessToken = localStorage.getItem("access_token");
@@ -29,6 +30,17 @@ function ListBarangKeluar() {
   const [filteredApprovalList, setFilteredApprovalList] = useState([]);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
+
+  if (accessToken) {
+    const decodedToken = jwtDecode(accessToken);
+    if (decodedToken.role_id == 3) {
+      console.log("tes");
+      localStorage.removeItem("access_token");
+      window.location.href = "/authentication/sign-in";
+    }
+  } else {
+    window.location.href = "/authentication/sign-in";
+  }
 
   window.Pusher = Pusher;
 
@@ -158,7 +170,7 @@ function ListBarangKeluar() {
         </MDBox>
       ),
     action: (
-      <Link to={`/detail/${item.hkeluar_nota}`}>
+      <Link to={`/list-barang-keluar/${item.hkeluar_nota}`}>
         <MDTypography variant="caption" color="text" fontWeight="medium">
           {item.hkeluar_status === 2 ? "Print" : "Detail"}
         </MDTypography>

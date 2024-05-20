@@ -27,6 +27,7 @@ import { Link, Navigate, useNavigate } from "react-router-dom";
 import { format } from "date-fns";
 import { navigateAndClearTokenKepalaGudang } from "navigationUtils/navigationUtilsKepalaGudang";
 import { jwtDecode } from "jwt-decode";
+import ComplexStatisticsCard from "examples/Cards/StatisticsCards/ComplexStatisticsCard";
 
 function KartuStok() {
   //   state
@@ -39,6 +40,7 @@ function KartuStok() {
   const [gudangs, setGudangs] = useState([]);
   const [GudangPick, setGudangPick] = useState(null);
   const [stokAwal, setStokAwal] = useState(0);
+  const [getLog, setGetLog] = useState([]);
 
   const accessToken = localStorage.getItem("access_token");
   if (!accessToken) {
@@ -123,15 +125,13 @@ function KartuStok() {
       }
 
       setKartuStok(response.data.data);
-      // setStokAwal(response.data.data_sebelumnya);
+      setGetLog(response.data.getLog);
+      // console.log(response.data.getLog);
       if (response.data.data_sebelumnya != null) {
         setStokAwal(response.data.data_sebelumnya["logbarang_stoksekarang"]);
       } else {
         setStokAwal[0];
       }
-
-      // console.log("ini data sebelumnya : ", response.data);
-      // console.log(response.data);
     } catch (error) {
       console.error("Terjadi kesalahan saat mengambil data kartu Stok:", error);
     }
@@ -163,7 +163,7 @@ function KartuStok() {
     { Header: "Stok Tersedia", accessor: "logbarang_stoksekarang", align: "center" },
     { Header: "Jenis Transaksi", accessor: "jenistransaksi", align: "center" },
     { Header: "Keterangan", accessor: "logbarang_keterangan", align: "left" },
-    { Header: "Action", accessor: "action", align: "center" },
+    // { Header: "Action", accessor: "action", align: "center" },
   ];
 
   const rows = kartuStok.map((item) => ({
@@ -187,13 +187,13 @@ function KartuStok() {
         : item.hpemusnahan_id !== null
         ? "Pemusnahan Barang"
         : "Belum ada",
-    action: (
-      <Link to={`/detailbarang-masuk/${item.hmasuk_nota}`}>
-        <MDTypography variant="caption" color="text" fontWeight="medium">
-          Detail
-        </MDTypography>
-      </Link>
-    ),
+    // action: (
+    //   <Link to={`/detailbarang-masuk/${item.hmasuk_nota}`}>
+    //     <MDTypography variant="caption" color="text" fontWeight="medium">
+    //       Detail
+    //     </MDTypography>
+    //   </Link>
+    // ),
   }));
 
   // Handle Excel
@@ -357,6 +357,52 @@ function KartuStok() {
               </Grid>
               <Grid item xs={12} px={2} pb={3} pt={5}>
                 <MDTypography>Stok Awal : {stokAwal ?? 0}</MDTypography>
+              </Grid>
+              <Grid container spacing={7} mt={1} ml={1}>
+                <Grid item xs={12} md={6} lg={3}>
+                  <MDBox mb={1.5}>
+                    <ComplexStatisticsCard
+                      color="dark"
+                      icon="weekend"
+                      title="Stok Awal"
+                      count={stokAwal}
+                      percentage={{
+                        color: "success",
+                        amount: "",
+                        label: "Just updated",
+                      }}
+                    />
+                  </MDBox>
+                </Grid>
+                <Grid item xs={12} md={6} lg={3}>
+                  <MDBox mb={1.5}>
+                    <ComplexStatisticsCard
+                      icon="leaderboard"
+                      title="Stok Masuk"
+                      count={getLog.total_masuk || 0}
+                      percentage={{
+                        color: "success",
+                        amount: "",
+                        label: "Just updated",
+                      }}
+                    />
+                  </MDBox>
+                </Grid>
+                <Grid item xs={12} md={6} lg={3}>
+                  <MDBox mb={1.5}>
+                    <ComplexStatisticsCard
+                      color="warning"
+                      icon="store"
+                      title="Stok Keluar"
+                      count={getLog.total_keluar || 0}
+                      percentage={{
+                        color: "success",
+                        amount: "",
+                        label: "Just updated",
+                      }}
+                    />
+                  </MDBox>
+                </Grid>
               </Grid>
               <MDBox pt={3}>
                 <DataTable

@@ -38,6 +38,7 @@ import { DatePicker } from "@mui/x-date-pickers";
 import MDButton from "components/MDButton";
 import Echo from "laravel-echo";
 import Pusher from "pusher-js";
+import { jwtDecode } from "jwt-decode";
 // import rejectedSJ from "./data/listRejectSuratJalan";
 // import projectsTableData from "layouts/tables/data/projectsTableData";
 
@@ -48,6 +49,15 @@ function ListPemusnahanBarang() {
   const accessToken = localStorage.getItem("access_token");
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
+  if (accessToken) {
+    const decodedToken = jwtDecode(accessToken);
+    if (decodedToken.role_id == 3) {
+      localStorage.removeItem("access_token");
+      window.location.href = "/authentication/sign-in";
+    }
+  } else {
+    window.location.href = "/authentication/sign-in";
+  }
 
   window.Pusher = Pusher;
 
@@ -154,7 +164,7 @@ function ListPemusnahanBarang() {
     // },
     //   suratjalan_tanggalkirim: item.suratjalan_tanggalkirim,
     action: (
-      <Link to={`/detail-pemusnahan-barang/${item.hpemusnahan_nota}`}>
+      <Link to={`/list-pemusnahan-barang/${item.hpemusnahan_nota}`}>
         <MDTypography variant="caption" color="text" fontWeight="medium">
           Detail
         </MDTypography>

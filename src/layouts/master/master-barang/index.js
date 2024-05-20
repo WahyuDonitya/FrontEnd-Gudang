@@ -42,12 +42,19 @@ function MasterBarang() {
   const [file, setFile] = useState(null);
 
   const accessToken = localStorage.getItem("access_token");
+  if (accessToken) {
+    const decodedToken = jwtDecode(accessToken);
+    if (decodedToken.role_id !== 3) {
+      localStorage.removeItem("access_token");
+      window.location.href = "/authentication/sign-in";
+    }
+  }
 
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
-  useEffect(() => {
-    navigateAndClearTokenAdmin(navigate);
-  }, [navigate]);
+  // useEffect(() => {
+  //   navigateAndClearTokenAdmin(navigate);
+  // }, [navigate]);
 
   // End API
 

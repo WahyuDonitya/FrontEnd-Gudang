@@ -64,6 +64,7 @@ import DetailBarangByGudang from "layouts/dashboard/dashboard-admin/detailBarang
 import DetailListBarangRusak from "layouts/barang-rusak/detail-list-rusak";
 import DetailPenyesuaian from "layouts/stok-opname/detail-penyesuaian";
 import ListSuratJalanByHtransfer from "layouts/surat-jalan/list-surat-jalan-by-htransfer";
+import ListBarangMasuk from "layouts/barang-masuk/list-barang-masuk";
 
 import BillingInformation from "layouts/billing/components/BillingInformation";
 import DetailPermintaanBarang from "layouts/permintaan-barang/list-permintaan-barang/detail-permintaan-barang";
@@ -209,10 +210,11 @@ export default function App() {
           {getRoutes(routes)}
           <Route path="/" element={<Navigate to="/authentication/sign-in" />} />
           <Route path="/detail-barang/:dataId/:gudangId?" element={<DetailBarang />} />
-          <Route path="/detail/:dataId" element={<DetailData />} />
-          <Route path="/detailsurat-jalan/:dataId" element={<DetailSJ />} />
-          <Route path="/detailbarang-masuk/:dataId" element={<DetailBarangMasuk />} />
-          <Route path="/detailmutasi-barang/:dataId" element={<DetailMB />} />
+          <Route path="/dashboard/:dataId/:gudangId?" element={<DetailBarang />} />
+          <Route path="/list-barang-keluar/:dataId" element={<DetailData />} />
+          <Route path="/list-surat-jalan/:dataId" element={<DetailSJ />} />
+          <Route path="/list-barang-masuk/:dataId" element={<DetailBarangMasuk />} />
+          <Route path="/list-mutasi-barang/:dataId" element={<DetailMB />} />
           <Route path="/detailsurat-jalan/transferbarang/:dataId" element={<DetailSJTrans />} />
           <Route path="/list-detailbarang-masuk/:dataId" element={<ListDetailBarangMasuk />} />
           <Route path="/list-suratjalan-by-hkeluar/:dataId" element={<ListSuratJalanByHkeluar />} />
@@ -220,17 +222,38 @@ export default function App() {
             path="/list-suratjalan-by-htransfer/:dataId"
             element={<ListSuratJalanByHtransfer />}
           />
-          <Route path="/detail-pemusnahan-barang/:dataId" element={<DetailBarangPemusnahan />} />
+          <Route path="/list-pemusnahan-barang/:dataId" element={<DetailBarangPemusnahan />} />
           <Route path="/list-tempat-barang/:dataId/:gudangId?" element={<ListTempatBarang />} />
-          <Route path="/detail-stok-opname/:dataId" element={<DetailStokOpname />} />
-          <Route path="/detail-barang-by-gudang/:dataId" element={<DetailBarangByGudang />} />
+          <Route path="/stok-opname/:dataId" element={<DetailStokOpname />} />
+          <Route path="/dashboard-adminz/:dataId" element={<DetailBarangByGudang />} />
           <Route
-            path="/detail-report-pengiriman-barang/:dataId/:dateAwal/:dateAkhir"
+            path="/pengiriman-barang/:dataId/:dateAwal/:dateAkhir"
             element={<DetailReportPengirimanBarang />}
           />
-          <Route path="/detail-list-barang-rusak/:dataId" element={<DetailListBarangRusak />} />
+          <Route path="/list-barang-rusak/:dataId" element={<DetailListBarangRusak />} />
           <Route path="/detail-penyesuaian/:dataId" element={<DetailPenyesuaian />} />
-          <Route path="/detail-permintaan-barang/:dataId" element={<DetailPermintaanBarang />} />
+          <Route path="/list-permintaan-barang/:dataId" element={<DetailPermintaanBarang />} />
+
+          {/* Untuk report pergerakan barang */}
+          <Route
+            path="/list-pemusnahan-barang/pergerakan-barang/:dataId"
+            element={<DetailBarangPemusnahan />}
+          />
+          <Route path="/list-barang-keluar/pergerakan-barang/:dataId" element={<DetailData />} />
+          <Route
+            path="/list-barang-masuk/pergerakan-barang/:dataId"
+            element={<DetailBarangMasuk />}
+          />
+          <Route path="/list-mutasi-barang/pergerakan-barang/:dataId" element={<DetailMB />} />
+          <Route
+            path="/list-barang-rusak/pergerakan-barang/:dataId"
+            element={<DetailListBarangRusak />}
+          />
+          {/* End report pergerakan barang */}
+
+          {/* Untuk report Penerimaan Barang */}
+          <Route path="/penerimaan-barang/:dataId" element={<ListDetailBarangMasuk />} />
+          {/* End Report Penerimaan Barang */}
         </Routes>
       </ThemeProvider>
     </LocalizationProvider>

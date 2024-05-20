@@ -24,6 +24,7 @@ import { TextField } from "@mui/material";
 import MDButton from "components/MDButton";
 import Echo from "laravel-echo";
 import Pusher from "pusher-js";
+import { jwtDecode } from "jwt-decode";
 
 function ListMutasiBarang() {
   // const { columns, rows } = listdataMutasi();
@@ -32,6 +33,15 @@ function ListMutasiBarang() {
   const [filteredApprovalList, setFilteredApprovalList] = useState([]);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
+  if (accessToken) {
+    const decodedToken = jwtDecode(accessToken);
+    if (decodedToken.role_id == 3) {
+      localStorage.removeItem("access_token");
+      window.location.href = "/authentication/sign-in";
+    }
+  } else {
+    window.location.href = "/authentication/sign-in";
+  }
 
   window.Pusher = Pusher;
 
@@ -148,7 +158,7 @@ function ListMutasiBarang() {
         </MDBox>
       ),
     action: (
-      <Link to={`/detailmutasi-barang/${item.htransfer_barang_id}`}>
+      <Link to={`/list-mutasi-barang/${item.htransfer_barang_id}`}>
         <MDTypography variant="caption" color="text" fontWeight="medium">
           Detail
         </MDTypography>

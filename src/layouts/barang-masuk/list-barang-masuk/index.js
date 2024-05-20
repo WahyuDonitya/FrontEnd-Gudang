@@ -23,6 +23,7 @@ import MDButton from "components/MDButton";
 import { TextField } from "@mui/material";
 import Echo from "laravel-echo";
 import Pusher from "pusher-js";
+import { jwtDecode } from "jwt-decode";
 
 function ListBarangMasuk() {
   const [approvalList, setApprovalList] = useState([]);
@@ -30,6 +31,16 @@ function ListBarangMasuk() {
   const [filteredApprovalList, setFilteredApprovalList] = useState([]);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
+
+  if (accessToken) {
+    const decodedToken = jwtDecode(accessToken);
+    if (decodedToken.role_id == 3) {
+      localStorage.removeItem("access_token");
+      window.location.href = "/authentication/sign-in";
+    }
+  } else {
+    window.location.href = "/authentication/sign-in";
+  }
 
   window.Pusher = Pusher;
 
@@ -129,7 +140,7 @@ function ListBarangMasuk() {
         </MDBox>
       ),
     action: (
-      <Link to={`/list-detailbarang-masuk/${item.hmasuk_nota}`}>
+      <Link to={`/list-barang-masuk/${item.hmasuk_nota}`}>
         <MDTypography variant="caption" color="text" fontWeight="medium">
           Detail
         </MDTypography>

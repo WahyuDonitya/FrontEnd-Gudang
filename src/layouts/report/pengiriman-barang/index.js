@@ -139,9 +139,7 @@ function PengirimanBarang() {
     customer: item.customer.customer_nama,
     pengiriman: item.jumlah_surat_jalan,
     detail: (
-      <Link
-        to={`/detail-report-pengiriman-barang/${item.customer_id}/${datePickerAwal}/${datePickerAkhir}`}
-      >
+      <Link to={`/pengiriman-barang/${item.customer_id}/${datePickerAwal}/${datePickerAkhir}`}>
         <MDTypography variant="caption" color="text" fontWeight="medium">
           Detail
         </MDTypography>

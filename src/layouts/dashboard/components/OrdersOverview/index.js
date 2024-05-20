@@ -34,6 +34,7 @@ function OrdersOverview() {
   const [countHbarangrusak, setHbarangrusak] = useState(0);
   const [countHbarangKeluaresok, setCountHbarangKeluaresok] = useState(0);
   const [countSuratJalanTransfer, setCountSuratJalanTransfer] = useState(0);
+  const [countBarangDilihat, setCountBarangDilihat] = useState(0);
 
   // API
   const getCountSuratJalan = async () => {
@@ -80,7 +81,7 @@ function OrdersOverview() {
       );
       setCountHbarangKeluaresok(response.data);
     } catch (error) {
-      console.log("gagal saat ingin mengambil data hbarang keluar");
+      console.log("gagal saat ingin mengambil data hbarang keluar besok");
     }
   };
 
@@ -92,7 +93,19 @@ function OrdersOverview() {
       );
       setCountSuratJalanTransfer(response.data);
     } catch (error) {
-      console.log("gagal saat ingin mengambil data hbarang keluar");
+      console.log("gagal saat ingin mengambil data surat jalan ", error);
+    }
+  };
+
+  const getcountPermintaanBarang = async () => {
+    try {
+      const response = await axios.get(
+        "http://127.0.0.1:8000/api/permintaan/get-count-belum-dilihat",
+        { headers: { Authorization: `Bearer ${accessToken}` } }
+      );
+      setCountBarangDilihat(response.data);
+    } catch (error) {
+      console.log("terdapat kesalahan ", error);
     }
   };
   // End API
@@ -103,6 +116,7 @@ function OrdersOverview() {
     getCountHbarangRusak();
     getcountHbarangKeluarBesok();
     getcountSuratJalanTransfer();
+    getcountPermintaanBarang();
   }, []);
 
   const today = new Date();
@@ -155,6 +169,12 @@ function OrdersOverview() {
           color="warning"
           icon="payment"
           title={`${countHbarangKeluaresok} Barang keluar untuk besok`}
+          dateTime={formattedDate}
+        />
+        <TimelineItem
+          color="warning"
+          icon="payment"
+          title={`${countBarangDilihat} Permintaan Barang baru belum dilihat`}
           dateTime={formattedDate}
           lastItem
         />

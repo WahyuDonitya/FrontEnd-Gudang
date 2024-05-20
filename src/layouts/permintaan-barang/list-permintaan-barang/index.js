@@ -22,6 +22,7 @@ import { TextField } from "@mui/material";
 import MDButton from "components/MDButton";
 import Echo from "laravel-echo";
 import Pusher from "pusher-js";
+import { jwtDecode } from "jwt-decode";
 
 function ListPermintaanBarang() {
   const accessToken = localStorage.getItem("access_token");
@@ -29,6 +30,16 @@ function ListPermintaanBarang() {
   const [filteredApprovalList, setFilteredApprovalList] = useState([]);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
+
+  if (accessToken) {
+    const decodedToken = jwtDecode(accessToken);
+    if (decodedToken.role_id == 3) {
+      localStorage.removeItem("access_token");
+      window.location.href = "/authentication/sign-in";
+    }
+  } else {
+    window.location.href = "/authentication/sign-in";
+  }
 
   window.Pusher = Pusher;
 
@@ -135,7 +146,7 @@ function ListPermintaanBarang() {
         "-"
       ),
     action: (
-      <Link to={`/detail-permintaan-barang/${item.hpermintaan_nota}`}>
+      <Link to={`/list-permintaan-barang/${item.hpermintaan_nota}`}>
         <MDTypography
           variant="caption"
           color="text"

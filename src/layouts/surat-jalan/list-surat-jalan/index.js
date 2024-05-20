@@ -25,6 +25,7 @@ import { DatePicker } from "@mui/x-date-pickers";
 import MDButton from "components/MDButton";
 import Echo from "laravel-echo";
 import Pusher from "pusher-js";
+import { jwtDecode } from "jwt-decode";
 
 function ListSuratJalan() {
   // const { columns, rows } = dataListSj();
@@ -37,6 +38,15 @@ function ListSuratJalan() {
   const [filteredApprovalList2, setFilteredApprovalList2] = useState([]);
   const [startDate2, setStartDate2] = useState(null);
   const [endDate2, setEndDate2] = useState(null);
+  if (accessToken) {
+    const decodedToken = jwtDecode(accessToken);
+    if (decodedToken.role_id == 3) {
+      localStorage.removeItem("access_token");
+      window.location.href = "/authentication/sign-in";
+    }
+  } else {
+    window.location.href = "/authentication/sign-in";
+  }
   // const { columns2, rows2 } = dataListSjTrans();
 
   window.Pusher = Pusher;
@@ -209,7 +219,7 @@ function ListSuratJalan() {
     pengguna_generate: { pengguna_nama: item.pengguna_generate?.pengguna_nama || "-" },
     pengguna_action: { pengguna_nama: item.pengguna_action?.pengguna_nama || "-" },
     action: (
-      <Link to={`/detailsurat-jalan/${item.suratjalan_nota}`}>
+      <Link to={`/list-surat-jalan/${item.suratjalan_nota}`}>
         <MDTypography variant="caption" color="text" fontWeight="medium">
           {item.suratjalan_status === 3 ? "Print" : "Detail"}
         </MDTypography>

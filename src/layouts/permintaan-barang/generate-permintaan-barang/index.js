@@ -20,6 +20,7 @@ import { useNavigate } from "react-router-dom";
 import { navigateAndClearTokenUser } from "navigationUtils/navigationUtilsUser";
 import DataTable from "examples/Tables/DataTable";
 import MDInput from "components/MDInput";
+import { jwtDecode } from "jwt-decode";
 
 function GeneratePermintaanBarang() {
   // State
@@ -45,6 +46,15 @@ function GeneratePermintaanBarang() {
 
   const accessToken = localStorage.getItem("access_token");
 
+  if (accessToken) {
+    const decodedToken = jwtDecode(accessToken);
+    if (decodedToken.role_id != 2) {
+      localStorage.removeItem("access_token");
+      window.location.href = "/authentication/sign-in";
+    }
+  } else {
+    window.location.href = "/authentication/sign-in";
+  }
   // API
 
   const getBarang = async () => {
