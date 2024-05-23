@@ -267,7 +267,7 @@ function KartuStok() {
                         renderInput={(params) => <TextField {...params} label="Pilih Barang " />}
                       />
                     ) : (
-                      <p>Loading customer data...</p>
+                      <p>Tidak ada Barang</p>
                     )}
                   </Grid>
                   <Grid item xs={6} pt={4} px={2}>
@@ -293,7 +293,7 @@ function KartuStok() {
                         }}
                       />
                     ) : (
-                      <p>Loading customer data...</p>
+                      <p>Tidak Ada Gudang</p>
                     )}
                   </Grid>
                 </Grid>
@@ -314,7 +314,7 @@ function KartuStok() {
                         renderInput={(params) => <TextField {...params} label="Pilih Barang " />}
                       />
                     ) : (
-                      <p>Loading customer data...</p>
+                      <p>Tidak Ada Barang</p>
                     )}
                   </Grid>
                 </Grid>

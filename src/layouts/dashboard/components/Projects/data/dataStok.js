@@ -68,16 +68,15 @@ export default function data() {
       barang: item.barang_nama,
       status: (
         <>
-          {item.total_stok < 50 && (
-            <MDBox ml={-1}>
+          <MDBox ml={-1}>
+            {item.total_stok == 0 ? (
+              <MDBadge badgeContent="Stok Habis" color="error" variant="gradient" size="sm" />
+            ) : item.total_stok < 50 ? (
               <MDBadge badgeContent="Under Stok" color="warning" variant="gradient" size="sm" />
-            </MDBox>
-          )}
-          {item.total_stok >= 50 && (
-            <MDBox ml={-1}>
+            ) : (
               <MDBadge badgeContent="OK" color="success" variant="gradient" size="sm" />
-            </MDBox>
-          )}
+            )}
+          </MDBox>
         </>
       ),
       total_stok: item.total_stok,

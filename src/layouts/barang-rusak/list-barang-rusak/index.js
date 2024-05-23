@@ -33,8 +33,9 @@ function ListBarangRusak() {
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
 
+  let decodedToken;
   if (accessToken) {
-    const decodedToken = jwtDecode(accessToken);
+    decodedToken = jwtDecode(accessToken);
     if (decodedToken.role_id == 3) {
       localStorage.removeItem("access_token");
       window.location.href = "/authentication/sign-in";
@@ -79,11 +80,13 @@ function ListBarangRusak() {
 
   const handleDetailClick = async (id) => {
     try {
-      const response = await axios.post(
-        `http://127.0.0.1:8000/api/barang-rusak/update-sudah-dilihat`,
-        { hbarangrusak_id: id },
-        { headers: { Authorization: `Bearer ${accessToken}` } }
-      );
+      if (decodedToken.role_id == 2) {
+        const response = await axios.post(
+          `http://127.0.0.1:8000/api/barang-rusak/update-sudah-dilihat`,
+          { hbarangrusak_id: id },
+          { headers: { Authorization: `Bearer ${accessToken}` } }
+        );
+      }
     } catch (error) {
       console.log("Terjadi Kesalahan Saat melakukan update ".error);
     }

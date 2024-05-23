@@ -252,7 +252,7 @@ function MasterPengguna() {
                   renderInput={(params) => <TextField {...params} label="Karyawan Gudang" />}
                 />
               ) : (
-                <p>Loading customer data...</p>
+                <p>Tidak Ada Gudang</p>
               )}
             </Grid>
             <Grid item xs={6}>
@@ -312,7 +312,7 @@ function MasterPengguna() {
                   renderInput={(params) => <TextField {...params} label="Pilih Role" />}
                 />
               ) : (
-                <p>Loading customer data...</p>
+                <p>Tidak ada Role</p>
               )}
             </Grid>
             <Grid item xs={12}>

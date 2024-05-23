@@ -206,6 +206,7 @@ const routes = [
         route: "/mutasi-barang",
         component: <GenerateMutasi />,
         roles: ["2", "1"],
+        jenis_gudang: ["1"],
       },
       {
         type: "collapse",
@@ -215,6 +216,7 @@ const routes = [
         route: "/approval-mutasi-barang",
         component: <ApprovalMutasi />,
         roles: ["2"],
+        jenis_gudang: ["1"],
       },
       {
         type: "collapse",
@@ -224,6 +226,7 @@ const routes = [
         route: "/list-mutasi-barang",
         component: <ListMutasiBarang />,
         roles: ["1", "2"],
+        jenis_gudang: ["1"],
       },
     ],
   },
@@ -242,6 +245,7 @@ const routes = [
         route: "/generate-permintaan-barang",
         component: <GeneratePermintaanBarang />,
         roles: ["2"],
+        jenis_gudang: ["2"],
       },
       {
         type: "collapse",
@@ -400,6 +404,7 @@ const routes = [
     route: "/packaging-barang",
     component: <GeneratePackaging />,
     roles: ["2", "1"],
+    jenis_gudang: ["1"],
   },
   {
     type: "route",

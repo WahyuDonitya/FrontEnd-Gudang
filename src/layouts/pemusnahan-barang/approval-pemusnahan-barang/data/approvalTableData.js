@@ -96,7 +96,7 @@ export default function data() {
       //   },
       //   suratjalan_tanggalkirim: item.suratjalan_tanggalkirim,
       action: (
-        <Link to={`/detail-pemusnahan-barang/${item.hpemusnahan_nota}`}>
+        <Link to={`/list-pemusnahan-barang/${item.hpemusnahan_nota}`}>
           <MDTypography variant="caption" color="text" fontWeight="medium">
             Detail
           </MDTypography>

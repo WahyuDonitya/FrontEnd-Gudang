@@ -93,6 +93,8 @@ function DetailSJ() {
   let decode = null;
   if (accessToken) {
     decode = jwtDecode(accessToken);
+  } else {
+    window.location.href = "/authentication/sign-in";
   }
 
   // API
@@ -219,15 +221,55 @@ function DetailSJ() {
 
   const handleSelesai = async () => {
     try {
-      const response = await axios.post(
-        `http://127.0.0.1:8000/api/suratjalan/selesai-suratjalan`,
-        {
-          suratjalan_nota: headerSuratJalan.suratjalan_nota,
-        },
-        { headers: { Authorization: `Bearer ${accessToken}` } }
-      );
-      getId();
-      openSuccessSB();
+      const selectedBarang = detailSuratJalan
+        .filter((item) => jumlahRusakByItem[item.dsuratjalan_id] > 0)
+        .map((item) => ({
+          dsuratjalan_id: item.dsuratjalan_id,
+          jumlah_rusak: jumlahRusakByItem[item.dsuratjalan_id],
+        }));
+
+      if (selectedBarang.length === 0) {
+        if (window.confirm("apakah tidak ada data yang rusak saat pengiriman")) {
+          const response = await axios.post(
+            `http://127.0.0.1:8000/api/suratjalan/selesai-suratjalan`,
+            {
+              suratjalan_nota: headerSuratJalan.suratjalan_nota,
+            },
+            { headers: { Authorization: `Bearer ${accessToken}` } }
+          );
+          openSuccessSB();
+          getId();
+        }
+      } else {
+        if (window.confirm("apakah barang yang rusak sudah benar?")) {
+          const hasInvalidInput = Object.values(isInputInvalid).some((value) => value === true);
+
+          if (hasInvalidInput) {
+            alert("Ada input yang tidak valid. Silakan periksa kembali sebelum melanjutkan.");
+            return;
+          }
+          const response = await axios.post(
+            `http://127.0.0.1:8000/api/suratjalan/selesai-suratjalan`,
+            {
+              suratjalan_nota: headerSuratJalan.suratjalan_nota,
+            },
+            { headers: { Authorization: `Bearer ${accessToken}` } }
+          );
+          const res = await axios.post(
+            `http://127.0.0.1:8000/api/suratjalan/surat-jalan-rusak`,
+            {
+              barang_rusak: selectedBarang,
+              dataId: dataId,
+            },
+            { headers: { Authorization: `Bearer ${accessToken}` } }
+          );
+
+          openSuccessSB();
+          setJumlahRusakByItem({});
+          setIsInputInvalid({});
+          getId();
+        }
+      }
     } catch (error) {
       openErrorSB();
       console.log("Terdapat kesalahan saat melakukan print dan kirim surat jalan : ", error);
@@ -323,11 +365,11 @@ function DetailSJ() {
     getId();
   }, []);
 
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
-  useEffect(() => {
-    navigateAndClearTokenUser(navigate);
-  }, [navigate]);
+  // useEffect(() => {
+  //   navigateAndClearTokenUser(navigate);
+  // }, [navigate]);
 
   const columns = [
     { Header: "Nama Barang", accessor: "barang.barang_nama", width: "10%", align: "left" },
@@ -487,25 +529,15 @@ function DetailSJ() {
                 </Grid>
               )}
 
-              {headerSuratJalan.suratjalan_status === 0 && (
+              {/* {headerSuratJalan.suratjalan_status === 0 && (
                 <Grid container pt={5} spacing={7} px={3} mb={4}>
-                  <Grid item xs={6}>
-                    <MDButton
-                      variant="gradient"
-                      color="error"
-                      fullWidth
-                      onClick={handleBarangRusak}
-                    >
-                      Lapor barang rusak
-                    </MDButton>
-                  </Grid>
-                  <Grid item xs={6}>
+                  <Grid item xs={12}>
                     <MDButton variant="gradient" color="info" fullWidth onClick={handlePrintNota}>
                       Print nota
                     </MDButton>
                   </Grid>
                 </Grid>
-              )}
+              )} */}
             </Card>
           </Grid>
         </Grid>

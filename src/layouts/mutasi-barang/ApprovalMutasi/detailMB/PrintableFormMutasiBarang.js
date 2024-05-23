@@ -61,6 +61,9 @@ const PrintableFormMutasiBarang = ({ detailKeluar, headerKeluar }) => {
               Jumlah Barang
             </th>
             <th style={{ border: "1px solid #ddd", padding: "8px", textAlign: "center" }}>
+              Jumlah Rusak
+            </th>
+            <th style={{ border: "1px solid #ddd", padding: "8px", textAlign: "center" }}>
               Jumlah Terkirim
             </th>
             <th style={{ border: "1px solid #ddd", padding: "8px", textAlign: "center" }}>
@@ -88,6 +91,9 @@ const PrintableFormMutasiBarang = ({ detailKeluar, headerKeluar }) => {
               </td>
               <td style={{ border: "1px solid #ddd", padding: "8px", textAlign: "center" }}>
                 {item.dtransfer_barang_jumlah}
+              </td>
+              <td style={{ border: "1px solid #ddd", padding: "8px", textAlign: "center" }}>
+                {item.dtransfer_barang_jumlahrusak}
               </td>
               <td style={{ border: "1px solid #ddd", padding: "8px", textAlign: "center" }}>
                 {item.dtransfer_barang_jumlah_terkirim}

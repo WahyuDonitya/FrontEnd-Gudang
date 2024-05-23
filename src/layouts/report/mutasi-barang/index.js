@@ -253,7 +253,7 @@ function PergerakanBarang() {
                         renderInput={(params) => <TextField {...params} label="Pilih Barang " />}
                       />
                     ) : (
-                      <p>Loading customer data...</p>
+                      <p>Tidak ada Barang</p>
                     )}
                   </Grid>
                   <Grid item xs={6} pt={4} px={2}>
@@ -279,7 +279,7 @@ function PergerakanBarang() {
                         }}
                       />
                     ) : (
-                      <p>Loading customer data...</p>
+                      <p>Tidak ada Gudang</p>
                     )}
                   </Grid>
                 </Grid>
@@ -300,7 +300,7 @@ function PergerakanBarang() {
                         renderInput={(params) => <TextField {...params} label="Pilih Barang " />}
                       />
                     ) : (
-                      <p>Loading customer data...</p>
+                      <p>Tidak ada Barang</p>
                     )}
                   </Grid>
                 </Grid>

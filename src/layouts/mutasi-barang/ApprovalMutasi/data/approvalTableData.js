@@ -126,7 +126,7 @@ export default function data() {
       pengguna_generate: { pengguna_nama: item.pengguna_generate?.pengguna_nama || "-" },
       htransfer_barang_catatan: item.htransfer_barang_catatan,
       action: (
-        <Link to={`/detailmutasi-barang/${item.htransfer_barang_id}`}>
+        <Link to={`/list-mutasi-barang/${item.htransfer_barang_id}`}>
           <MDTypography variant="caption" color="text" fontWeight="medium">
             Detail
           </MDTypography>

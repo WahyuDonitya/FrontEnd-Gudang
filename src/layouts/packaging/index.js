@@ -187,7 +187,7 @@ function GeneratePackaging() {
   const handleChangeRusak = (value) => {
     const numericValue = parseInt(value);
 
-    if (numericValue > inputJumlahPacking) {
+    if (numericValue >= inputJumlahPacking) {
       alert("Angka yang anda masukkan melebihi jumlah yang ingin di packing");
       setIsInputRusakInvalid(true);
     } else {
@@ -338,7 +338,7 @@ function GeneratePackaging() {
                   }}
                 />
               ) : (
-                <p>Loading customer data...</p>
+                <p>Tidak ada Nota Barang Masuk</p>
               )}
             </Grid>
 

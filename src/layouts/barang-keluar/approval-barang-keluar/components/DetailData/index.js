@@ -29,6 +29,7 @@ function DetailData() {
   const [headerKeluar, setHeaderlKeluar] = useState([]);
   const { dataId } = useParams();
   const accessToken = localStorage.getItem("access_token");
+  // alert(dataId);
   let decode = null;
   if (accessToken) {
     decode = jwtDecode(accessToken);
@@ -70,6 +71,7 @@ function DetailData() {
   const openRejectModalHandler = () => {
     setOpenRejectModal(true);
   };
+  const navigate = useNavigate();
 
   const closeRejectModalHandler = () => {
     setOpenRejectModal(false);
@@ -179,6 +181,11 @@ function DetailData() {
     printWindow.onafterprint = () => printWindow.close();
   };
 
+  const handleCreateSuratJalan = () => {
+    // alert(dataId);
+    navigate(`/create-surat-jalan/${dataId}`);
+  };
+
   const handleBarangRusak = async () => {
     if (window.confirm("Apakah data rusak yang anda masukkan sudah benar?")) {
       try {
@@ -252,8 +259,6 @@ function DetailData() {
   useEffect(() => {
     getId();
   }, []);
-
-  const navigate = useNavigate();
 
   useEffect(() => {
     navigateAndClearTokenUser(navigate);
@@ -457,23 +462,37 @@ function DetailData() {
 
               {headerKeluar.hkeluar_status !== 3 && (
                 <Grid container pt={5} spacing={7} px={3} mb={4}>
-                  {headerKeluar.hkeluar_status !== 0 && (
-                    <Grid item xs={6}>
-                      <MDButton
-                        variant="gradient"
-                        color="error"
-                        fullWidth
-                        onClick={handleBarangRusak}
-                      >
-                        Lapor barang rusak
-                      </MDButton>
-                    </Grid>
-                  )}
                   <Grid item xs={6}>
                     <MDButton variant="gradient" color="info" fullWidth onClick={handlePrint}>
                       Print Nota
                     </MDButton>
                   </Grid>
+                  {headerKeluar.hkeluar_status !== 0 &&
+                    headerKeluar.hkeluar_status !== 4 &&
+                    headerKeluar.hkeluar_status !== 5 && (
+                      <>
+                        <Grid item xs={6}>
+                          <MDButton
+                            variant="gradient"
+                            color="error"
+                            fullWidth
+                            onClick={handleBarangRusak}
+                          >
+                            Lapor barang rusak
+                          </MDButton>
+                        </Grid>
+                        <Grid item xs={12}>
+                          <MDButton
+                            variant="gradient"
+                            color="success"
+                            fullWidth
+                            onClick={handleCreateSuratJalan}
+                          >
+                            Buat Surat Jalan
+                          </MDButton>
+                        </Grid>
+                      </>
+                    )}
                 </Grid>
               )}
             </Card>

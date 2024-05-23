@@ -190,15 +190,23 @@ function DetailBarangMasuk() {
     { Header: "Batch Barang", accessor: "detailbarang_batch", align: "center" },
     { Header: "Jumlah Barang Datang", accessor: "detailbarang_stokmasuk", align: "center" },
     { Header: "Jumlah Barang Rusak", accessor: "detailbarang_jumlahrusakmasuk", align: "center" },
+    { Header: "Jumlah Barang Pack", accessor: "jumlahpack", align: "center" },
+    { Header: "Jumlah Rusak Pack", accessor: "jumlahrusakpack", align: "center" },
     { Header: "Jumlah Barang Masuk", accessor: "detailbarang_stok", align: "center" },
   ];
 
   const rows = detailBarangMasuk.map((item) => {
     // Check if barang_nama is "Tahu POO polos"
     if (item.barang.barang_nama === "Tahu POO polos") {
-      tahupolos = true;
+      if (decode.jenis_gudang == 2) {
+        tahupolos = false;
+      } else {
+        tahupolos = true;
+      }
     }
     return {
+      jumlahpack: item.detailbarang_jumlahpack,
+      jumlahrusakpack: item.detailbarang_jumlahrusakpack,
       barang: { barang_nama: item.barang.barang_nama },
       detailbarang_expdate: dayjs(item.detailbarang_expdate).format("DD-MM-YYYY"),
       detailbarang_batch: item.detailbarang_batch,

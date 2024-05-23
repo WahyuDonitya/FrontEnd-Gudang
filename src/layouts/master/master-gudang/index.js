@@ -310,7 +310,7 @@ function MasterGudang() {
                   renderInput={(params) => <TextField {...params} label="Jenis Gudang " />}
                 />
               ) : (
-                <p>Loading customer data...</p>
+                <p>Tidak ada Jenis Gudang</p>
               )}
             </Grid>
             <Grid item xs={12}>

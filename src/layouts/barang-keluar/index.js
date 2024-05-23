@@ -410,7 +410,7 @@ function BarangKeluar() {
                   renderInput={(params) => <TextField {...params} label="Customer" />}
                 />
               ) : (
-                <p>Loading customer data...</p>
+                <p>Tidak ada data Customer</p>
               )}
             </Grid>
 

@@ -74,8 +74,10 @@ function Basic() {
 
         // console.log("Response dari API:", response.data.access_token);
         setToken(response.data.access_token);
+        const jenisGudang = jwtDecode(response.data.access_token);
         localStorage.setItem("access_token", response.data.access_token);
         localStorage.setItem("role_id", response.data.role_id);
+        localStorage.setItem("jenis_gudang", jenisGudang.jenis_gudang);
 
         // jika bukan admin atau manager maka yang akan dimunculkan hanya informasi mengenai gudang nya saja
         if (response.data.role_id == 1) {

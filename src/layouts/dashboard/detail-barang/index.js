@@ -202,12 +202,19 @@ function DetailBarang() {
       { Header: "Batch Barang", accessor: "detailbarang_batch", align: "center" },
       { Header: "Exp Date", accessor: "detailbarang_expdate", align: "center" },
       { Header: "Jumlah Barang saat datang", accessor: "detailbarang_stokmasuk", align: "center" },
+      { Header: "Jumlah rusak saat masuk", accessor: "jumlahrusakmasuk", align: "center" },
       { Header: "Stok Barang", accessor: "detailbarang_stok", align: "center" },
       {
         Header: "Jumlah yang butuh tempat",
         accessor: "detailbarang_jumlahplacement",
         align: "center",
       },
+      {
+        Header: "Jumlah Pack",
+        accessor: "jumlahpack",
+        align: "center",
+      },
+      { Header: "Jumlah rusak pack", accessor: "jumlahrusakpack", align: "center" },
       { Header: "Status", accessor: "status", align: "center" },
       { Header: "Penempatan", accessor: "action", align: "center" },
       { Header: "Cek Tempat", accessor: "cek", align: "center" },
@@ -216,7 +223,7 @@ function DetailBarang() {
     rows = detailBarang.map((item, index) => {
       const isExpired = dayjs(item.detailbarang_expdate).isBefore(today);
       let statusPlacement = false;
-      if (item.detailbarang_jumlahplacement > 0) {
+      if (item.detailbarang_jumlahplacement > 0 && !isExpired) {
         statusPlacement = true;
       }
 
@@ -229,8 +236,11 @@ function DetailBarang() {
       return {
         nomor: index + 1,
         detailbarang_batch: item.detailbarang_batch,
+        jumlahrusakmasuk: item.detailbarang_jumlahrusakmasuk,
         detailbarang_expdate: dayjs(item.detailbarang_expdate).format("DD-MM-YYYY"),
         detailbarang_stokmasuk: item.detailbarang_stokmasuk,
+        jumlahpack: item.detailbarang_jumlahpack,
+        jumlahrusakpack: item.detailbarang_jumlahrusakpack,
         detailbarang_jumlahplacement: item.detailbarang_jumlahplacement,
         detailbarang_stok: item.detailbarang_stok,
         status: isExpired ? (
@@ -391,7 +401,7 @@ function DetailBarang() {
               />
             </div>
           ) : (
-            <p>Loading customer data...</p>
+            <p>Tidak ada Posisi</p>
           )}
         </DialogContent>
         <DialogActions>

@@ -136,7 +136,7 @@ function PenerimaanBarang() {
     hmasuk_nota: item.hmasuk_nota,
     hmasuk_notasupplier: item.hmasuk_notasupplier,
     pengguna_generate: { pengguna_nama: item.pengguna_generate?.pengguna_username || "-" },
-    pengguna_action: { pengguna_nama: item.pengguna_action.pengguna_username || "-" },
+    pengguna_action: { pengguna_nama: item.pengguna_action?.pengguna_username || "-" },
     status:
       item.hmasuk_status == 0
         ? "Ditolak"
@@ -229,7 +229,7 @@ function PenerimaanBarang() {
                         }}
                       />
                     ) : (
-                      <p>Loading customer data...</p>
+                      <p>Tidak ada Gudang</p>
                     )}
                   </Grid>
                 </Grid>

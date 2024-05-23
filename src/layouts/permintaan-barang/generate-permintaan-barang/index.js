@@ -52,6 +52,11 @@ function GeneratePermintaanBarang() {
       localStorage.removeItem("access_token");
       window.location.href = "/authentication/sign-in";
     }
+
+    if (decodedToken.jenis_gudang == 1) {
+      window.location.href = "/list-permintaan-barang";
+      return alert("Tidak dapat melakukan akses pada form ini");
+    }
   } else {
     window.location.href = "/authentication/sign-in";
   }

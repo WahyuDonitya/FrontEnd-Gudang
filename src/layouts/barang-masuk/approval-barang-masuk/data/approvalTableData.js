@@ -90,7 +90,7 @@ export default function data() {
       //   },
       //   suratjalan_tanggalkirim: item.suratjalan_tanggalkirim,
       action: (
-        <Link to={`/detailbarang-masuk/${item.hmasuk_nota}`}>
+        <Link to={`/list-barang-masuk/${item.hmasuk_nota}`}>
           <MDTypography variant="caption" color="text" fontWeight="medium">
             Detail
           </MDTypography>

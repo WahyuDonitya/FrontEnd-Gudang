@@ -24,6 +24,7 @@ import MDInput from "components/MDInput";
 import breakpoints from "assets/theme/base/breakpoints";
 import DataTable from "examples/Tables/DataTable";
 import { Link, useNavigate } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
 
 function StokOpname() {
   const [tabsOrientation, setTabsOrientation] = useState("horizontal");
@@ -53,10 +54,24 @@ function StokOpname() {
   //   const [isInputInvalid, setIsInputInvalid] = useState(false);
 
   const accessToken = localStorage.getItem("access_token");
+  let decodedToken;
+  if (accessToken) {
+    decodedToken = jwtDecode(accessToken);
+    if (decodedToken.role_id == 3) {
+      localStorage.removeItem("access_token");
+      window.location.href = "/authorization/sign-in";
+    }
+  } else {
+    window.location.href = "/authorization/sign-in";
+  }
 
   // API
 
   const addGenerateOpname = async () => {
+    if (decodedToken.role_id != 2) {
+      alert("yang bisa melakukan generate opname adalah kepala gudang");
+      return;
+    }
     if (datePickerstart == null || datePickerend == null) {
       alert("Terdapat field yang kosong");
     } else {
@@ -484,7 +499,7 @@ function StokOpname() {
                 renderInput={(params) => <TextField {...params} label="Pilih Header Opname" />}
               />
             ) : (
-              <p>Loading customer data...</p>
+              <p>Tidak ada data nota opname.</p>
             )}
           </Grid>
 

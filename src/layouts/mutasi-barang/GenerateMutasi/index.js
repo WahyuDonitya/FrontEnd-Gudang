@@ -77,13 +77,14 @@ function GenerateMutasi() {
   const [isInputInvalid, setIsInputInvalid] = useState(false);
 
   const accessToken = localStorage.getItem("access_token");
+  let gudangId;
   useEffect(() => {
     const accessToken = localStorage.getItem("access_token");
 
     if (accessToken && !gudangAwal) {
       const [, payloadBase64] = accessToken.split(".");
       const payload = JSON.parse(atob(payloadBase64));
-      const gudangId = payload.gudang_id;
+      gudangId = payload.gudang_id;
       setGudangAwal(gudangId);
 
       console.log("Nilai gudang_id:", gudangId);
@@ -101,8 +102,8 @@ function GenerateMutasi() {
           Authorization: `Bearer ${accessToken}`,
         },
       });
-      // console.log("Data Customer:", response.data);
-      setGudangs(response.data);
+      const filteredData = response.data.filter((gudang) => gudang.gudang_id !== gudangId);
+      setGudangs(filteredData);
     } catch (error) {
       console.error("Terjadi kesalahan saat mengambil data Gudang:", error);
     }
@@ -196,7 +197,12 @@ function GenerateMutasi() {
         },
       }
     );
-    setDetailBarang(response.data);
+    const currentDate = new Date();
+    const filteredData = response.data.filter((data) => {
+      return new Date(data.detailbarang_expdate) > currentDate;
+    });
+    // console.log(filteredData);
+    setDetailBarang(filteredData);
   };
 
   const handleSetBatch = async (batchlok) => {
@@ -473,7 +479,7 @@ function GenerateMutasi() {
                   }}
                 />
               ) : (
-                <p>Loading customer data...</p>
+                <p>Tidak ada gudang</p>
               )}
             </Grid>
 

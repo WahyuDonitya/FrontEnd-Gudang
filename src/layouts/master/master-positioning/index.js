@@ -10,6 +10,7 @@ import MDTypography from "components/MDTypography";
 import MDAlert from "components/MDAlert";
 import MDButton from "components/MDButton";
 import MDSnackbar from "components/MDSnackbar";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 // Material Dashboard 2 React example components
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
@@ -19,14 +20,7 @@ import Header from "../components/Header";
 import {
   Autocomplete,
   Divider,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
   TextField,
-  Paper,
   IconButton,
   Icon,
   AppBar,
@@ -54,6 +48,7 @@ function MasterPositioning() {
   const [namaRak, setNamaRak] = useState(0);
   const [level, setLevel] = useState(0);
   const [rowsId, setRowsId] = useState(null);
+  const [position, setPosition] = useState([]);
 
   // state untuk notification
   const [successSB, setSuccessSB] = useState(false);
@@ -88,8 +83,48 @@ function MasterPositioning() {
     }
   };
 
+  const getPositioning = async () => {
+    try {
+      const response = await axios.get("http://127.0.0.1:8000/api/positioning/get-positioning", {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
+      console.log(response.data);
+      setPosition(response.data);
+    } catch (error) {
+      console.error("Terjadi kesalahan saat mengambil data Gudang:", error);
+    }
+  };
+
+  const handleDelete = async (rack) => {
+    if (window.confirm("Anda yakin ingin menghapus barang ini?")) {
+      try {
+        await axios.delete(`http://127.0.0.1:8000/api/positioning/delete-positioning/${rack}`, {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        });
+        getPositioning();
+      } catch (error) {
+        console.error("Terjadi kesalahan saat menghapus barang:", error);
+      }
+    }
+  };
+
+  const handleDeleteRow = async (row) => {
+    if (window.confirm("Anda yakin ingin menghapus barang ini?")) {
+      try {
+        await axios.delete(`http://127.0.0.1:8000/api/positioning/delete-row/${row}`, {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        });
+        getRows();
+        getPositioning();
+      } catch (error) {
+        console.error("Terjadi kesalahan saat menghapus row:", error);
+      }
+    }
+  };
+
   useEffect(() => {
     getRows();
+    getPositioning();
   }, []);
 
   const navigate = useNavigate();
@@ -107,6 +142,11 @@ function MasterPositioning() {
       if (namaRows == "") {
         alert("rows yang ingin dimasukkan masih kosong");
       } else {
+        const filteredData = row.filter((r) => r.row_name.toLowerCase() === namaRows.toLowerCase());
+        if (filteredData.length > 0) {
+          alert("Rows dengan nama tersebut sudah ada");
+          return;
+        }
         try {
           const response = await axios.post(
             `http://127.0.0.1:8000/api/positioning/add-rows`,
@@ -115,6 +155,7 @@ function MasterPositioning() {
           );
           setNamaRows("");
           openSuccessSB();
+          getRows();
         } catch (error) {
           console.log("terjadi kesalahan saat menambahkan data ", error);
           openErrorSB();
@@ -141,6 +182,7 @@ function MasterPositioning() {
           setSelectedRows(null);
           setNamaRak(0);
           setLevel(0);
+          getPositioning();
           openSuccessSB();
         } catch (error) {
           console.log("terdapat kesalahan saat menambahkan data rack ", error);
@@ -212,82 +254,152 @@ function MasterPositioning() {
       // Jika tab "Baris" yang aktif
       return (
         <>
-          <Grid item xs={12}>
-            <MDInput
-              label="Nama Rows"
-              fullWidth
-              type="text"
-              value={namaRows}
-              onChange={(e) => {
-                setNamaRows(e.target.value);
-              }}
-              required
-            />
+          <Grid container spacing={7}>
+            <Grid item xs={12}>
+              <MDInput
+                label="Nama Rows"
+                fullWidth
+                type="text"
+                value={namaRows}
+                onChange={(e) => {
+                  setNamaRows(e.target.value);
+                }}
+                required
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <MDButton variant="gradient" color="success" fullWidth onClick={addRows}>
+                Add Data
+              </MDButton>
+            </Grid>
+            {/* Tambahkan elemen-elemen form tambahan sesuai kebutuhan */}
           </Grid>
-          {/* Tambahkan elemen-elemen form tambahan sesuai kebutuhan */}
+          <MDBox pt={3} pb={4}>
+            <DataTable
+              table={{ columns: columns2, rows: rows2 }}
+              isSorted={false}
+              entriesPerPage={false}
+              showTotalEntries={false}
+              noEndBorder
+            />
+          </MDBox>
         </>
       );
     } else {
       // Jika tab "Rak" yang aktif
       return (
         <>
-          <Grid item xs={12}>
-            {Array.isArray(row) && row.length > 0 ? (
-              <Autocomplete
-                disablePortal
-                id="combo-box-demo"
-                options={row}
-                value={row.find((r) => r.row_id === rowsId) || null}
-                getOptionLabel={(option) => `${option.row_name || "kosong"}`}
-                onChange={(event, newValue) => {
-                  if (newValue) {
-                    handleChangeRows(newValue);
-                    setRowsId(newValue.row_id);
-                  } else {
-                    setSelectedRows(null);
-                    setRowsId(null);
-                  }
-                }}
+          <Grid container spacing={7}>
+            <Grid item xs={12}>
+              {Array.isArray(row) && row.length > 0 ? (
+                <Autocomplete
+                  disablePortal
+                  id="combo-box-demo"
+                  options={row}
+                  value={row.find((r) => r.row_id === rowsId) || null}
+                  getOptionLabel={(option) => `${option.row_name || "kosong"}`}
+                  onChange={(event, newValue) => {
+                    if (newValue) {
+                      handleChangeRows(newValue);
+                      setRowsId(newValue.row_id);
+                    } else {
+                      setSelectedRows(null);
+                      setRowsId(null);
+                    }
+                  }}
+                  fullWidth
+                  renderInput={(params) => <TextField {...params} label="Rows Penyimpanan" />}
+                />
+              ) : (
+                <p>Tidak ada data rows</p>
+              )}
+            </Grid>
+            <Grid item xs={6}>
+              <MDInput
+                label="Nomor Sel"
                 fullWidth
-                renderInput={(params) => <TextField {...params} label="Rows Penyimpanan" />}
+                type="number"
+                value={namaRak}
+                onChange={(e) => {
+                  setNamaRak(e.target.value);
+                }}
+                required
+                inputProps={{ min: 0 }}
               />
-            ) : (
-              <p>Tidak ada data rows</p>
-            )}
+            </Grid>
+            <Grid item xs={6}>
+              <MDInput
+                label="Nomor Level"
+                fullWidth
+                type="number"
+                value={level}
+                onChange={(e) => {
+                  setLevel(e.target.value);
+                }}
+                inputProps={{ min: 0 }}
+                required
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <MDButton variant="gradient" color="success" fullWidth onClick={addRack}>
+                Add Rack
+              </MDButton>
+            </Grid>
+            {/* Tambahkan elemen-elemen form tambahan sesuai kebutuhan */}
           </Grid>
-          <Grid item xs={6}>
-            <MDInput
-              label="Nomor Sel"
-              fullWidth
-              type="number"
-              value={namaRak}
-              onChange={(e) => {
-                setNamaRak(e.target.value);
-              }}
-              required
-              inputProps={{ min: 0 }}
+          <MDBox pt={3} pb={4}>
+            <DataTable
+              table={{ columns, rows }}
+              isSorted={false}
+              entriesPerPage={false}
+              showTotalEntries={false}
+              noEndBorder
             />
-          </Grid>
-          <Grid item xs={6}>
-            <MDInput
-              label="Nomor Level"
-              fullWidth
-              type="number"
-              value={level}
-              onChange={(e) => {
-                setLevel(e.target.value);
-              }}
-              inputProps={{ min: 0 }}
-              required
-            />
-          </Grid>
-          {/* Tambahkan elemen-elemen form tambahan sesuai kebutuhan */}
+          </MDBox>
         </>
       );
     }
   };
+  const columns = [
+    { Header: "Row Name", accessor: "get_rows.row_name", width: "12%", align: "left" },
+    { Header: "Sel", accessor: "rack_bay", align: "center" },
+    { Header: "Level", accessor: "rack_level", align: "center" },
+    {
+      Header: "Delete",
+      accessor: "delete",
+      width: "12%",
+      align: "center",
+    },
+  ];
 
-  const { columns, rows } = dataPositioning();
+  const rows = position.map((item) => ({
+    get_rows: { row_name: item.get_rows.row_name },
+    rack_bay: item.rack_bay,
+    rack_level: item.rack_level,
+    delete: (
+      <IconButton onClick={() => handleDelete(item.rack_id)} aria-label="delete">
+        <DeleteIcon />
+      </IconButton>
+    ),
+  }));
+
+  const columns2 = [
+    { Header: "Nomor.", accessor: "index", width: "12%", align: "left" },
+    { Header: "Nama Row", accessor: "rowname", align: "center" },
+    { Header: "Delete", accessor: "delete", align: "center" },
+  ];
+
+  const rows2 = row.map((item, index) => ({
+    index: index + 1,
+    rowname: item.row_name,
+    delete: (
+      <IconButton onClick={() => handleDeleteRow(item.row_id)} aria-label="delete">
+        <DeleteIcon />
+      </IconButton>
+    ),
+  }));
+
+  // const { columns, rows } = dataPositioning();
 
   return (
     <DashboardLayout>
@@ -306,7 +418,7 @@ function MasterPositioning() {
           <Grid container>
             <Grid item xs={6}>
               <MDTypography variant="h6" fontWeight="medium">
-                Rak Penyimpanan
+                {tabValue === 0 ? "Row Penyimpanan" : "Rak Penyimpanan"}
               </MDTypography>
             </Grid>
             <Grid item xs={6} md={6} lg={4} sx={{ ml: "auto" }}>
@@ -333,20 +445,11 @@ function MasterPositioning() {
             </Grid>
           </Grid>
 
-          <Grid container spacing={7}>
+          {/* <Grid container spacing={7}>
             {renderForm()}
-            <Grid item xs={12}>
-              <MDButton
-                variant="gradient"
-                color="success"
-                fullWidth
-                onClick={tabValue === 0 ? addRows : addRack}
-              >
-                {tabValue === 0 ? "Add Data" : "Add Rack"}
-              </MDButton>
-            </Grid>
-          </Grid>
-          <MDBox pt={3} pb={4}>
+          </Grid> */}
+          {renderForm()}
+          {/* <MDBox pt={3} pb={4}>
             <DataTable
               table={{ columns, rows }}
               isSorted={false}
@@ -354,7 +457,7 @@ function MasterPositioning() {
               showTotalEntries={false}
               noEndBorder
             />
-          </MDBox>
+          </MDBox> */}
         </MDBox>
         <MDBox p={2}>
           <Grid container spacing={6}>

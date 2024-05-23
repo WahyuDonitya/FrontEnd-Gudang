@@ -446,7 +446,8 @@ function DetailMB() {
               {headerMutasiBarang.htransfer_barang_status !== 1 && (
                 <Grid container pt={5} spacing={7} px={3} mb={4}>
                   {headerMutasiBarang.htransfer_barang_status !== 0 &&
-                    headerMutasiBarang.htransfer_barang_status !== 5 && (
+                    headerMutasiBarang.htransfer_barang_status !== 5 &&
+                    headerMutasiBarang.htransfer_barang_status !== 3 && (
                       <Grid item xs={6}>
                         <MDButton
                           variant="gradient"

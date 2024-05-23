@@ -171,7 +171,7 @@ function InventoryAging() {
                           }}
                         />
                       ) : (
-                        <p>Loading customer data...</p>
+                        <p>Tidak Ada Gudang</p>
                       )}
                     </Grid>
                   </Grid>

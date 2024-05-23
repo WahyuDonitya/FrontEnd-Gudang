@@ -377,7 +377,7 @@ function DetailStokOpname() {
                 </Grid>
               )}
 
-              {headerBarangMasuk.opname_status === 0 ||
+              {/* {headerBarangMasuk.opname_status === 0 ||
                 (headerBarangMasuk.opname_status === 1 && (
                   <Grid container pt={5} spacing={7} px={3} mb={4}>
                     <Grid item xs={12}>
@@ -388,7 +388,26 @@ function DetailStokOpname() {
                       </MDButton>
                     </Grid>
                   </Grid>
-                ))}
+                ))} */}
+              {headerBarangMasuk.opname_status === 0 && (
+                <Grid container pt={5} spacing={7} px={3} mb={4}>
+                  <Grid item xs={12}>
+                    <MDButton variant="gradient" color="info" fullWidth onClick={handlePrint}>
+                      Print dan Jalankan Stok Opname
+                    </MDButton>
+                  </Grid>
+                </Grid>
+              )}
+
+              {headerBarangMasuk.opname_status === 1 && (
+                <Grid container pt={5} spacing={7} px={3} mb={4}>
+                  <Grid item xs={12}>
+                    <MDButton variant="gradient" color="info" fullWidth onClick={handlePrint}>
+                      Print
+                    </MDButton>
+                  </Grid>
+                </Grid>
+              )}
 
               {headerBarangMasuk.opname_status === 4 && (
                 <Grid container pt={5} spacing={7} px={3} mb={4}>

@@ -197,7 +197,7 @@ function PengirimanBarang() {
                         }}
                       />
                     ) : (
-                      <p>Loading customer data...</p>
+                      <p>Tidak ada Gudang</p>
                     )}
                   </Grid>
                 </Grid>

@@ -23,13 +23,13 @@ export default function data() {
     }
   };
 
-  const handleDelete = async (barangId) => {
+  const handleDelete = async (rack) => {
     if (window.confirm("Anda yakin ingin menghapus barang ini?")) {
       try {
-        await axios.delete(`http://127.0.0.1:8000/api/barang/${barangId}`, {
+        await axios.delete(`http://127.0.0.1:8000/api/positioning/delete-positioning/${rack}`, {
           headers: { Authorization: `Bearer ${accessToken}` },
         });
-        getBarang();
+        getPositioning();
       } catch (error) {
         console.error("Terjadi kesalahan saat menghapus barang:", error);
       }
@@ -59,7 +59,7 @@ export default function data() {
       rack_bay: item.rack_bay,
       rack_level: item.rack_level,
       delete: (
-        <IconButton onClick={() => handleDelete(item.barang_id)} aria-label="delete">
+        <IconButton onClick={() => handleDelete(item.rack_id)} aria-label="delete">
           <DeleteIcon />
         </IconButton>
       ),

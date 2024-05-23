@@ -68,6 +68,9 @@ import ListBarangMasuk from "layouts/barang-masuk/list-barang-masuk";
 
 import BillingInformation from "layouts/billing/components/BillingInformation";
 import DetailPermintaanBarang from "layouts/permintaan-barang/list-permintaan-barang/detail-permintaan-barang";
+import { jwtDecode } from "jwt-decode";
+import GenerateSuratJalan from "layouts/surat-jalan/generate-surat-jalan";
+import GenerateSuratJalanByHkeluar from "layouts/surat-jalan/generate-surat-jalan-byhkeluar";
 
 // const getFilteredRoutes = (allRoutes, userRole) => {
 //   const filteredRoutes = allRoutes.filter((route) => {
@@ -86,23 +89,51 @@ import DetailPermintaanBarang from "layouts/permintaan-barang/list-permintaan-ba
 //   return filteredRoutes;
 // };
 
-const getFilteredRoutes = (allRoutes, userRole) => {
+// const getFilteredRoutes = (allRoutes, userRole) => {
+//   const filteredRoutes = allRoutes
+//     .map((route) => {
+//       if (route.type === "collapse" && Array.isArray(route.children)) {
+//         const filteredChildren = route.children.filter(
+//           (child) => child.roles && child.roles.includes(userRole)
+//         );
+//         return {
+//           ...route,
+//           children: filteredChildren,
+//         };
+//       } else if (route.roles && route.roles.includes(userRole)) {
+//         return route;
+//       }
+//       return null; // Filter out routes that don't match the user role
+//     })
+//     .filter((route) => route !== null); // Filter out null routes
+
+//   return filteredRoutes;
+// };
+
+const getFilteredRoutes = (allRoutes, userRole, userGudang) => {
   const filteredRoutes = allRoutes
     .map((route) => {
       if (route.type === "collapse" && Array.isArray(route.children)) {
         const filteredChildren = route.children.filter(
-          (child) => child.roles && child.roles.includes(userRole)
+          (child) =>
+            child.roles &&
+            child.roles.includes(userRole) &&
+            (!child.jenis_gudang || child.jenis_gudang.includes(userGudang))
         );
         return {
           ...route,
           children: filteredChildren,
         };
-      } else if (route.roles && route.roles.includes(userRole)) {
+      } else if (
+        route.roles &&
+        route.roles.includes(userRole) &&
+        (!route.jenis_gudang || route.jenis_gudang.includes(userGudang))
+      ) {
         return route;
       }
-      return null; // Filter out routes that don't match the user role
+      return null;
     })
-    .filter((route) => route !== null); // Filter out null routes
+    .filter((route) => route !== null);
 
   return filteredRoutes;
 };
@@ -140,6 +171,11 @@ export default function App() {
 
   // Change the openConfigurator state
   const handleConfiguratorOpen = () => setOpenConfigurator(dispatch, !openConfigurator);
+  const accessToken = localStorage.getItem("access_token");
+  let jenisGudang;
+  if (accessToken) {
+    jenisGudang = jwtDecode(accessToken);
+  }
 
   // Setting the dir attribute for the body element
   useEffect(() => {
@@ -199,7 +235,11 @@ export default function App() {
               color={sidenavColor}
               brand={(transparentSidenav && !darkMode) || whiteSidenav ? brandDark : brandWhite}
               brandName="Tahu POO Kediri"
-              routes={getFilteredRoutes(routes, localStorage.getItem("role_id"))}
+              routes={getFilteredRoutes(
+                routes,
+                localStorage.getItem("role_id"),
+                localStorage.getItem("jenis_gudang")
+              )}
               onMouseEnter={handleOnMouseEnter}
               onMouseLeave={handleOnMouseLeave}
             />
@@ -225,7 +265,7 @@ export default function App() {
           <Route path="/list-pemusnahan-barang/:dataId" element={<DetailBarangPemusnahan />} />
           <Route path="/list-tempat-barang/:dataId/:gudangId?" element={<ListTempatBarang />} />
           <Route path="/stok-opname/:dataId" element={<DetailStokOpname />} />
-          <Route path="/dashboard-adminz/:dataId" element={<DetailBarangByGudang />} />
+          <Route path="/dashboard-admin/:dataId" element={<DetailBarangByGudang />} />
           <Route
             path="/pengiriman-barang/:dataId/:dateAwal/:dateAkhir"
             element={<DetailReportPengirimanBarang />}
@@ -254,6 +294,10 @@ export default function App() {
           {/* Untuk report Penerimaan Barang */}
           <Route path="/penerimaan-barang/:dataId" element={<ListDetailBarangMasuk />} />
           {/* End Report Penerimaan Barang */}
+
+          {/* Create Surat Jalan */}
+          <Route path="/create-surat-jalan/:dataId" element={<GenerateSuratJalanByHkeluar />} />
+          {/* End Create Surat Jalan */}
         </Routes>
       </ThemeProvider>
     </LocalizationProvider>

@@ -42,6 +42,7 @@ import MDInput from "components/MDInput";
 import { useNavigate } from "react-router-dom";
 import { navigateAndClearTokenUser } from "navigationUtils/navigationUtilsUser";
 import DataTable from "examples/Tables/DataTable";
+import { jwtDecode } from "jwt-decode";
 
 // const useStyles = makeStyles((theme) => ({
 //   input: {
@@ -85,6 +86,7 @@ function GenerateBarangRusak() {
   const [isInputInvalid, setIsInputInvalid] = useState(false);
 
   const accessToken = localStorage.getItem("access_token");
+  let gudangId = jwtDecode(accessToken);
 
   // API
 
@@ -132,9 +134,9 @@ function GenerateBarangRusak() {
           setData([]);
           setCatatan("");
           setPelaku("");
-          setBarangs([]);
           setinputMasukJumlah("");
           setBatch("");
+          setDataToSubmit([]);
         } catch (error) {
           openErrorSB();
           console.error("Terjadi kesalahan saat mengambil input data Barang keluar:", error);
@@ -152,13 +154,17 @@ function GenerateBarangRusak() {
         },
       }
     );
-    setDetailBarang(response.data);
+    const currentDate = new Date();
+    const filteredData = response.data.filter((data) => {
+      return new Date(data.detailbarang_expdate) > currentDate;
+    });
+    setDetailBarang(filteredData);
   };
 
   const handleSetBatch = async (batchlok) => {
     try {
       const response = await axios.get(
-        `http://127.0.0.1:8000/api/detailbarang/get-detail-barang-by-batch/${batchlok.detailbarang_batch}/${inputBarangId}/1`,
+        `http://127.0.0.1:8000/api/detailbarang/get-detail-barang-by-batch/${batchlok.detailbarang_batch}/${inputBarangId}/${gudangId.gudang_id}`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -191,6 +197,7 @@ function GenerateBarangRusak() {
       console.log("Ini penempatan barang ", penempatanBarang);
       // setDetailBarangStok(response.data.detailbarang_stok);
       setDetailBarangByBatch(response.data);
+      console.log(response.data);
       setDetailBarangPick(batchlok);
     } catch (error) {
       console.error("Terjadi kesalahan saat mengambil data Gudang:", error);
@@ -380,15 +387,17 @@ function GenerateBarangRusak() {
 
   // INI UNTUK GAMBAR
 
+  const MAX_FILE_SIZE = 2 * 1024 * 1024;
   const handleFileChange = async (event) => {
-    // setSelectedFile(event.target.files[0]);
-    // console.log(event.target.files[0]);
     const file = event.target.files[0];
     if (file) {
-      const base64Image = await convertImageToBase64(file);
-      setSelectedFile(base64Image);
-      // Kirim base64Image ke backend
-      // Misalnya: sendDataToBackend(base64Image);
+      if (file.size > MAX_FILE_SIZE) {
+        alert("Maksimal file adalah 2MB");
+        return;
+      } else {
+        const base64Image = await convertImageToBase64(file);
+        setSelectedFile(base64Image);
+      }
     }
   };
 
@@ -588,11 +597,6 @@ function GenerateBarangRusak() {
               <input id="contained-button-file" type="file" onChange={handleFileChange} />
               {selectedFile && <div>File yang dipilih: {selectedFile.name}</div>}
             </Grid>
-            {/* <Grid item xs={12}>
-              <Button variant="contained" color="primary" onClick={handleUpload}>
-                Upload
-              </Button>
-            </Grid> */}
 
             {/* Button Add */}
             <Grid item xs={12}>
@@ -603,33 +607,6 @@ function GenerateBarangRusak() {
 
             {/* Untuk data table */}
             <Grid item xs={12}>
-              {/* {data.length > 0 ? (
-                <TableContainer component={Paper}>
-                  <Table>
-                    <TableBody>
-                      {data.map((item, index) => (
-                        <TableRow key={index}>
-                          <TableCell>{item.inputBarangNama}</TableCell>
-                          <TableCell>{item.detailbarang_stok}</TableCell>
-                          <TableCell>{item.detailbarang_batch}</TableCell>
-                          <TableCell>{item.detailbarang_expdate}</TableCell>
-                          <TableCell>
-                            <IconButton
-                              aria-label="delete"
-                              size="large"
-                              onClick={() => handleDelete(index)}
-                            >
-                              <Icon fontSize="small">delete</Icon>
-                            </IconButton>
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </TableContainer>
-              ) : (
-                <p>No data available</p>
-              )} */}
               <MDBox pt={3}>
                 <DataTable
                   table={{ columns, rows }}

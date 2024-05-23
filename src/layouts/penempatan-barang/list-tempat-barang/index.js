@@ -57,6 +57,10 @@ function ListTempatBarang() {
   const [positionDipilih, setPositionDipilih] = useState(null);
   const [jumlahProduk, setJumlahProduk] = useState(null);
 
+  if (!accessToken) {
+    window.location.href = "/authentication/sign-in";
+  }
+
   // state untuk notification
   const [successSB, setSuccessSB] = useState(false);
   const openSuccessSB = () => setSuccessSB(true);
@@ -138,11 +142,11 @@ function ListTempatBarang() {
     getPositionAvailable();
   }, []);
 
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
-  useEffect(() => {
-    navigateAndClearTokenKepalaGudang(navigate);
-  }, [navigate]);
+  // useEffect(() => {
+  //   navigateAndClearTokenKepalaGudang(navigate);
+  // }, [navigate]);
 
   // Handle modal
   const [openRejectModal, setOpenRejectModal] = useState(false);
@@ -289,7 +293,7 @@ function ListTempatBarang() {
               />
             </div>
           ) : (
-            <p>Loading customer data...</p>
+            <p>Tidak Ada Posisi</p>
           )}
         </DialogContent>
         <DialogActions>
