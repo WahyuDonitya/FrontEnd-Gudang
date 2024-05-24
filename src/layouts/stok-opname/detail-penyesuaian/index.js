@@ -29,7 +29,7 @@ function DetailPenyesuaian() {
   const getDbarangRusak = async () => {
     try {
       const response = await axios.get(
-        `http://127.0.0.1:8000/api/stok-opname/get-penyesuaian/${dataId}`,
+        `https://api.tahupoosby.com/api/stok-opname/get-penyesuaian/${dataId}`,
         {
           headers: { Authorization: `Bearer ${accessToken}` },
         }

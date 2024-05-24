@@ -68,7 +68,7 @@ function PackagingLast() {
 
   const getGudang = async () => {
     try {
-      const response = await axios.get("http://127.0.0.1:8000/api/gudang/", {
+      const response = await axios.get("https://api.tahupoosby.com/api/gudang", {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
@@ -82,7 +82,7 @@ function PackagingLast() {
 
   const getBarang = async () => {
     try {
-      const response = await axios.get("http://127.0.0.1:8000/api/packaging/get-polos", {
+      const response = await axios.get("https://api.tahupoosby.com/api/packaging/get-polos", {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
@@ -119,7 +119,7 @@ function PackagingLast() {
             console.log("value data to send: ", dataToSend);
 
             const response = await axios.post(
-              "http://127.0.0.1:8000/api/packaging/add-packaging",
+              "https://api.tahupoosby.com/api/packaging/add-packaging",
               dataToSend,
               {
                 headers: {

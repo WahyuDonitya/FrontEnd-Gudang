@@ -77,7 +77,7 @@ function PemusnahanBarang() {
 
   // const getGudang = async () => {
   //   try {
-  //     const response = await axios.get("http://127.0.0.1:8000/api/gudang/", {
+  //     const response = await axios.get("https://api.tahupoosby.com/api/gudang/", {
   //       headers: {
   //         Authorization: `Bearer ${accessToken}`,
   //       },
@@ -91,7 +91,7 @@ function PemusnahanBarang() {
 
   // const getSupplier = async () => {
   //   try {
-  //     const response = await axios.get("http://127.0.0.1:8000/api/supplier/", {
+  //     const response = await axios.get("https://api.tahupoosby.com/api/supplier/", {
   //       headers: {
   //         Authorization: `Bearer ${accessToken}`,
   //       },
@@ -105,7 +105,7 @@ function PemusnahanBarang() {
 
   const getBarang = async () => {
     try {
-      const response = await axios.get("http://127.0.0.1:8000/api/barang/", {
+      const response = await axios.get("https://api.tahupoosby.com/api/barang", {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
@@ -133,7 +133,7 @@ function PemusnahanBarang() {
 
           console.log("hasil data kirim ", dataKirim);
           const response = await axios.post(
-            "http://127.0.0.1:8000/api/pemusnahan-barang/add-pemusnahan-barang",
+            "https://api.tahupoosby.com/api/pemusnahan-barang/add-pemusnahan-barang",
             dataKirim,
             {
               headers: {
@@ -160,7 +160,7 @@ function PemusnahanBarang() {
 
   const handleChangeBarang = async (barangID) => {
     const response = await axios.get(
-      `http://127.0.0.1:8000/api/detailbarang/get-detail-exp-by-barang-id/${barangID}`,
+      `https://api.tahupoosby.com/api/detailbarang/get-detail-exp-by-barang-id/${barangID}`,
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,
@@ -178,7 +178,7 @@ function PemusnahanBarang() {
     setinputMasukJumlah(detailBarang[batchlok].detailbarang_stok);
     // try {
     //   const response = await axios.get(
-    //     `http://127.0.0.1:8000/api/detailbarang/get-detail-barang-by-batch/${batchlok}/${inputBarangId}/${gudangAwal}`,
+    //     `https://api.tahupoosby.com/api/detailbarang/get-detail-barang-by-batch/${batchlok}/${inputBarangId}/${gudangAwal}`,
     //     {
     //       headers: {
     //         Authorization: `Bearer ${accessToken}`,

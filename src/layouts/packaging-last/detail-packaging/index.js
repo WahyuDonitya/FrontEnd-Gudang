@@ -82,14 +82,17 @@ function DetailPackaging() {
 
   const getId = async () => {
     try {
-      const id = await axios.get(`http://127.0.0.1:8000/api/packaging/get-hpackaging/${dataId}`, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
+      const id = await axios.get(
+        `https://api.tahupoosby.com/api/packaging/get-hpackaging/${dataId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
 
       const response = await axios.get(
-        `http://127.0.0.1:8000/api/packaging/get-dpackaging/${id.data.hpackaging_id}`,
+        `https://api.tahupoosby.com/api/packaging/get-dpackaging/${id.data.hpackaging_id}`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -112,7 +115,7 @@ function DetailPackaging() {
         };
         // console.log("tes");
         const response = await axios.post(
-          "http://127.0.0.1:8000/api/transaksi-barang/approve-keluar",
+          "https://api.tahupoosby.com/api/transaksi-barang/approve-keluar",
           datatosend,
           {
             headers: { Authorization: `Bearer ${accessToken}` },
@@ -141,7 +144,7 @@ function DetailPackaging() {
         };
         console.log("tes");
         const response = await axios.post(
-          "http://127.0.0.1:8000/api/transaksi-barang/reject-keluar",
+          "https://api.tahupoosby.com/api/transaksi-barang/reject-keluar",
           datatosend,
           {
             headers: { Authorization: `Bearer ${accessToken}` },
@@ -212,7 +215,7 @@ function DetailPackaging() {
         console.log(datatosend);
 
         const response = await axios.post(
-          "http://127.0.0.1:8000/api/transaksi-barang/barang-keluar-rusak",
+          "https://api.tahupoosby.com/api/transaksi-barang/barang-keluar-rusak",
           datatosend,
           { headers: { Authorization: `Bearer ${accessToken}` } }
         );
@@ -253,7 +256,7 @@ function DetailPackaging() {
   const handleJalankan = async () => {
     try {
       const id = await axios.post(
-        `http://127.0.0.1:8000/api/packaging/update-status-jalankan/`,
+        `https://api.tahupoosby.com/api/packaging/update-status-jalankan`,
         { id: dataId },
         {
           headers: {
@@ -300,7 +303,7 @@ function DetailPackaging() {
         console.log(selectedBarang);
         // return;
         const response = await axios.post(
-          "http://127.0.0.1:8000/api/packaging/do-packaging",
+          "https://api.tahupoosby.com/api/packaging/do-packaging",
           {
             id: dataId,
             detail_transaksi: selectedBarang,

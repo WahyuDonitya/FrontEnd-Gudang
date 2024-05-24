@@ -65,14 +65,14 @@ function PenerimaanBarang() {
       let response;
       if (GudangPick == null) {
         response = await axios.get(
-          `http://127.0.0.1:8000/api/report/get-report-penerimaan/${datePickerAwal}/${datePickerAkhir}`,
+          `https://api.tahupoosby.com/api/report/get-report-penerimaan/${datePickerAwal}/${datePickerAkhir}`,
           {
             headers: { Authorization: `Bearer ${accessToken}` },
           }
         );
       } else {
         response = await axios.get(
-          `http://127.0.0.1:8000/api/report/get-report-penerimaan/${datePickerAwal}/${datePickerAkhir}/${GudangPick}`,
+          `https://api.tahupoosby.com/api/report/get-report-penerimaan/${datePickerAwal}/${datePickerAkhir}/${GudangPick}`,
           {
             headers: { Authorization: `Bearer ${accessToken}` },
           }
@@ -90,7 +90,7 @@ function PenerimaanBarang() {
 
   const getGudang = async () => {
     try {
-      const response = await axios.get("http://127.0.0.1:8000/api/gudang/", {
+      const response = await axios.get("https://api.tahupoosby.com/api/gudang", {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },

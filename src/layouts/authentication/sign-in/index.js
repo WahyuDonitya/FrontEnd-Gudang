@@ -67,7 +67,7 @@ function Basic() {
       alert("terdapat field yang kosong");
     } else {
       try {
-        const response = await axios.post("http://127.0.0.1:8000/api/login", {
+        const response = await axios.post("https://api.tahupoosby.com/api/login", {
           pengguna_username: username,
           password: password,
         });

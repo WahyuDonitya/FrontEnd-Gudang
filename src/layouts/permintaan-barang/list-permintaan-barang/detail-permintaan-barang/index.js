@@ -31,7 +31,7 @@ function DetailPermintaanBarang() {
   const getDPermintaan = async () => {
     try {
       const response = await axios.get(
-        `http://127.0.0.1:8000/api/permintaan/get-detail-permintaan/${dataId}`,
+        `https://api.tahupoosby.com/api/permintaan/get-detail-permintaan/${dataId}`,
         {
           headers: { Authorization: `Bearer ${accessToken}` },
         }

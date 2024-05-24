@@ -83,7 +83,7 @@ function ListPemusnahanBarang() {
   const getApprovalList = async () => {
     try {
       const response = await axios.get(
-        "http://127.0.0.1:8000/api/pemusnahan-barang/get-all-pemusnahan-barang",
+        "https://api.tahupoosby.com/api/pemusnahan-barang/get-all-pemusnahan-barang",
         {
           headers: { Authorization: `Bearer ${accessToken}` },
         }

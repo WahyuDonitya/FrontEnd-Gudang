@@ -51,7 +51,7 @@ function PergerakanBarang() {
   //   Pemanggilan API
   const getBarang = async () => {
     try {
-      const response = await axios.get("http://127.0.0.1:8000/api/barang", {
+      const response = await axios.get("https://api.tahupoosby.com/api/barang", {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
@@ -65,7 +65,7 @@ function PergerakanBarang() {
 
   const getGudang = async () => {
     try {
-      const response = await axios.get("http://127.0.0.1:8000/api/gudang/", {
+      const response = await axios.get("https://api.tahupoosby.com/api/gudang", {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
@@ -103,14 +103,14 @@ function PergerakanBarang() {
       if (GudangPick == null) {
         if (datePickerAkhir != null) {
           response = await axios.get(
-            `http://127.0.0.1:8000/api/report/get-pergerakan-barang/${barangId}/${datePickerAwal}/${datePickerAkhir}`,
+            `https://api.tahupoosby.com/api/report/get-pergerakan-barang/${barangId}/${datePickerAwal}/${datePickerAkhir}`,
             {
               headers: { Authorization: `Bearer ${accessToken}` },
             }
           );
         } else {
           response = await axios.get(
-            `http://127.0.0.1:8000/api/report/get-pergerakan-barang/${barangId}/${datePickerAwal}`,
+            `https://api.tahupoosby.com/api/report/get-pergerakan-barang/${barangId}/${datePickerAwal}`,
             {
               headers: { Authorization: `Bearer ${accessToken}` },
             }
@@ -119,14 +119,14 @@ function PergerakanBarang() {
       } else {
         if (datePickerAkhir != null) {
           response = await axios.get(
-            `http://127.0.0.1:8000/api/report/get-pergerakan-barang/${barangId}/${datePickerAwal}/${datePickerAkhir}/${GudangPick}`,
+            `https://api.tahupoosby.com/api/report/get-pergerakan-barang/${barangId}/${datePickerAwal}/${datePickerAkhir}/${GudangPick}`,
             {
               headers: { Authorization: `Bearer ${accessToken}` },
             }
           );
         } else {
           response = await axios.get(
-            `http://127.0.0.1:8000/api/report/get-pergerakan-barang/${barangId}/${datePickerAwal}/${GudangPick}`,
+            `https://api.tahupoosby.com/api/report/get-pergerakan-barang/${barangId}/${datePickerAwal}/${GudangPick}`,
             {
               headers: { Authorization: `Bearer ${accessToken}` },
             }

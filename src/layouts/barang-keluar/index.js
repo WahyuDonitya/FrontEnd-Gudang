@@ -80,7 +80,7 @@ function BarangKeluar() {
 
   const getGudang = async () => {
     try {
-      const response = await axios.get("http://127.0.0.1:8000/api/gudang/", {
+      const response = await axios.get("https://api.tahupoosby.com/api/gudang", {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
@@ -94,7 +94,7 @@ function BarangKeluar() {
 
   const getCustomer = async () => {
     try {
-      const response = await axios.get("http://127.0.0.1:8000/api/get-customer-by-gudang", {
+      const response = await axios.get("https://api.tahupoosby.com/api/get-customer-by-gudang", {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
@@ -108,7 +108,7 @@ function BarangKeluar() {
 
   const getBarang = async () => {
     try {
-      const response = await axios.get("http://127.0.0.1:8000/api/barang/", {
+      const response = await axios.get("https://api.tahupoosby.com/api/barang", {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
@@ -147,7 +147,7 @@ function BarangKeluar() {
             console.log("value data to send: ", dataToSend);
 
             const response = await axios.post(
-              "http://127.0.0.1:8000/api/transaksi-barang-keluar",
+              "https://api.tahupoosby.com/api/transaksi-barang-keluar",
               dataToSend,
               {
                 headers: {
@@ -255,7 +255,7 @@ function BarangKeluar() {
   const handleInputChangeBarang = async (barangId) => {
     try {
       const response = await axios.get(
-        `http://127.0.0.1:8000/api/detailbarang/get-detail-barang-stok-by-gudang/${barangId}`,
+        `https://api.tahupoosby.com/api/detailbarang/get-detail-barang-stok-by-gudang/${barangId}`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,

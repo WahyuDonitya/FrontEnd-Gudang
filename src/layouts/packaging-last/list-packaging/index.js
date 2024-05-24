@@ -65,11 +65,14 @@ function ListPackaging() {
   // API
   const getApprovalList = async () => {
     try {
-      const response = await axios.get("http://127.0.0.1:8000/api/packaging/get-packaging-barang", {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
+      const response = await axios.get(
+        "https://api.tahupoosby.com/api/packaging/get-packaging-barang",
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
 
       setApprovalList(response.data);
       setFilteredApprovalList(response.data);
@@ -107,7 +110,7 @@ function ListPackaging() {
   //   const handleClickDetail = async (newValue) => {
   //     try {
   //       const response = await axios.post(
-  //         `http://127.0.0.1:8000/api/permintaan/update-dilihat`,
+  //         `https://api.tahupoosby.com/api/permintaan/update-dilihat`,
   //         {
   //           nomornota: newValue,
   //         },

@@ -26,7 +26,7 @@ function ListSuratJalanByHkeluar() {
   const getData = async () => {
     try {
       const response = await axios.get(
-        `http://127.0.0.1:8000/api/suratjalan/get-suratjalan-by-hkeluar/${dataId}`,
+        `https://api.tahupoosby.com/api/suratjalan/get-suratjalan-by-hkeluar/${dataId}`,
         {
           headers: { Authorization: `Bearer ${accessToken}` },
         }

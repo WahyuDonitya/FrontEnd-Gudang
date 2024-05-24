@@ -49,9 +49,12 @@ export default function data() {
   //    API
   const getApprovalList = async () => {
     try {
-      const response = await axios.get("http://127.0.0.1:8000/api/detailbarang/get-approval-list", {
-        headers: { Authorization: `Bearer ${accessToken}` },
-      });
+      const response = await axios.get(
+        "https://api.tahupoosby.com/api/detailbarang/get-approval-list",
+        {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        }
+      );
 
       setApprovalList(response.data);
       console.log(approvalList);

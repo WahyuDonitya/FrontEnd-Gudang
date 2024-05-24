@@ -63,7 +63,7 @@ function MasterBarang() {
       try {
         if (barangIdEdit) {
           const response = await axios.put(
-            `http://127.0.0.1:8000/api/barang/${barangIdEdit}`,
+            `https://api.tahupoosby.com/api/barang/${barangIdEdit}`,
             {
               barang_nama: barang_nama,
             },
@@ -76,7 +76,7 @@ function MasterBarang() {
             alert("Field barang nama kosong");
           } else {
             const add = await axios.post(
-              `http://127.0.0.1:8000/api/barang`,
+              `https://api.tahupoosby.com/api/barang`,
               { barang_nama },
               {
                 headers: { Authorization: `Bearer ${accessToken}` },
@@ -96,7 +96,7 @@ function MasterBarang() {
 
   const getBarang = async () => {
     try {
-      const response = await axios.get("http://127.0.0.1:8000/api/barang/", {
+      const response = await axios.get("https://api.tahupoosby.com/api/barang", {
         headers: { Authorization: `Bearer ${accessToken}` },
       });
 
@@ -112,7 +112,7 @@ function MasterBarang() {
         alert("Sedang dalam proses edit barang");
       } else {
         try {
-          await axios.delete(`http://127.0.0.1:8000/api/barang/${barangId}`, {
+          await axios.delete(`https://api.tahupoosby.com/api/barang/${barangId}`, {
             headers: { Authorization: `Bearer ${accessToken}` },
           });
           getBarang();
@@ -145,7 +145,7 @@ function MasterBarang() {
       try {
         // Upload file to backend
         const response = await axios.post(
-          "http://127.0.0.1:8000/api/upload-excel/upload-barang",
+          "https://api.tahupoosby.com/api/upload-excel/upload-barang",
           formData,
           {
             headers: {

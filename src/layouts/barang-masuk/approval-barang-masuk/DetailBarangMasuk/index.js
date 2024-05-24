@@ -94,7 +94,7 @@ function DetailBarangMasuk() {
   const getId = async () => {
     try {
       const id = await axios.get(
-        `http://127.0.0.1:8000/api/detailbarang/get-barang-masuk-id/${dataId}`,
+        `https://api.tahupoosby.com/api/detailbarang/get-barang-masuk-id/${dataId}`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -103,7 +103,7 @@ function DetailBarangMasuk() {
       );
 
       const response = await axios.get(
-        `http://127.0.0.1:8000/api/detailbarang/get-dbarang-masuk/${id.data.hmasuk_id}`,
+        `https://api.tahupoosby.com/api/detailbarang/get-dbarang-masuk/${id.data.hmasuk_id}`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -128,7 +128,7 @@ function DetailBarangMasuk() {
         };
         // console.log(datatosend);
         const response = await axios.post(
-          "http://127.0.0.1:8000/api/detailbarang/approval-barang-masuk",
+          "https://api.tahupoosby.com/api/detailbarang/approval-barang-masuk",
           datatosend,
           {
             headers: { Authorization: `Bearer ${accessToken}` },
@@ -157,7 +157,7 @@ function DetailBarangMasuk() {
         };
         console.log(datatosend);
         const response = await axios.post(
-          "http://127.0.0.1:8000/api/detailbarang/reject-barang-masuk",
+          "https://api.tahupoosby.com/api/detailbarang/reject-barang-masuk",
           datatosend,
           {
             headers: { Authorization: `Bearer ${accessToken}` },

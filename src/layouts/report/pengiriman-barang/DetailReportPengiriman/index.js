@@ -36,7 +36,7 @@ function DetailReportPengirimanBarang() {
   const getBarang = async () => {
     try {
       const response = await axios.get(
-        `http://127.0.0.1:8000/api/report/get-report-detail-pengiriman-barang/${dataId}/${dateAwal}/${dateAkhir}`,
+        `https://api.tahupoosby.com/api/report/get-report-detail-pengiriman-barang/${dataId}/${dateAwal}/${dateAkhir}`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,

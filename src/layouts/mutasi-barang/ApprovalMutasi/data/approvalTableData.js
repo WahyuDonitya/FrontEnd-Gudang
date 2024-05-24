@@ -53,7 +53,7 @@ export default function data() {
   const getApprovalList = async () => {
     try {
       const response = await axios.get(
-        "http://127.0.0.1:8000/api/gudang/get-transaksi/get-htrans",
+        "https://api.tahupoosby.com/api/gudang/get-transaksi/get-htrans",
         {
           headers: { Authorization: `Bearer ${accessToken}` },
         }
@@ -75,7 +75,7 @@ export default function data() {
   // useEffect(() => {
   //   const fetchData = async () => {
   //     try {
-  //       const response = await fetch("http://127.0.0.1:8000/api/gudang/get-transaksi/get-htrans", {
+  //       const response = await fetch("https://api.tahupoosby.com/api/gudang/get-transaksi/get-htrans", {
   //         headers: {
   //           Authorization: `Bearer ${accessToken}`,
   //         },

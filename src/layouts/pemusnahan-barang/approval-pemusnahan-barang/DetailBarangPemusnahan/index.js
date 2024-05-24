@@ -86,7 +86,7 @@ function DetailBarangPemusnahan() {
   const getId = async () => {
     try {
       const id = await axios.get(
-        `http://127.0.0.1:8000/api/pemusnahan-barang/get-detail-pemusnahan-barang/${dataId}`,
+        `https://api.tahupoosby.com/api/pemusnahan-barang/get-detail-pemusnahan-barang/${dataId}`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -95,7 +95,7 @@ function DetailBarangPemusnahan() {
       );
 
       const header = await axios.get(
-        `http://127.0.0.1:8000/api/pemusnahan-barang/get-header-pemusnahan-barang/${dataId}`,
+        `https://api.tahupoosby.com/api/pemusnahan-barang/get-header-pemusnahan-barang/${dataId}`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -104,7 +104,7 @@ function DetailBarangPemusnahan() {
       );
 
       //   const response = await axios.get(
-      //     `http://127.0.0.1:8000/api/detailbarang/get-dbarang-masuk/${id.data.hmasuk_id}`,
+      //     `https://api.tahupoosby.com/api/detailbarang/get-dbarang-masuk/${id.data.hmasuk_id}`,
       //     {
       //       headers: {
       //         Authorization: `Bearer ${accessToken}`,
@@ -130,7 +130,7 @@ function DetailBarangPemusnahan() {
         };
         // console.log(datatosend);
         const response = await axios.post(
-          "http://127.0.0.1:8000/api/pemusnahan-barang/approval-pemusnahan-barang",
+          "https://api.tahupoosby.com/api/pemusnahan-barang/approval-pemusnahan-barang",
           datatosend,
           {
             headers: { Authorization: `Bearer ${accessToken}` },
@@ -159,7 +159,7 @@ function DetailBarangPemusnahan() {
         };
         console.log(datatosend);
         const response = await axios.post(
-          "http://127.0.0.1:8000/api/pemusnahan-barang/rejected-pemusnahan-barang",
+          "https://api.tahupoosby.com/api/pemusnahan-barang/rejected-pemusnahan-barang",
           datatosend,
           {
             headers: { Authorization: `Bearer ${accessToken}` },
@@ -187,7 +187,7 @@ function DetailBarangPemusnahan() {
     try {
       if (headerPemusnahanBarang.hpemusnahan_status == 1) {
         const response = await axios.post(
-          `http://127.0.0.1:8000/api/pemusnahan-barang/do-pemusnahan-barang`,
+          `https://api.tahupoosby.com/api/pemusnahan-barang/do-pemusnahan-barang`,
           { hpemusnahan_id: headerPemusnahanBarang.hpemusnahan_id },
           { headers: { Authorization: `Bearer ${accessToken}` } }
         );

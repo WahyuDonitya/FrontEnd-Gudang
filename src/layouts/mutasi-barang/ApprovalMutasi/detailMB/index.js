@@ -102,7 +102,7 @@ function DetailMB() {
   const getId = async () => {
     try {
       const id = await axios.get(
-        `http://127.0.0.1:8000/api/gudang/get-transaksi/get-header-by-id/${dataId}`,
+        `https://api.tahupoosby.com/api/gudang/get-transaksi/get-header-by-id/${dataId}`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -111,7 +111,7 @@ function DetailMB() {
       );
 
       const response = await axios.get(
-        `http://127.0.0.1:8000/api/gudang/get-transaksi/get-dtrans/${id.data.htransfer_barang_id}`,
+        `https://api.tahupoosby.com/api/gudang/get-transaksi/get-dtrans/${id.data.htransfer_barang_id}`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -135,7 +135,7 @@ function DetailMB() {
         };
         console.log(datatosend);
         const response = await axios.post(
-          "http://127.0.0.1:8000/api/gudang/transaksi-accept",
+          "https://api.tahupoosby.com/api/gudang/transaksi-accept",
           datatosend,
           {
             headers: { Authorization: `Bearer ${accessToken}` },
@@ -164,7 +164,7 @@ function DetailMB() {
         };
         console.log(datatosend);
         const response = await axios.post(
-          "http://127.0.0.1:8000/api/gudang/transaksi-reject",
+          "https://api.tahupoosby.com/api/gudang/transaksi-reject",
           datatosend,
           {
             headers: { Authorization: `Bearer ${accessToken}` },
@@ -235,7 +235,7 @@ function DetailMB() {
 
         console.log(datatosend);
         const response = await axios.post(
-          "http://127.0.0.1:8000/api/gudang/pelaporan-barang-rusak",
+          "https://api.tahupoosby.com/api/gudang/pelaporan-barang-rusak",
           datatosend,
           { headers: { Authorization: `Bearer ${accessToken}` } }
         );

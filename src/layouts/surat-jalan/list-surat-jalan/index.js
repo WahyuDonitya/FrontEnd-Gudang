@@ -85,9 +85,12 @@ function ListSuratJalan() {
   //    API
   const getApprovalList = async () => {
     try {
-      const response = await axios.get("http://127.0.0.1:8000/api/suratjalan/get-surat-jalan-all", {
-        headers: { Authorization: `Bearer ${accessToken}` },
-      });
+      const response = await axios.get(
+        "https://api.tahupoosby.com/api/suratjalan/get-surat-jalan-all",
+        {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        }
+      );
 
       setApprovalList(response.data);
       setFilteredApprovalList(response.data);
@@ -100,7 +103,7 @@ function ListSuratJalan() {
   const getApprovalList2 = async () => {
     try {
       const response = await axios.get(
-        "http://127.0.0.1:8000/api/suratjalan/get-surat-jalan-transfer-all",
+        "https://api.tahupoosby.com/api/suratjalan/get-surat-jalan-transfer-all",
         {
           headers: { Authorization: `Bearer ${accessToken}` },
         }

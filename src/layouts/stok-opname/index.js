@@ -85,7 +85,7 @@ function StokOpname() {
 
           // console.log("hasil data kirim ", dataKirim);
           const response = await axios.post(
-            "http://127.0.0.1:8000/api/stok-opname/generate-stok-opname",
+            "https://api.tahupoosby.com/api/stok-opname/generate-stok-opname",
             dataKirim,
             {
               headers: {
@@ -137,7 +137,7 @@ function StokOpname() {
           console.log(datakirim);
 
           const response = await axios.post(
-            "http://127.0.0.1:8000/api/stok-opname/stok-opname-form",
+            "https://api.tahupoosby.com/api/stok-opname/stok-opname-form",
             datakirim,
             {
               headers: {
@@ -166,7 +166,7 @@ function StokOpname() {
   const getDataStokOpname = async () => {
     try {
       const response = await axios.get(
-        `http://127.0.0.1:8000/api/stok-opname/get-stok-opname-list`,
+        `https://api.tahupoosby.com/api/stok-opname/get-stok-opname-list`,
         { headers: { Authorization: `Bearer ${accessToken}` } }
       );
       setDataOpname(response.data);
@@ -178,7 +178,7 @@ function StokOpname() {
   const getHeaderOpname = async () => {
     try {
       const res = await axios.get(
-        `http://127.0.0.1:8000/api/stok-opname/get-header-opname-berlangsung`,
+        `https://api.tahupoosby.com/api/stok-opname/get-header-opname-berlangsung`,
         { headers: { Authorization: `Bearer ${accessToken}` } }
       );
       setHeaderOpname(res.data);
@@ -190,7 +190,7 @@ function StokOpname() {
   const handleCustomerInputChange = async (value) => {
     if (value) {
       const res = await axios.get(
-        `http://127.0.0.1:8000/api/stok-opname/get-detail-barang/${value.opname_id}`,
+        `https://api.tahupoosby.com/api/stok-opname/get-detail-barang/${value.opname_id}`,
         { headers: { Authorization: `Bearer ${accessToken}` } }
       );
       // console.log(res.data);

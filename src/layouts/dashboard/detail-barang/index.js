@@ -99,7 +99,7 @@ function DetailBarang() {
   const getDetailBarang = async () => {
     if (!gudangId) {
       const response = await axios.get(
-        `http://127.0.0.1:8000/api/detailbarang/get-detail-by-barang-id/${dataId}`,
+        `https://api.tahupoosby.com/api/detailbarang/get-detail-by-barang-id/${dataId}`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -109,7 +109,7 @@ function DetailBarang() {
       setDetailBarang(response.data);
     } else {
       const response = await axios.get(
-        `http://127.0.0.1:8000/api/detailbarang/get-detail-by-barang-id/${dataId}/${gudangId}`,
+        `https://api.tahupoosby.com/api/detailbarang/get-detail-by-barang-id/${dataId}/${gudangId}`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -123,7 +123,7 @@ function DetailBarang() {
   const getPositionAvailable = async () => {
     try {
       const response = await axios.get(
-        "http://127.0.0.1:8000/api/positioning/get-positioning-available",
+        "https://api.tahupoosby.com/api/positioning/get-positioning-available",
         { headers: { Authorization: `Bearer ${accessToken}` } }
       );
       // console.log(response.data);
@@ -140,7 +140,7 @@ function DetailBarang() {
       if (window.confirm("Apakah data yang anda masukkan sudah benar?")) {
         try {
           const response = await axios.post(
-            `http://127.0.0.1:8000/api/positioning/add-placement`,
+            `https://api.tahupoosby.com/api/positioning/add-placement`,
             {
               detailbarang_id: detailBarangId,
               rack_id: positionDipilih,

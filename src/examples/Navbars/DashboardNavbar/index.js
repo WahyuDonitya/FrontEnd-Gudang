@@ -59,7 +59,7 @@
 
 //   const getGudang = async () => {
 //     try {
-//       const response = await axios.get(`http://127.0.0.1:8000/api/gudang/${decode.gudang_id}`, {
+//       const response = await axios.get(`https://api.tahupoosby.com/api/gudang/${decode.gudang_id}`, {
 //         headers: { Authorization: `Bearer ${accessToken}` },
 //       });
 //       setGudang(response.data);
@@ -70,7 +70,7 @@
 
 //   const getPengguna = async () => {
 //     try {
-//       const response = await axios.get(`http://127.0.0.1:8000/api/pengguna/${decode.pengguna_id}`, {
+//       const response = await axios.get(`https://api.tahupoosby.com/api/pengguna/${decode.pengguna_id}`, {
 //         headers: { Authorization: `Bearer ${accessToken}` },
 //       });
 //       setPengguna(response.data);
@@ -155,7 +155,7 @@
 //       // console.log("dari local storage", accessToken);
 
 //       await axios.post(
-//         "http://127.0.0.1:8000/api/logout",
+//         "https://api.tahupoosby.com/api/logout",
 //         {},
 //         {
 //           headers: {
@@ -293,9 +293,12 @@ function DashboardNavbar({ absolute, light, isMini }) {
 
   const getGudang = async () => {
     try {
-      const response = await axios.get(`http://127.0.0.1:8000/api/gudang/${decode.gudang_id}`, {
-        headers: { Authorization: `Bearer ${accessToken}` },
-      });
+      const response = await axios.get(
+        `https://api.tahupoosby.com/api/gudang/${decode.gudang_id}`,
+        {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        }
+      );
       setGudang(response.data);
       // console.log(response.data);
     } catch (error) {
@@ -305,9 +308,12 @@ function DashboardNavbar({ absolute, light, isMini }) {
 
   const getPengguna = async () => {
     try {
-      const response = await axios.get(`http://127.0.0.1:8000/api/pengguna/${decode.pengguna_id}`, {
-        headers: { Authorization: `Bearer ${accessToken}` },
-      });
+      const response = await axios.get(
+        `https://api.tahupoosby.com/api/pengguna/${decode.pengguna_id}`,
+        {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        }
+      );
       setPengguna(response.data);
     } catch (error) {
       console.log(error);
@@ -392,7 +398,7 @@ function DashboardNavbar({ absolute, light, isMini }) {
       // console.log("dari local storage", accessToken);
 
       await axios.post(
-        "http://127.0.0.1:8000/api/logout",
+        "https://api.tahupoosby.com/api/logout",
         {},
         {
           headers: {

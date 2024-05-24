@@ -45,7 +45,7 @@ function DetailListBarangRusak() {
   const getDbarangRusak = async () => {
     try {
       const response = await axios.get(
-        `http://127.0.0.1:8000/api/barang-rusak/get-dbarang-rusak/${dataId}`,
+        `https://api.tahupoosby.com/api/barang-rusak/get-dbarang-rusak/${dataId}`,
         {
           headers: { Authorization: `Bearer ${accessToken}` },
         }

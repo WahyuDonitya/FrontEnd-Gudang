@@ -66,7 +66,7 @@ function ListBarangKeluar() {
   const getApprovalList = async () => {
     try {
       const response = await axios.get(
-        "http://127.0.0.1:8000/api/transaksi-barang/getAll-hkeluar",
+        "https://api.tahupoosby.com/api/transaksi-barang/getAll-hkeluar",
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,

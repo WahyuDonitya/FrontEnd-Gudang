@@ -29,7 +29,7 @@ function Dashboard() {
   const getCountHkeluar = async () => {
     try {
       const response = await axios.get(
-        `http://127.0.0.1:8000/api/transaksi-barang/get-count-hkeluar-approval`,
+        `https://api.tahupoosby.com/api/transaksi-barang/get-count-hkeluar-approval`,
         { headers: { Authorization: `Bearer ${accessToken}` } }
       );
       setCountHkeluar(response.data);
@@ -41,7 +41,7 @@ function Dashboard() {
   const getCountSuratJalan = async () => {
     try {
       const response = await axios.get(
-        "http://127.0.0.1:8000/api/suratjalan/suratjalan-needapproval-count",
+        "https://api.tahupoosby.com/api/suratjalan/suratjalan-needapproval-count",
         {
           headers: { Authorization: `Bearer ${accessToken}` },
         }
@@ -55,7 +55,7 @@ function Dashboard() {
   const getCountBarangMasuk = async () => {
     try {
       const response = await axios.get(
-        "http://127.0.0.1:8000/api/detailbarang/get-count-barang-masuk",
+        "https://api.tahupoosby.com/api/detailbarang/get-count-barang-masuk",
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -71,7 +71,7 @@ function Dashboard() {
   const getCountMutasiBarang = async () => {
     try {
       const response = await axios.get(
-        "http://127.0.0.1:8000/api/detailbarang/get-count-mutasi-barang-approval",
+        "https://api.tahupoosby.com/api/detailbarang/get-count-mutasi-barang-approval",
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,

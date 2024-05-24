@@ -78,7 +78,7 @@ function BarangMasuk() {
 
   // const getGudang = async () => {
   //   try {
-  //     const response = await axios.get("http://127.0.0.1:8000/api/gudang/", {
+  //     const response = await axios.get("https://api.tahupoosby.com/api/gudang/", {
   //       headers: {
   //         Authorization: `Bearer ${accessToken}`,
   //       },
@@ -92,7 +92,7 @@ function BarangMasuk() {
 
   const getSupplier = async () => {
     try {
-      const response = await axios.get("http://127.0.0.1:8000/api/supplier/", {
+      const response = await axios.get("https://api.tahupoosby.com/api/supplier", {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
@@ -106,7 +106,7 @@ function BarangMasuk() {
 
   const getBarang = async () => {
     try {
-      const response = await axios.get("http://127.0.0.1:8000/api/barang/", {
+      const response = await axios.get("https://api.tahupoosby.com/api/barang", {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
@@ -139,7 +139,7 @@ function BarangMasuk() {
           };
 
           const response = await axios.post(
-            "http://127.0.0.1:8000/api/detailbarang/add",
+            "https://api.tahupoosby.com/api/detailbarang/add",
             dataKirim,
             {
               headers: {

@@ -46,7 +46,7 @@ function InventoryAging() {
   //   Pemanggilan API
   const getBarang = async () => {
     try {
-      const response = await axios.get("http://127.0.0.1:8000/api/report/inventory-aging", {
+      const response = await axios.get("https://api.tahupoosby.com/api/report/inventory-aging", {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
@@ -61,7 +61,7 @@ function InventoryAging() {
   const getBarangWithGudang = async (newValue) => {
     try {
       const response = await axios.get(
-        `http://127.0.0.1:8000/api/report/inventory-aging/${newValue.gudang_id}`,
+        `https://api.tahupoosby.com/api/report/inventory-aging/${newValue.gudang_id}`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -78,7 +78,7 @@ function InventoryAging() {
 
   const getGudang = async () => {
     try {
-      const response = await axios.get("http://127.0.0.1:8000/api/gudang/", {
+      const response = await axios.get("https://api.tahupoosby.com/api/gudang", {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },

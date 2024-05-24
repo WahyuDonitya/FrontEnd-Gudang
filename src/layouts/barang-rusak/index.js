@@ -92,7 +92,7 @@ function GenerateBarangRusak() {
 
   const getBarang = async () => {
     try {
-      const response = await axios.get("http://127.0.0.1:8000/api/barang/", {
+      const response = await axios.get("https://api.tahupoosby.com/api/barang", {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
@@ -121,7 +121,7 @@ function GenerateBarangRusak() {
 
           console.log("hasil data kirim ", dataKirim);
           const response = await axios.post(
-            "http://127.0.0.1:8000/api/barang-rusak/add-barang-rusak",
+            "https://api.tahupoosby.com/api/barang-rusak/add-barang-rusak",
             dataKirim,
             {
               headers: {
@@ -147,7 +147,7 @@ function GenerateBarangRusak() {
 
   const handleChangeBarang = async (barangID) => {
     const response = await axios.get(
-      `http://127.0.0.1:8000/api/detailbarang/get-detail-by-barang-id/${barangID}`,
+      `https://api.tahupoosby.com/api/detailbarang/get-detail-by-barang-id/${barangID}`,
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,
@@ -164,7 +164,7 @@ function GenerateBarangRusak() {
   const handleSetBatch = async (batchlok) => {
     try {
       const response = await axios.get(
-        `http://127.0.0.1:8000/api/detailbarang/get-detail-barang-by-batch/${batchlok.detailbarang_batch}/${inputBarangId}/${gudangId.gudang_id}`,
+        `https://api.tahupoosby.com/api/detailbarang/get-detail-barang-by-batch/${batchlok.detailbarang_batch}/${inputBarangId}/${gudangId.gudang_id}`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -173,7 +173,7 @@ function GenerateBarangRusak() {
       );
 
       const res = await axios.get(
-        `http://127.0.0.1:8000/api/positioning/get-penempatan-by-detailbarang/${batchlok.detailbarang_id}`,
+        `https://api.tahupoosby.com/api/positioning/get-penempatan-by-detailbarang/${batchlok.detailbarang_id}`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,

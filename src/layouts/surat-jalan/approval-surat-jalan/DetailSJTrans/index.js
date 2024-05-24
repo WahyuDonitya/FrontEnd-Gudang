@@ -99,14 +99,17 @@ function DetailSJTrans() {
 
   const getId = async () => {
     try {
-      const id = await axios.get(`http://127.0.0.1:8000/api/suratjalan/get-sj-transfer/${dataId}`, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
+      const id = await axios.get(
+        `https://api.tahupoosby.com/api/suratjalan/get-sj-transfer/${dataId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
 
       const response = await axios.get(
-        `http://127.0.0.1:8000/api/suratjalan/get-dsj-transfer/${id.data.suratjalantransfer_id}`,
+        `https://api.tahupoosby.com/api/suratjalan/get-dsj-transfer/${id.data.suratjalantransfer_id}`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -129,7 +132,7 @@ function DetailSJTrans() {
         };
         console.log(datatosend);
         const response = await axios.post(
-          "http://127.0.0.1:8000/api/suratjalan/suratjalan-transfer-approval",
+          "https://api.tahupoosby.com/api/suratjalan/suratjalan-transfer-approval",
           datatosend,
           {
             headers: { Authorization: `Bearer ${accessToken}` },
@@ -158,7 +161,7 @@ function DetailSJTrans() {
         };
         console.log(datatosend);
         const response = await axios.post(
-          "http://127.0.0.1:8000/api/suratjalan/suratjalan-transfer-reject",
+          "https://api.tahupoosby.com/api/suratjalan/suratjalan-transfer-reject",
           datatosend,
           {
             headers: { Authorization: `Bearer ${accessToken}` },
@@ -182,7 +185,7 @@ function DetailSJTrans() {
     console.log(headerSuratJalan.suratjalantransfer_nota);
     try {
       const response = await axios.post(
-        `http://127.0.0.1:8000/api/suratjalan/kirim-suratjalan-transfer`,
+        `https://api.tahupoosby.com/api/suratjalan/kirim-suratjalan-transfer`,
         {
           suratjalantransfer_nota: headerSuratJalan.suratjalantransfer_nota,
           nama_pengirim: nama,
@@ -223,7 +226,7 @@ function DetailSJTrans() {
       if (selectedBarang.length === 0) {
         if (window.confirm("Apakah tidak ada barang yang rusak saat pengiriman?")) {
           const response = await axios.post(
-            `http://127.0.0.1:8000/api/suratjalan/selesai-suratjalan-transfer`,
+            `https://api.tahupoosby.com/api/suratjalan/selesai-suratjalan-transfer`,
             {
               suratjalantransfer_nota: headerSuratJalan.suratjalantransfer_nota,
             },
@@ -241,14 +244,14 @@ function DetailSJTrans() {
             return;
           }
           const response = await axios.post(
-            `http://127.0.0.1:8000/api/suratjalan/selesai-suratjalan-transfer`,
+            `https://api.tahupoosby.com/api/suratjalan/selesai-suratjalan-transfer`,
             {
               suratjalantransfer_nota: headerSuratJalan.suratjalantransfer_nota,
             },
             { headers: { Authorization: `Bearer ${accessToken}` } }
           );
           const res = await axios.post(
-            `http://127.0.0.1:8000/api/suratjalan/surat-jalan-transfer-rusak`,
+            `https://api.tahupoosby.com/api/suratjalan/surat-jalan-transfer-rusak`,
             {
               barang_rusak: selectedBarang,
               dataId: dataId,
@@ -293,7 +296,7 @@ function DetailSJTrans() {
         }
 
         const res = await axios.post(
-          `http://127.0.0.1:8000/api/suratjalan/surat-jalan-transfer-rusak`,
+          `https://api.tahupoosby.com/api/suratjalan/surat-jalan-transfer-rusak`,
           {
             barang_rusak: selectedBarang,
             dataId: dataId,

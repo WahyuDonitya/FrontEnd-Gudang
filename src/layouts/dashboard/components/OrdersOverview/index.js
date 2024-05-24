@@ -40,7 +40,7 @@ function OrdersOverview() {
   const getCountSuratJalan = async () => {
     try {
       const response = await axios.get(
-        `http://127.0.0.1:8000/api/suratjalan/get-suratjalan-send-today`,
+        `https://api.tahupoosby.com/api/suratjalan/get-suratjalan-send-today`,
         { headers: { Authorization: `Bearer ${accessToken}` } }
       );
       setCountSuratJalanSend(response.data);
@@ -52,7 +52,7 @@ function OrdersOverview() {
   const getCountPemusnahan = async () => {
     try {
       const response = await axios.get(
-        `http://127.0.0.1:8000/api/pemusnahan-barang/get-pemusnahanbarang-today`,
+        `https://api.tahupoosby.com/api/pemusnahan-barang/get-pemusnahanbarang-today`,
         { headers: { Authorization: `Bearer ${accessToken}` } }
       );
       setCountPemusnahanToday(response.data);
@@ -64,7 +64,7 @@ function OrdersOverview() {
   const getCountHbarangRusak = async () => {
     try {
       const response = await axios.get(
-        `http://127.0.0.1:8000/api/barang-rusak/get-hbarang-rusak-count`,
+        `https://api.tahupoosby.com/api/barang-rusak/get-hbarang-rusak-count`,
         { headers: { Authorization: `Bearer ${accessToken}` } }
       );
       setHbarangrusak(response.data);
@@ -76,7 +76,7 @@ function OrdersOverview() {
   const getcountHbarangKeluarBesok = async () => {
     try {
       const response = await axios.get(
-        "http://127.0.0.1:8000/api/transaksi-barang/barang-keluar-send-tommorow",
+        "https://api.tahupoosby.com/api/transaksi-barang/barang-keluar-send-tommorow",
         { headers: { Authorization: `Bearer ${accessToken}` } }
       );
       setCountHbarangKeluaresok(response.data);
@@ -88,7 +88,7 @@ function OrdersOverview() {
   const getcountSuratJalanTransfer = async () => {
     try {
       const response = await axios.get(
-        "http://127.0.0.1:8000/api/suratjalan/get-suratjalan-transfer-send-today",
+        "https://api.tahupoosby.com/api/suratjalan/get-suratjalan-transfer-send-today",
         { headers: { Authorization: `Bearer ${accessToken}` } }
       );
       setCountSuratJalanTransfer(response.data);
@@ -100,7 +100,7 @@ function OrdersOverview() {
   const getcountPermintaanBarang = async () => {
     try {
       const response = await axios.get(
-        "http://127.0.0.1:8000/api/permintaan/get-count-belum-dilihat",
+        "https://api.tahupoosby.com/api/permintaan/get-count-belum-dilihat",
         { headers: { Authorization: `Bearer ${accessToken}` } }
       );
       setCountBarangDilihat(response.data);

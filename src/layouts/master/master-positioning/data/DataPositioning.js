@@ -13,9 +13,12 @@ export default function data() {
   //    API
   const getPositioning = async () => {
     try {
-      const response = await axios.get("http://127.0.0.1:8000/api/positioning/get-positioning", {
-        headers: { Authorization: `Bearer ${accessToken}` },
-      });
+      const response = await axios.get(
+        "https://api.tahupoosby.com/api/positioning/get-positioning",
+        {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        }
+      );
       console.log(response.data);
       setPosition(response.data);
     } catch (error) {
@@ -26,9 +29,12 @@ export default function data() {
   const handleDelete = async (rack) => {
     if (window.confirm("Anda yakin ingin menghapus barang ini?")) {
       try {
-        await axios.delete(`http://127.0.0.1:8000/api/positioning/delete-positioning/${rack}`, {
-          headers: { Authorization: `Bearer ${accessToken}` },
-        });
+        await axios.delete(
+          `https://api.tahupoosby.com/api/positioning/delete-positioning/${rack}`,
+          {
+            headers: { Authorization: `Bearer ${accessToken}` },
+          }
+        );
         getPositioning();
       } catch (error) {
         console.error("Terjadi kesalahan saat menghapus barang:", error);
