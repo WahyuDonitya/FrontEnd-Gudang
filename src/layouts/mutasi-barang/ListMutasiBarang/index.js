@@ -158,7 +158,7 @@ function ListMutasiBarang() {
         </MDBox>
       ),
     action: (
-      <Link to={`/list-mutasi-barang/${item.htransfer_barang_id}`}>
+      <Link to={`/list-mutasi-barang/${item.htransfer_barang_nota}`}>
         <MDTypography variant="caption" color="text" fontWeight="medium">
           Detail
         </MDTypography>

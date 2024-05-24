@@ -71,6 +71,8 @@ import DetailPermintaanBarang from "layouts/permintaan-barang/list-permintaan-ba
 import { jwtDecode } from "jwt-decode";
 import GenerateSuratJalan from "layouts/surat-jalan/generate-surat-jalan";
 import GenerateSuratJalanByHkeluar from "layouts/surat-jalan/generate-surat-jalan-byhkeluar";
+import DetailPackaging from "layouts/packaging-last/detail-packaging";
+import GenerateSuratJalanByHtrans from "layouts/surat-jalan/generate-surat-jalan-byhtrans";
 
 // const getFilteredRoutes = (allRoutes, userRole) => {
 //   const filteredRoutes = allRoutes.filter((route) => {
@@ -297,7 +299,15 @@ export default function App() {
 
           {/* Create Surat Jalan */}
           <Route path="/create-surat-jalan/:dataId" element={<GenerateSuratJalanByHkeluar />} />
+          <Route
+            path="/create-surat-jalan-trans/:dataId"
+            element={<GenerateSuratJalanByHtrans />}
+          />
           {/* End Create Surat Jalan */}
+
+          {/* Detail packaging */}
+          <Route path="/detail-packaging/:dataId" element={<DetailPackaging />} />
+          {/* End Detail Packaging */}
         </Routes>
       </ThemeProvider>
     </LocalizationProvider>

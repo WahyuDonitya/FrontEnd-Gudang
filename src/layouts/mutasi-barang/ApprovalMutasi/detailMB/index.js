@@ -111,7 +111,7 @@ function DetailMB() {
       );
 
       const response = await axios.get(
-        `http://127.0.0.1:8000/api/gudang/get-transaksi/get-dtrans/${dataId}`,
+        `http://127.0.0.1:8000/api/gudang/get-transaksi/get-dtrans/${id.data.htransfer_barang_id}`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -267,6 +267,11 @@ function DetailMB() {
     printWindow.document.close();
     printWindow.print();
     printWindow.onafterprint = () => printWindow.close();
+  };
+
+  const handleCreateSuratJalan = () => {
+    // alert(dataId);
+    navigate(`/create-surat-jalan-trans/${dataId}`);
   };
 
   // END API
@@ -445,25 +450,37 @@ function DetailMB() {
               )}
               {headerMutasiBarang.htransfer_barang_status !== 1 && (
                 <Grid container pt={5} spacing={7} px={3} mb={4}>
-                  {headerMutasiBarang.htransfer_barang_status !== 0 &&
-                    headerMutasiBarang.htransfer_barang_status !== 5 &&
-                    headerMutasiBarang.htransfer_barang_status !== 3 && (
-                      <Grid item xs={6}>
-                        <MDButton
-                          variant="gradient"
-                          color="error"
-                          fullWidth
-                          onClick={handleBarangRusak}
-                        >
-                          Lapor barang rusak
-                        </MDButton>
-                      </Grid>
-                    )}
                   <Grid item xs={6}>
                     <MDButton variant="gradient" color="info" fullWidth onClick={handlePrint}>
                       Print Nota
                     </MDButton>
                   </Grid>
+                  {headerMutasiBarang.htransfer_barang_status !== 0 &&
+                    headerMutasiBarang.htransfer_barang_status !== 5 &&
+                    headerMutasiBarang.htransfer_barang_status !== 3 && (
+                      <>
+                        <Grid item xs={6}>
+                          <MDButton
+                            variant="gradient"
+                            color="error"
+                            fullWidth
+                            onClick={handleBarangRusak}
+                          >
+                            Lapor barang rusak
+                          </MDButton>
+                        </Grid>
+                        <Grid item xs={12}>
+                          <MDButton
+                            variant="gradient"
+                            color="success"
+                            fullWidth
+                            onClick={handleCreateSuratJalan}
+                          >
+                            Buat Surat Jalan
+                          </MDButton>
+                        </Grid>
+                      </>
+                    )}
                 </Grid>
               )}
             </Card>

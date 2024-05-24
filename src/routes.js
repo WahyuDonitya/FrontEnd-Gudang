@@ -41,6 +41,8 @@ import SidenavCollapse from "examples/Sidenav/SidenavCollapse";
 import { Shop } from "@mui/icons-material";
 import GeneratePermintaanBarang from "layouts/permintaan-barang/generate-permintaan-barang";
 import ListPermintaanBarang from "layouts/permintaan-barang/list-permintaan-barang";
+import PackagingLast from "layouts/packaging-last";
+import ListPackaging from "layouts/packaging-last/list-packaging";
 
 const routes = [
   {
@@ -280,6 +282,56 @@ const routes = [
 
   {
     type: "collapse",
+    name: "Packaging",
+    key: "packaging",
+    icon: <ShoppingBasketIcon fontSize="small" />,
+    children: [
+      {
+        type: "collapse",
+        name: "Generate Packaging",
+        key: "generate-packaging",
+        icon: <Icon fontSize="small">inventory_2</Icon>,
+        route: "/packaging-barang",
+        component: <PackagingLast />,
+        roles: ["2"],
+        jenis_gudang: ["1"],
+      },
+      {
+        type: "route",
+        name: "List Packaging",
+        key: "List-packaging",
+        icon: <Icon fontSize="small">inventory_2</Icon>,
+        route: "/list-packaging",
+        component: <ListPackaging />,
+        roles: ["2"],
+        jenis_gudang: ["1"],
+      },
+    ],
+  },
+
+  {
+    type: "route",
+    name: "Generate Packaging",
+    key: "generate-packaging",
+    icon: <Icon fontSize="small">inventory_2</Icon>,
+    route: "/packaging-barang",
+    component: <PackagingLast />,
+    roles: ["2"],
+    jenis_gudang: ["1"],
+  },
+  {
+    type: "route",
+    name: "List Packaging",
+    key: "List-packaging",
+    icon: <Icon fontSize="small">inventory_2</Icon>,
+    route: "/list-packaging",
+    component: <ListPackaging />,
+    roles: ["2"],
+    jenis_gudang: ["1"],
+  },
+
+  {
+    type: "collapse",
     name: "Pemusnahan Barang",
     key: "pemusnahan-barang",
     icon: <Icon fontSize="small">delete_forever</Icon>,
@@ -396,16 +448,6 @@ const routes = [
     roles: ["2", "1"],
   },
 
-  {
-    type: "collapse",
-    name: "Packaging",
-    key: "packaging-barang",
-    icon: <Icon fontSize="small">inventory_2</Icon>,
-    route: "/packaging-barang",
-    component: <GeneratePackaging />,
-    roles: ["2", "1"],
-    jenis_gudang: ["1"],
-  },
   {
     type: "route",
     name: "Pemusnahan Barang",

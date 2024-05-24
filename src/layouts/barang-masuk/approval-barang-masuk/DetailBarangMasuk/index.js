@@ -307,9 +307,11 @@ function DetailBarangMasuk() {
                       variant="gradient"
                       color="success"
                       fullWidth
-                      onClick={tahupolos ? openTahuModalHandler : handleApprove}
+                      // onClick={tahupolos ? openTahuModalHandler : handleApprove}
+                      onClick={handleApprove}
                     >
-                      {tahupolos ? "Open Tahu Modal" : "Approve"}
+                      {/* {tahupolos ? "Open Tahu Modal" : "Approve"} */}
+                      Approve
                     </MDButton>
                   </Grid>
                 </Grid>
@@ -350,7 +352,7 @@ function DetailBarangMasuk() {
         </DialogActions>
       </Dialog>
 
-      <Dialog open={openTahuModal} onClose={closeTahuModalHandler}>
+      {/* <Dialog open={openTahuModal} onClose={closeTahuModalHandler}>
         <DialogTitle>Apakah Terdapat proses Packaging untuk tahu polos?</DialogTitle>
         <DialogContent>
           <RadioGroup
@@ -371,7 +373,7 @@ function DetailBarangMasuk() {
             Approve
           </MDButton>
         </DialogActions>
-      </Dialog>
+      </Dialog> */}
     </DashboardLayout>
   );
 }
