@@ -298,7 +298,7 @@ function GeneratePermintaanBarang() {
             </Grid>
             <Grid item xs={12}>
               <TextField
-                label="Jumlah barang keluar"
+                label="Jumlah barang yang diminta"
                 fullWidth
                 type="number"
                 value={inputKeluarJumlah}

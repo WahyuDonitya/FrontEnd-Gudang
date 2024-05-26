@@ -18,6 +18,7 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { navigateAndClearTokenUser } from "navigationUtils/navigationUtilsUser";
+import { jwtDecode } from "jwt-decode";
 
 function Dashboard() {
   const accessToken = localStorage.getItem("access_token");
@@ -25,6 +26,17 @@ function Dashboard() {
   const [countSuratJalan, setCountSuratJalan] = useState(0);
   const [countBarangMasuk, setCountBarangMasuk] = useState(0);
   const [countMutasiBarang, setMutasiBarang] = useState(0);
+
+  if (accessToken) {
+    const decodedToken = jwtDecode(accessToken);
+    if (decodedToken.role_id == 3) {
+      localStorage.removeItem("access_token");
+      window.location.href = "/authentication/sign-in";
+    }
+  } else {
+    window.location.href = "/authentication/sign-in";
+  }
+
   // api
   const getCountHkeluar = async () => {
     try {
@@ -94,11 +106,11 @@ function Dashboard() {
 
   // code dibawah untuk melakukan pengecekan token
 
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
-  useEffect(() => {
-    navigateAndClearTokenUser(navigate);
-  }, [navigate]);
+  // useEffect(() => {
+  //   navigateAndClearTokenUser(navigate);
+  // }, [navigate]);
 
   // const { sales, tasks } = reportsLineChartData;
   return (

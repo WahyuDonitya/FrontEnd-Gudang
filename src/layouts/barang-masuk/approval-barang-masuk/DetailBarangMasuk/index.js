@@ -77,15 +77,21 @@ function DetailBarangMasuk() {
   };
   // end Handle modal
 
-  const navigate = useNavigate();
-  useEffect(() => {
-    navigateAndClearTokenKepalaGudang(navigate);
-  }, [navigate]);
+  // const navigate = useNavigate();
+  // useEffect(() => {
+  //   navigateAndClearTokenKepalaGudang(navigate);
+  // }, [navigate]);
 
   const accessToken = localStorage.getItem("access_token");
   let decode = null;
   if (accessToken) {
     decode = jwtDecode(accessToken);
+    if (decode.role_id == 3) {
+      localStorage.removeItem("access_token");
+      window.location.href = "/authentication/sign-in";
+    }
+  } else {
+    window.location.href = "/authentication/sign-in";
   }
   let tahupolos = false;
 

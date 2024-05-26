@@ -42,6 +42,10 @@ const PrintableFormSJTrans = ({ detailSuratJalan, headerSuratJalan }) => {
             <strong>Gudang Tujuan : </strong>{" "}
             {headerSuratJalan.htransfer?.gudang_tujuan?.gudang_nama}
           </p>
+          <p>
+            <strong>Gudang alamat: </strong>{" "}
+            {headerSuratJalan.htransfer?.gudang_tujuan?.gudang_alamat}
+          </p>
         </div>
       </div>
 

@@ -303,7 +303,7 @@ const routes = [
         icon: <Icon fontSize="small">inventory_2</Icon>,
         route: "/list-packaging",
         component: <ListPackaging />,
-        roles: ["2"],
+        roles: ["2", "1"],
         jenis_gudang: ["1"],
       },
     ],

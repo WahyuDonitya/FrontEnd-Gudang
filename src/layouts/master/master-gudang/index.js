@@ -35,6 +35,7 @@ function MasterGudang() {
   const [jenisGudangPickID, setJenisGudangPickId] = useState(null);
   const [gudangEditId, setGudangEditId] = useState(null);
   const [jenisGudangId, setJenisGudangId] = useState(null);
+  const [alamat, setAlamat] = useState("");
 
   // state untuk notification
   const [successSB, setSuccessSB] = useState(false);
@@ -122,12 +123,13 @@ function MasterGudang() {
           );
           setGudangEditId(null);
         } else {
-          if (gudang_nama == "" || jenisGudangPickID == null) {
+          if (gudang_nama == "" || jenisGudangPickID == null || alamat == "") {
             alert("Data tidak boleh kosong!");
           } else {
             const datakirim = {
               gudang_nama: gudang_nama,
               jenis_gudang_id: parseInt(jenisGudangPickID),
+              gudang_alamat: alamat,
             };
             const add = await axios.post(`https://api.tahupoosby.com/api/gudang`, datakirim, {
               headers: { Authorization: `Bearer ${accessToken}` },
@@ -312,6 +314,17 @@ function MasterGudang() {
               ) : (
                 <p>Tidak ada Jenis Gudang</p>
               )}
+            </Grid>
+            <Grid item xs={12}>
+              <MDInput
+                label="Alamat Gudang"
+                fullWidth
+                type="text"
+                value={alamat}
+                onChange={(e) => {
+                  setAlamat(e.target.value);
+                }}
+              />
             </Grid>
             <Grid item xs={12}>
               <MDButton variant="gradient" color="success" fullWidth onClick={addBarang}>
