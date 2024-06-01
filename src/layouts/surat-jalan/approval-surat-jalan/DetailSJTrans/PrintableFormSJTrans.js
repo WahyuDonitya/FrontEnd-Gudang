@@ -92,6 +92,11 @@ const PrintableFormSJTrans = ({ detailSuratJalan, headerSuratJalan }) => {
           ))}
         </tbody>
       </table>
+      {/* Signature Column */}
+
+      <div style={{ marginTop: "200px", textAlign: "right" }}>
+        <p>Tanda tangan: ____________________________</p>
+      </div>
 
       {/* Styling for printing, you may include media queries in your CSS */}
       <style>

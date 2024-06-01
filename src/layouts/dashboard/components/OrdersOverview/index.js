@@ -35,8 +35,22 @@ function OrdersOverview() {
   const [countHbarangKeluaresok, setCountHbarangKeluaresok] = useState(0);
   const [countSuratJalanTransfer, setCountSuratJalanTransfer] = useState(0);
   const [countBarangDilihat, setCountBarangDilihat] = useState(0);
+  const [countMutasiBesok, setCountMutasiBesok] = useState(0);
 
   // API
+
+  // const getMutasiBesok = async () => {
+  //   try {
+  //     const response = await axios.get(
+  //       `https://api.tahupoosby.com/api/gudang/get-mutasibarang-send-tommorow`,
+  //       { headers: { Authorization: `Bearer ${accessToken}` } }
+  //     );
+  //     setCountMutasiBesok(response.data);
+  //   } catch (error) {
+  //     console.log("Terdapat kesalahan saat mengambil data count surat jalan : ", error);
+  //   }
+  // };
+
   const getCountSuratJalan = async () => {
     try {
       const response = await axios.get(
@@ -117,6 +131,7 @@ function OrdersOverview() {
     getcountHbarangKeluarBesok();
     getcountSuratJalanTransfer();
     getcountPermintaanBarang();
+    // getMutasiBesok();
   }, []);
 
   const today = new Date();
@@ -171,6 +186,12 @@ function OrdersOverview() {
           title={`${countHbarangKeluaresok} Barang keluar untuk besok`}
           dateTime={formattedDate}
         />
+        {/* <TimelineItem
+          color="warning"
+          icon="payment"
+          title={`${countMutasiBesok} Mutasi Barang untuk besok`}
+          dateTime={formattedDate}
+        /> */}
         <TimelineItem
           color="warning"
           icon="payment"

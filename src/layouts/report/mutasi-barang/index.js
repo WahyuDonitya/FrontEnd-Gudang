@@ -25,6 +25,12 @@ import { Link, Navigate, useNavigate } from "react-router-dom";
 import { format } from "date-fns";
 import { navigateAndClearTokenKepalaGudang } from "navigationUtils/navigationUtilsKepalaGudang";
 import { jwtDecode } from "jwt-decode";
+import DefaultInfoCard from "examples/Cards/InfoCards/DefaultInfoCard";
+import BrokenImageIcon from "@mui/icons-material/BrokenImage";
+import DeleteIcon from "@mui/icons-material/Delete";
+import SyncIcon from "@mui/icons-material/Sync";
+import ExitToAppIcon from "@mui/icons-material/ExitToApp";
+import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
 
 function PergerakanBarang() {
   //   state
@@ -197,7 +203,7 @@ function PergerakanBarang() {
             : item.hkeluar_id
             ? `/list-barang-keluar/pergerakan-barang/${item.hkeluar_nota}`
             : item.htransfer_barang_id
-            ? `/list-mutasi-barang/pergerakan-barang/${item.htransfer_barang_id}`
+            ? `/list-mutasi-barang/pergerakan-barang/${item.htransfer_barang_nota}`
             : item.hpemusnahan_id
             ? `/list-pemusnahan-barang/pergerakan-barang/${item.hpemusnahan_nota}`
             : item.hbarangrusak_id
@@ -349,41 +355,9 @@ function PergerakanBarang() {
                   canSearch
                   noEndBorder
                 />
-                {/* <Grid item xs={12} px={2} pb={3} pt={5}>
-                  <MDButton variant="gradient" color="success" onClick={handleSubmit}>
-                    Print
-                  </MDButton>
-                </Grid> */}
               </MDBox>
             </Card>
           </Grid>
-          {/* <Grid item xs={12}>
-            <Card>
-              <MDBox
-                mx={2}
-                mt={-3}
-                py={3}
-                px={2}
-                variant="gradient"
-                bgColor="info"
-                borderRadius="lg"
-                coloredShadow="info"
-              >
-                <MDTypography variant="h6" color="white">
-                  Projects Table
-                </MDTypography>
-              </MDBox>
-              <MDBox pt={3}>
-                <DataTable
-                  table={{ columns: pColumns, rows: pRows }}
-                  isSorted={false}
-                  entriesPerPage={false}
-                  showTotalEntries={false}
-                  noEndBorder
-                />
-              </MDBox>
-            </Card>
-          </Grid> */}
         </Grid>
       </MDBox>
     </DashboardLayout>

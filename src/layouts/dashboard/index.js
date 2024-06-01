@@ -90,6 +90,7 @@ function Dashboard() {
           },
         }
       );
+      const currentDate = new Date().toDateString();
       setMutasiBarang(response.data);
     } catch (error) {
       console.error("Terjadi kesalahan saat mengambil data mutasi barang :", error);

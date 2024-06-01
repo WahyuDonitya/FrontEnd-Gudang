@@ -37,6 +37,8 @@ function PenerimaanBarang() {
   const [dataBarang, setDataBarang] = useState([]);
   const [gudangs, setGudangs] = useState([]);
   const [GudangPick, setGudangPick] = useState(null);
+  const [barangs, setBarangs] = useState([]);
+  const [inputBarangId, setInputBarangId] = useState("");
 
   const accessToken = localStorage.getItem("access_token");
   const decodedToken = jwtDecode(accessToken);
@@ -62,17 +64,21 @@ function PenerimaanBarang() {
   const handleSubmit = async () => {
     // console.log(datePickerAwal);
     try {
+      if (inputBarangId == "") {
+        alert("harus memilih barang");
+        return;
+      }
       let response;
       if (GudangPick == null) {
         response = await axios.get(
-          `https://api.tahupoosby.com/api/report/get-report-penerimaan/${datePickerAwal}/${datePickerAkhir}`,
+          `https://api.tahupoosby.com/api/report/get-report-penerimaan/${inputBarangId}/${datePickerAwal}/${datePickerAkhir}`,
           {
             headers: { Authorization: `Bearer ${accessToken}` },
           }
         );
       } else {
         response = await axios.get(
-          `https://api.tahupoosby.com/api/report/get-report-penerimaan/${datePickerAwal}/${datePickerAkhir}/${GudangPick}`,
+          `https://api.tahupoosby.com/api/report/get-report-penerimaan/${inputBarangId}/${datePickerAwal}/${datePickerAkhir}/${GudangPick}`,
           {
             headers: { Authorization: `Bearer ${accessToken}` },
           }
@@ -80,11 +86,28 @@ function PenerimaanBarang() {
       }
 
       //   console.log(response.data.datahbarang);
+      console.log(response.data);
+      // return;
 
       setLaporanPenerimaan(response.data);
-      setDataBarang(response.data.datahbarang);
+      setDataBarang(response.data.data);
     } catch (error) {
       console.error("Terjadi kesalahan saat mengambil data kartu Stok:", error);
+    }
+  };
+
+  const getBarang = async () => {
+    try {
+      const response = await axios.get("https://api.tahupoosby.com/api/barang", {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      // Cetak hasil ke konsol
+      // console.log("Data Barang:", response.data);
+      setBarangs(response.data);
+    } catch (error) {
+      console.error("Terjadi kesalahan saat mengambil data Customer:", error);
     }
   };
 
@@ -104,6 +127,7 @@ function PenerimaanBarang() {
 
   useEffect(() => {
     getGudang();
+    getBarang();
   }, []);
 
   //   const navigate = useNavigate();
@@ -237,6 +261,34 @@ function PenerimaanBarang() {
                 <></>
               )}
               <Grid container>
+                <Grid item xs={12} pt={4} px={2}>
+                  {Array.isArray(barangs) && barangs.length > 0 ? (
+                    <Autocomplete
+                      disablePortal
+                      id="combo-box-demo"
+                      value={barangs.find((barang) => barang.barang_id === inputBarangId) || null}
+                      options={barangs}
+                      getOptionLabel={(option) => `${option.barang_nama || "Gamuncul"}`}
+                      onChange={(event, newValue) => {
+                        if (newValue) {
+                          setInputBarangId(newValue.barang_id);
+                          // setInputBarangStok(newValue.barang_stok);
+                        } else {
+                          setInputBarangId("");
+                        }
+
+                        console.log(barangs);
+                      }}
+                      fullWidth
+                      renderInput={(params) => <TextField {...params} label="Nama Barang" />}
+                    />
+                  ) : (
+                    <p>Data Customer tidak ditemukan...</p>
+                  )}
+                </Grid>
+              </Grid>
+
+              <Grid container>
                 <Grid item xs={6} pt={4} px={2}>
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DatePicker
@@ -277,8 +329,8 @@ function PenerimaanBarang() {
                     <ComplexStatisticsCard
                       color="dark"
                       icon="weekend"
-                      title="Jumlah nota Approved"
-                      count={laporanPenerimaan.barangditerima}
+                      title="Total Barang Masuk"
+                      count={laporanPenerimaan.totalbarangmasuk}
                       percentage={{
                         color: "success",
                         amount: "",
@@ -287,7 +339,7 @@ function PenerimaanBarang() {
                     />
                   </MDBox>
                 </Grid>
-                <Grid item xs={12} md={6} lg={3}>
+                {/* <Grid item xs={12} md={6} lg={3}>
                   <MDBox mb={1.5}>
                     <ComplexStatisticsCard
                       icon="leaderboard"
@@ -315,7 +367,7 @@ function PenerimaanBarang() {
                       }}
                     />
                   </MDBox>
-                </Grid>
+                </Grid> */}
               </Grid>
               <MDBox pt={3}>
                 <DataTable

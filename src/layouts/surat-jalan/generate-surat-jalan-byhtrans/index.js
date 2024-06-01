@@ -339,6 +339,18 @@ function GenerateSuratJalanByHtrans() {
                   </MDTypography>
                 </Grid>
               </Grid>
+              <Grid container px={3}>
+                <Grid item xs={6}>
+                  <MDTypography variant="h6" fontWeight="medium">
+                    Rencana Tanggal Kirim :{" "}
+                    {selectedHtransfer
+                      ? dayjs(selectedHtransfer.htransfer_barang_tanggal_dikirim).format(
+                          "DD-MM-YYYY"
+                        )
+                      : "Pilih Nota"}
+                  </MDTypography>
+                </Grid>
+              </Grid>
               <MDBox pt={3} pb={4}>
                 <DataTable
                   table={{ columns: columnstransfer, rows: rowstransfer }}

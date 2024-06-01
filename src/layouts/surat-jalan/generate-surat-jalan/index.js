@@ -633,6 +633,16 @@ function GenerateSuratJalan() {
                     </MDTypography>
                   </Grid>
                 </Grid>
+                <Grid container px={3}>
+                  <Grid item xs={6}>
+                    <MDTypography variant="h6" fontWeight="medium">
+                      Rencana Tanggal Kirim :{" "}
+                      {selectedHtransfer
+                        ? selectedHtransfer.htransfer_barang_tanggal_dikirim
+                        : "Pilih Nota"}
+                    </MDTypography>
+                  </Grid>
+                </Grid>
                 <MDBox pt={3} pb={4}>
                   <DataTable
                     table={{ columns: columnstransfer, rows: rowstransfer }}

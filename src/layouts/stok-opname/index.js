@@ -466,8 +466,8 @@ function StokOpname() {
               <DataTable
                 table={{ columns, rows }}
                 isSorted={false}
-                entriesPerPage={true}
-                showTotalEntries={true}
+                entriesPerPage={false}
+                showTotalEntries={false}
                 noEndBorder
                 canSearch
               />
