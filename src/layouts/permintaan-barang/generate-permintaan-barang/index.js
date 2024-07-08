@@ -64,7 +64,7 @@ function GeneratePermintaanBarang() {
 
   const getBarang = async () => {
     try {
-      const response = await axios.get("https://api.tahupoosby.com/api/barang", {
+      const response = await axios.get("http://127.0.0.1:8000/api/barang", {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
@@ -93,7 +93,7 @@ function GeneratePermintaanBarang() {
           };
 
           const response = await axios.post(
-            `https://api.tahupoosby.com/api/permintaan/add-permintaan`,
+            `http://127.0.0.1:8000/api/permintaan/add-permintaan`,
             dataToSend,
             { headers: { Authorization: `Bearer ${accessToken}` } }
           );

@@ -13,7 +13,7 @@ export default function data() {
   //    API
   const getCustomer = async () => {
     try {
-      const response = await axios.get("https://api.tahupoosby.com/api/customer", {
+      const response = await axios.get("http://127.0.0.1:8000/api/customer", {
         headers: { Authorization: `Bearer ${accessToken}` },
       });
 
@@ -26,7 +26,7 @@ export default function data() {
   const handleDelete = async (customerID) => {
     if (window.confirm("Anda yakin ingin menghapus barang ini?")) {
       try {
-        await axios.delete(`https://api.tahupoosby.com/api/customer/${customerID}`, {
+        await axios.delete(`http://127.0.0.1:8000/api/customer/${customerID}`, {
           headers: { Authorization: `Bearer ${accessToken}` },
         });
         getCustomer();

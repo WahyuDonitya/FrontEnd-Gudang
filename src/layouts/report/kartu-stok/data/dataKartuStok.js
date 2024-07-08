@@ -13,7 +13,7 @@ export default function data() {
   const getKartuStok = async () => {
     try {
       const response = await axios.get(
-        "https://api.tahupoosby.com/api/log-barang/get-kartu-stok/1/2023-12-27/2023-12-28",
+        "http://127.0.0.1:8000/api/log-barang/get-kartu-stok/1/2023-12-27/2023-12-28",
         {
           headers: { Authorization: `Bearer ${accessToken}` },
         }

@@ -65,7 +65,7 @@ function ListPermintaanBarang() {
   // API
   const getApprovalList = async () => {
     try {
-      const response = await axios.get("https://api.tahupoosby.com/api/permintaan/get-permintaan", {
+      const response = await axios.get("http://127.0.0.1:8000/api/permintaan/get-permintaan", {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
@@ -107,7 +107,7 @@ function ListPermintaanBarang() {
   const handleClickDetail = async (newValue) => {
     try {
       const response = await axios.post(
-        `https://api.tahupoosby.com/api/permintaan/update-dilihat`,
+        `http://127.0.0.1:8000/api/permintaan/update-dilihat`,
         {
           nomornota: newValue,
         },

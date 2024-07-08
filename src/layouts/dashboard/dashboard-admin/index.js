@@ -32,7 +32,7 @@ function DashboardAdmin() {
   const getCountHkeluar = async () => {
     try {
       const response = await axios.get(
-        `https://api.tahupoosby.com/api/transaksi-barang/get-count-hkeluar-approval`,
+        `http://127.0.0.1:8000/api/transaksi-barang/get-count-hkeluar-approval`,
         { headers: { Authorization: `Bearer ${accessToken}` } }
       );
       setCountHkeluar(response.data);
@@ -44,7 +44,7 @@ function DashboardAdmin() {
   const getCountSuratJalan = async () => {
     try {
       const response = await axios.get(
-        "https://api.tahupoosby.com/api/suratjalan/suratjalan-needapproval-count",
+        "http://127.0.0.1:8000/api/suratjalan/suratjalan-needapproval-count",
         {
           headers: { Authorization: `Bearer ${accessToken}` },
         }
@@ -58,7 +58,7 @@ function DashboardAdmin() {
   const getCountBarangMasuk = async () => {
     try {
       const response = await axios.get(
-        "https://api.tahupoosby.com/api/detailbarang/get-count-barang-masuk",
+        "http://127.0.0.1:8000/api/detailbarang/get-count-barang-masuk",
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -74,7 +74,7 @@ function DashboardAdmin() {
   const getCountMutasiBarang = async () => {
     try {
       const response = await axios.get(
-        "https://api.tahupoosby.com/api/detailbarang/get-count-mutasi-barang-approval",
+        "http://127.0.0.1:8000/api/detailbarang/get-count-mutasi-barang-approval",
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,

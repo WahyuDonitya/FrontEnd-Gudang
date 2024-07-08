@@ -46,7 +46,7 @@ function InventoryAging() {
   //   Pemanggilan API
   const getBarang = async () => {
     try {
-      const response = await axios.get("https://api.tahupoosby.com/api/report/inventory-aging", {
+      const response = await axios.get("http://127.0.0.1:8000/api/report/inventory-aging", {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
@@ -61,7 +61,7 @@ function InventoryAging() {
   const getBarangWithGudang = async (newValue) => {
     try {
       const response = await axios.get(
-        `https://api.tahupoosby.com/api/report/inventory-aging/${newValue.gudang_id}`,
+        `http://127.0.0.1:8000/api/report/inventory-aging/${newValue.gudang_id}`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -78,7 +78,7 @@ function InventoryAging() {
 
   const getGudang = async () => {
     try {
-      const response = await axios.get("https://api.tahupoosby.com/api/gudang", {
+      const response = await axios.get("http://127.0.0.1:8000/api/gudang", {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
@@ -109,17 +109,19 @@ function InventoryAging() {
   const columns = [
     { Header: "No. ", accessor: "nomor", align: "center" },
     { Header: "Nama Barang ", accessor: "barang_nama", align: "center" },
+    { Header: "Exp Date ", accessor: "exp", align: "center" },
     { Header: "Batch Barang ", accessor: "detailbarang_batch", align: "center" },
     { Header: "Stok Barang ", accessor: "detailbarang_stok", align: "center" },
-    { Header: "Lama Di Gudang", accessor: "umur_inventaris", align: "center" },
+    { Header: "Sisa Umur", accessor: "umur_inventaris", align: "center" },
   ];
 
   const rows = barang.map((item, index) => ({
     nomor: index + 1,
     barang_nama: item.barang_nama,
+    exp: dayjs(item.detailbarang_expdate).format("DD-MM-YYYY"),
     detailbarang_batch: item.detailbarang_batch,
     detailbarang_stok: item.detailbarang_stok,
-    umur_inventaris: `${item.umur_inventaris} Hari`,
+    umur_inventaris: `${item.hari_kedaluwarsa} Hari`,
   }));
 
   return (
@@ -140,7 +142,7 @@ function InventoryAging() {
                 coloredShadow="info"
               >
                 <MDTypography variant="h6" color="white">
-                  Inventory Aging
+                  Barang Hampir Expired
                 </MDTypography>
               </MDBox>
               <MDBox pt={3}>

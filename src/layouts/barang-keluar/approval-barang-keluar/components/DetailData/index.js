@@ -84,7 +84,7 @@ function DetailData() {
   const getId = async () => {
     try {
       const id = await axios.get(
-        `https://api.tahupoosby.com/api/transaksi-barang/get-hkeluar-id/${dataId}`,
+        `http://127.0.0.1:8000/api/transaksi-barang/get-hkeluar-id/${dataId}`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -93,7 +93,7 @@ function DetailData() {
       );
 
       const response = await axios.get(
-        `https://api.tahupoosby.com/api/transaksi-barang/get-dkeluar/${id.data.hkeluar_id}`,
+        `http://127.0.0.1:8000/api/transaksi-barang/get-dkeluar/${id.data.hkeluar_id}`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -111,12 +111,22 @@ function DetailData() {
   const handleApprove = async () => {
     if (window.confirm("Apakah anda yakin ingin melakukan proses Approve?")) {
       try {
+        const selectedBarang = detailKeluar
+          .filter((item) => jumlahRusakByItem[item.dkeluar_id] > 0)
+          .map((item) => ({
+            dkeluar_id: item.dkeluar_id,
+            jumlah_approve: jumlahRusakByItem[item.dkeluar_id],
+          }));
+
         const datatosend = {
           dataId: dataId,
+          dbarang_keluarapprove: selectedBarang,
         };
+        console.log(datatosend);
+        // return;
         // console.log("tes");
         const response = await axios.post(
-          "https://api.tahupoosby.com/api/transaksi-barang/approve-keluar",
+          "http://127.0.0.1:8000/api/transaksi-barang/approve-keluar",
           datatosend,
           {
             headers: { Authorization: `Bearer ${accessToken}` },
@@ -145,7 +155,7 @@ function DetailData() {
         };
         console.log("tes");
         const response = await axios.post(
-          "https://api.tahupoosby.com/api/transaksi-barang/reject-keluar",
+          "http://127.0.0.1:8000/api/transaksi-barang/reject-keluar",
           datatosend,
           {
             headers: { Authorization: `Bearer ${accessToken}` },
@@ -216,7 +226,7 @@ function DetailData() {
         console.log(datatosend);
 
         const response = await axios.post(
-          "https://api.tahupoosby.com/api/transaksi-barang/barang-keluar-rusak",
+          "http://127.0.0.1:8000/api/transaksi-barang/barang-keluar-rusak",
           datatosend,
           { headers: { Authorization: `Bearer ${accessToken}` } }
         );
@@ -264,37 +274,85 @@ function DetailData() {
     navigateAndClearTokenUser(navigate);
   }, [navigate]);
 
-  const columns = [
-    { Header: "Nama Barang", accessor: "barang", width: "10%", align: "left" },
-    { Header: "Batch Barang", accessor: "d_barang", align: "center" },
-    { Header: "Jumlah Barang", accessor: "dkeluar_jumlah", align: "center" },
-    { Header: "Jumlah Terkirim", accessor: "dkeluar_terkirim", align: "center" },
-    { Header: "Jumlah Sisa", accessor: "dkeluar_sisa", align: "center" },
-    { Header: "Proses Approve", accessor: "dkeluar_needapprovekirim", align: "center" },
-    { Header: "Jumlah rusak tercatat", accessor: "dkeluar_rusak", align: "center" },
-    { Header: "Jumlah rusak", accessor: "jumlah_rusak", align: "center" },
-  ];
-
-  const rows = detailKeluar.map((item) => ({
-    barang: item.barang.barang_nama,
-    d_barang: item.d_barang.detailbarang_batch,
-    dkeluar_jumlah: item.dkeluar_jumlah,
-    dkeluar_terkirim: item.dkeluar_terkirim,
-    dkeluar_sisa: item.dkeluar_sisa,
-    dkeluar_needapprovekirim: item.dkeluar_needapprovekirim,
-    dkeluar_rusak: item.dkeluar_rusak,
-    jumlah_rusak: (
-      <MDInput
-        type="number"
-        value={jumlahRusakByItem[item.dkeluar_id] || 0}
-        inputProps={{ min: 0 }}
-        error={isInputInvalid[item.dkeluar_id]}
-        helperText={isInputInvalid[item.dkeluar_id] ? "Jumlah melebihi stok yang tersedia" : ""}
-        onChange={(e) => handleChangeJumlahKirim(item.dkeluar_id, e.target.value)}
-        sx={{ "& .MuiInput-root": { borderColor: isInputInvalid[item.dkeluar_id] ? "red" : "" } }}
-      ></MDInput>
-    ),
-  }));
+  let columns;
+  let rows;
+  if (headerKeluar.hkeluar_status == 3) {
+    columns = [
+      { Header: "Nama Barang", accessor: "barang", width: "10%", align: "left" },
+      { Header: "Batch Barang", accessor: "d_barang", align: "center" },
+      { Header: "Jumlah Barang", accessor: "dkeluar_jumlah", align: "center" },
+      { Header: "Jumlah Approve", accessor: "jumlah_rusak", align: "center" },
+    ];
+    rows = detailKeluar.map((item) => ({
+      barang: item.barang.barang_nama,
+      d_barang: item.d_barang.detailbarang_batch,
+      dkeluar_jumlah: item.dkeluar_jumlah,
+      jumlah_rusak: (
+        <MDInput
+          type="number"
+          value={jumlahRusakByItem[item.dkeluar_id] || 0}
+          inputProps={{ min: 0 }}
+          error={isInputInvalid[item.dkeluar_id]}
+          helperText={isInputInvalid[item.dkeluar_id] ? "Jumlah melebihi stok yang tersedia" : ""}
+          onChange={(e) => handleChangeJumlahKirim(item.dkeluar_id, e.target.value)}
+          sx={{
+            "& .MuiInput-root": { borderColor: isInputInvalid[item.dkeluar_id] ? "red" : "" },
+          }}
+        ></MDInput>
+      ),
+    }));
+  } else {
+    columns = [
+      { Header: "Nama Barang", accessor: "barang", width: "10%", align: "left" },
+      { Header: "Batch Barang", accessor: "d_barang", align: "center" },
+      { Header: "Jumlah Barang", accessor: "dkeluar_jumlah", align: "center" },
+      { Header: "Jumlah Approve", accessor: "jumlah_approve", align: "center" },
+      { Header: "Jumlah Terkirim", accessor: "dkeluar_terkirim", align: "center" },
+      {
+        Header: "Proses Proses Approve Kirim",
+        accessor: "dkeluar_needapprovekirim",
+        align: "center",
+      },
+      { Header: "Jumlah Sisa", accessor: "dkeluar_sisa", align: "center" },
+      { Header: "Jumlah Rusak", accessor: "rusak", align: "center" },
+      { Header: "Input Rusak", accessor: "jumlah_rusak", align: "center" },
+    ];
+    rows = detailKeluar.map((item) => ({
+      barang: item.barang.barang_nama,
+      d_barang: item.d_barang.detailbarang_batch,
+      dkeluar_jumlah: item.dkeluar_jumlah,
+      jumlah_approve: item.dkeluar_jumlahapprove,
+      dkeluar_terkirim: item.dkeluar_terkirim,
+      dkeluar_sisa: item.dkeluar_sisa,
+      dkeluar_needapprovekirim: item.dkeluar_needapprovekirim,
+      rusak: item.dkeluar_rusak,
+      // dkeluar_rusak: item.dkeluar_rusak,
+      // jumlah_rusak: (
+      //   <MDInput
+      //     type="number"
+      //     value={jumlahRusakByItem[item.dkeluar_id] || 0}
+      //     inputProps={{ min: 0 }}
+      //     error={isInputInvalid[item.dkeluar_id]}
+      //     helperText={isInputInvalid[item.dkeluar_id] ? "Jumlah melebihi stok yang tersedia" : ""}
+      //     onChange={(e) => handleChangeJumlahKirim(item.dkeluar_id, e.target.value)}
+      //     sx={{ "& .MuiInput-root": { borderColor: isInputInvalid[item.dkeluar_id] ? "red" : "" } }}
+      //   ></MDInput>
+      // ),
+      jumlah_rusak: (
+        <MDInput
+          type="number"
+          value={jumlahRusakByItem[item.dkeluar_id] || 0}
+          inputProps={{ min: 0 }}
+          error={isInputInvalid[item.dkeluar_id]}
+          helperText={isInputInvalid[item.dkeluar_id] ? "Jumlah melebihi stok yang tersedia" : ""}
+          onChange={(e) => handleChangeJumlahKirim(item.dkeluar_id, e.target.value)}
+          sx={{
+            "& .MuiInput-root": { borderColor: isInputInvalid[item.dkeluar_id] ? "red" : "" },
+          }}
+        ></MDInput>
+      ),
+    }));
+  }
 
   const renderSuccessSBRusak = (
     <MDSnackbar

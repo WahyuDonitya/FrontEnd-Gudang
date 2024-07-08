@@ -50,7 +50,7 @@ function PengirimanBarang() {
 
   const getGudang = async () => {
     try {
-      const response = await axios.get("https://api.tahupoosby.com/api/gudang", {
+      const response = await axios.get("http://127.0.0.1:8000/api/gudang", {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
@@ -68,14 +68,14 @@ function PengirimanBarang() {
       let response;
       if (GudangPick == null) {
         response = await axios.get(
-          `https://api.tahupoosby.com/api/report/get-report-pengiriman-barang/${datePickerAwal}/${datePickerAkhir}`,
+          `http://127.0.0.1:8000/api/report/get-report-pengiriman-barang/${datePickerAwal}/${datePickerAkhir}`,
           {
             headers: { Authorization: `Bearer ${accessToken}` },
           }
         );
       } else {
         response = await axios.get(
-          `https://api.tahupoosby.com/api/report/get-report-pengiriman-barang/${datePickerAwal}/${datePickerAkhir}/${GudangPick}`,
+          `http://127.0.0.1:8000/api/report/get-report-pengiriman-barang/${datePickerAwal}/${datePickerAkhir}/${GudangPick}`,
           {
             headers: { Authorization: `Bearer ${accessToken}` },
           }

@@ -73,7 +73,7 @@ function MasterPositioning() {
 
   const getRows = async () => {
     try {
-      const response = await axios.get(`https://api.tahupoosby.com/api/positioning/get-rows`, {
+      const response = await axios.get(`http://127.0.0.1:8000/api/positioning/get-rows`, {
         headers: { Authorization: `Bearer ${accessToken}` },
       });
 
@@ -85,12 +85,9 @@ function MasterPositioning() {
 
   const getPositioning = async () => {
     try {
-      const response = await axios.get(
-        "https://api.tahupoosby.com/api/positioning/get-positioning",
-        {
-          headers: { Authorization: `Bearer ${accessToken}` },
-        }
-      );
+      const response = await axios.get("http://127.0.0.1:8000/api/positioning/get-positioning", {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
       console.log(response.data);
       setPosition(response.data);
     } catch (error) {
@@ -101,12 +98,9 @@ function MasterPositioning() {
   const handleDelete = async (rack) => {
     if (window.confirm("Anda yakin ingin menghapus barang ini?")) {
       try {
-        await axios.delete(
-          `https://api.tahupoosby.com/api/positioning/delete-positioning/${rack}`,
-          {
-            headers: { Authorization: `Bearer ${accessToken}` },
-          }
-        );
+        await axios.delete(`http://127.0.0.1:8000/api/positioning/delete-positioning/${rack}`, {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        });
         getPositioning();
       } catch (error) {
         console.error("Terjadi kesalahan saat menghapus barang:", error);
@@ -117,7 +111,7 @@ function MasterPositioning() {
   const handleDeleteRow = async (row) => {
     if (window.confirm("Anda yakin ingin menghapus barang ini?")) {
       try {
-        await axios.delete(`https://api.tahupoosby.com/api/positioning/delete-row/${row}`, {
+        await axios.delete(`http://127.0.0.1:8000/api/positioning/delete-row/${row}`, {
           headers: { Authorization: `Bearer ${accessToken}` },
         });
         getRows();
@@ -155,7 +149,7 @@ function MasterPositioning() {
         }
         try {
           const response = await axios.post(
-            `https://api.tahupoosby.com/api/positioning/add-rows`,
+            `http://127.0.0.1:8000/api/positioning/add-rows`,
             { row_name: namaRows },
             { headers: { Authorization: `Bearer ${accessToken}` } }
           );
@@ -177,7 +171,7 @@ function MasterPositioning() {
       if (window.confirm("Apakah data yang anda masukkan sudah benar?")) {
         try {
           const response = await axios.post(
-            `https://api.tahupoosby.com/api/positioning/add-sel-level`,
+            `http://127.0.0.1:8000/api/positioning/add-sel-level`,
             {
               row_id: selectedRows,
               rack_bay: namaRak,

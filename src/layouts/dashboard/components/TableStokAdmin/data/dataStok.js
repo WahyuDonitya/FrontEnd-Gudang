@@ -31,7 +31,7 @@ export default function dataStokAdmin() {
   const getStok = async () => {
     try {
       const response = await axios.get(
-        "https://api.tahupoosby.com/api/detailbarang/get-stok-barang-all-gudang-groupby",
+        "http://127.0.0.1:8000/api/detailbarang/get-stok-barang-all-gudang-groupby",
         {
           headers: { Authorization: `Bearer ${accessToken}` },
         }

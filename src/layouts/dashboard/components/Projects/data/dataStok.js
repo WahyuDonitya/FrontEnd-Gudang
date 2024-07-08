@@ -33,7 +33,7 @@ export default function data() {
   const getStok = async () => {
     try {
       const response = await axios.get(
-        "https://api.tahupoosby.com/api/detailbarang/get-detail-barang-stok-by-gudang",
+        "http://127.0.0.1:8000/api/detailbarang/get-detail-barang-stok-by-gudang",
         {
           headers: { Authorization: `Bearer ${accessToken}` },
         }

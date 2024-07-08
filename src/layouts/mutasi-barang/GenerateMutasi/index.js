@@ -97,7 +97,7 @@ function GenerateMutasi() {
 
   const getGudang = async () => {
     try {
-      const response = await axios.get("https://api.tahupoosby.com/api/gudang", {
+      const response = await axios.get("http://127.0.0.1:8000/api/gudang", {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
@@ -111,7 +111,7 @@ function GenerateMutasi() {
 
   const getSupplier = async () => {
     try {
-      const response = await axios.get("https://api.tahupoosby.com/api/supplier", {
+      const response = await axios.get("http://127.0.0.1:8000/api/supplier", {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
@@ -125,7 +125,7 @@ function GenerateMutasi() {
 
   const getBarang = async () => {
     try {
-      const response = await axios.get("https://api.tahupoosby.com/api/barang", {
+      const response = await axios.get("http://127.0.0.1:8000/api/barang", {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
@@ -162,7 +162,7 @@ function GenerateMutasi() {
 
           console.log("hasil data kirim ", dataKirim);
           const response = await axios.post(
-            "https://api.tahupoosby.com/api/gudang/transaksi-transfer-barang",
+            "http://127.0.0.1:8000/api/gudang/transaksi-transfer-barang",
             dataKirim,
             {
               headers: {
@@ -190,7 +190,7 @@ function GenerateMutasi() {
 
   const handleChangeBarang = async (barangID) => {
     const response = await axios.get(
-      `https://api.tahupoosby.com/api/detailbarang/get-detail-by-barang-id/${barangID}`,
+      `http://127.0.0.1:8000/api/detailbarang/get-detail-by-barang-id/${barangID}`,
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,
@@ -212,7 +212,7 @@ function GenerateMutasi() {
 
     try {
       const response = await axios.get(
-        `https://api.tahupoosby.com/api/detailbarang/get-detail-barang-by-batch/${batchlok}/${inputBarangId}/${gudangAwal}`,
+        `http://127.0.0.1:8000/api/detailbarang/get-detail-barang-by-batch/${batchlok}/${inputBarangId}/${gudangAwal}`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,

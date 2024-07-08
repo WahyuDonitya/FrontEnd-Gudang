@@ -100,7 +100,7 @@ function DetailBarangMasuk() {
   const getId = async () => {
     try {
       const id = await axios.get(
-        `https://api.tahupoosby.com/api/detailbarang/get-barang-masuk-id/${dataId}`,
+        `http://127.0.0.1:8000/api/detailbarang/get-barang-masuk-id/${dataId}`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -109,7 +109,7 @@ function DetailBarangMasuk() {
       );
 
       const response = await axios.get(
-        `https://api.tahupoosby.com/api/detailbarang/get-dbarang-masuk/${id.data.hmasuk_id}`,
+        `http://127.0.0.1:8000/api/detailbarang/get-dbarang-masuk/${id.data.hmasuk_id}`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -134,7 +134,7 @@ function DetailBarangMasuk() {
         };
         // console.log(datatosend);
         const response = await axios.post(
-          "https://api.tahupoosby.com/api/detailbarang/approval-barang-masuk",
+          "http://127.0.0.1:8000/api/detailbarang/approval-barang-masuk",
           datatosend,
           {
             headers: { Authorization: `Bearer ${accessToken}` },
@@ -163,7 +163,7 @@ function DetailBarangMasuk() {
         };
         console.log(datatosend);
         const response = await axios.post(
-          "https://api.tahupoosby.com/api/detailbarang/reject-barang-masuk",
+          "http://127.0.0.1:8000/api/detailbarang/reject-barang-masuk",
           datatosend,
           {
             headers: { Authorization: `Bearer ${accessToken}` },
@@ -194,6 +194,7 @@ function DetailBarangMasuk() {
     { Header: "Nama Barang", accessor: "barang.barang_nama", width: "10%", align: "left" },
     { Header: "Exp Barang", accessor: "detailbarang_expdate", align: "center" },
     { Header: "Batch Barang", accessor: "detailbarang_batch", align: "center" },
+    { Header: "Batch Produksi", accessor: "detailbarang_batchproduksi", align: "center" },
     { Header: "Jumlah Barang Datang", accessor: "detailbarang_stokmasuk", align: "center" },
     { Header: "Jumlah Barang Rusak", accessor: "detailbarang_jumlahrusakmasuk", align: "center" },
     { Header: "Jumlah Barang Pack", accessor: "jumlahpack", align: "center" },
@@ -216,6 +217,7 @@ function DetailBarangMasuk() {
       barang: { barang_nama: item.barang.barang_nama },
       detailbarang_expdate: dayjs(item.detailbarang_expdate).format("DD-MM-YYYY"),
       detailbarang_batch: item.detailbarang_batch,
+      detailbarang_batchproduksi: dayjs(item.detailbarang_batchproduksi).format("DD-MM-YYYY"),
       detailbarang_stokmasuk: item.detailbarang_stokmasuk,
       detailbarang_jumlahrusakmasuk: item.detailbarang_jumlahrusakmasuk,
       detailbarang_stok: item.detailbarang_stok,

@@ -87,7 +87,7 @@ const PrintableFormBarangKeluar = ({ detailKeluar, headerKeluar }) => {
                 {item.d_barang.detailbarang_batch}
               </td>
               <td style={{ border: "1px solid #ddd", padding: "8px", textAlign: "center" }}>
-                {item.dkeluar_jumlah}
+                {item.dkeluar_jumlahapprove}
               </td>
               <td style={{ border: "1px solid #ddd", padding: "8px", textAlign: "center" }}>
                 {item.dkeluar_terkirim}

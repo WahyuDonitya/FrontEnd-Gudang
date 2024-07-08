@@ -85,12 +85,9 @@ function ListSuratJalan() {
   //    API
   const getApprovalList = async () => {
     try {
-      const response = await axios.get(
-        "https://api.tahupoosby.com/api/suratjalan/get-surat-jalan-all",
-        {
-          headers: { Authorization: `Bearer ${accessToken}` },
-        }
-      );
+      const response = await axios.get("http://127.0.0.1:8000/api/suratjalan/get-surat-jalan-all", {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
 
       setApprovalList(response.data);
       setFilteredApprovalList(response.data);
@@ -103,7 +100,7 @@ function ListSuratJalan() {
   const getApprovalList2 = async () => {
     try {
       const response = await axios.get(
-        "https://api.tahupoosby.com/api/suratjalan/get-surat-jalan-transfer-all",
+        "http://127.0.0.1:8000/api/suratjalan/get-surat-jalan-transfer-all",
         {
           headers: { Authorization: `Bearer ${accessToken}` },
         }
@@ -173,6 +170,7 @@ function ListSuratJalan() {
     { Header: "Dari Gudang", accessor: "gudang.gudang_nama", align: "center" },
     { Header: "Tanggal Kirim", accessor: "suratjalan_tanggalkirim", align: "center" },
     { Header: "Status", accessor: "status", align: "center" },
+    { Header: "Status Rusak", accessor: "statusrusak", align: "center" },
     { Header: "Pembuat", accessor: "pengguna_generate.pengguna_nama", align: "center" },
     { Header: "Diputus Oleh", accessor: "pengguna_action.pengguna_nama", align: "center" },
     { Header: "pengirim", accessor: "pengirim", align: "center" },
@@ -193,6 +191,16 @@ function ListSuratJalan() {
     suratjalan_tanggalkirim: dayjs(item.suratjalan_tanggalkirim).format("DD-MM-YYYY"),
     suratjalan_comment: item.suratjalan_comment || "-",
     pengirim: item.suratjalan_pengirim || "-",
+    statusrusak:
+      item.isDamaged === 1 ? (
+        <MDBox ml={-1}>
+          <MDBadge badgeContent="Terdapat Rusak" color="warning" variant="gradient" size="sm" />
+        </MDBox>
+      ) : (
+        <MDBox ml={-1}>
+          <MDBadge badgeContent="Tidak ada Rusak" color="success" variant="gradient" size="sm" />
+        </MDBox>
+      ),
     status:
       item.suratjalan_status === 1 ? (
         <MDBox ml={-1}>

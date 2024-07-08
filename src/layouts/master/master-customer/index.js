@@ -61,7 +61,7 @@ function MasterCustomer() {
       try {
         if (customerIdEdit) {
           const response = await axios.put(
-            `https://api.tahupoosby.com/api/customer/${customerIdEdit}`,
+            `http://127.0.0.1:8000/api/customer/${customerIdEdit}`,
             {
               customer_nama: customer_nama,
               customer_telepon: customer_telepon,
@@ -80,7 +80,7 @@ function MasterCustomer() {
             alert("terdapat inputan yang kosong");
           } else {
             const add = await axios.post(
-              `https://api.tahupoosby.com/api/customer`,
+              `http://127.0.0.1:8000/api/customer`,
               {
                 customer_nama: customer_nama,
                 customer_alamat: customer_alamat,
@@ -108,7 +108,7 @@ function MasterCustomer() {
 
   const getGudang = async () => {
     try {
-      const response = await axios.get(`https://api.tahupoosby.com/api/gudang`, {
+      const response = await axios.get(`http://127.0.0.1:8000/api/gudang`, {
         headers: { Authorization: `Bearer ${accessToken}` },
       });
 
@@ -120,7 +120,7 @@ function MasterCustomer() {
 
   const getCustomer = async () => {
     try {
-      const response = await axios.get("https://api.tahupoosby.com/api/customer", {
+      const response = await axios.get("http://127.0.0.1:8000/api/customer", {
         headers: { Authorization: `Bearer ${accessToken}` },
       });
 
@@ -133,7 +133,7 @@ function MasterCustomer() {
   const handleDelete = async (customerID) => {
     if (window.confirm("Anda yakin ingin menghapus barang ini?")) {
       try {
-        await axios.delete(`https://api.tahupoosby.com/api/customer/${customerID}`, {
+        await axios.delete(`http://127.0.0.1:8000/api/customer/${customerID}`, {
           headers: { Authorization: `Bearer ${accessToken}` },
         });
         getCustomer();
@@ -167,7 +167,7 @@ function MasterCustomer() {
       try {
         // Upload file to backend
         const response = await axios.post(
-          "https://api.tahupoosby.com/api/upload-excel/upload-customer",
+          "http://127.0.0.1:8000/api/upload-excel/upload-customer",
           formData,
           {
             headers: {

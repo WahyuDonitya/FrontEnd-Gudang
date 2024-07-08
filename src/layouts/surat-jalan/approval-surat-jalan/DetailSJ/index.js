@@ -101,14 +101,14 @@ function DetailSJ() {
 
   const getId = async () => {
     try {
-      const id = await axios.get(`https://api.tahupoosby.com/api/suratjalan/get-sj-id/${dataId}`, {
+      const id = await axios.get(`http://127.0.0.1:8000/api/suratjalan/get-sj-id/${dataId}`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
       });
 
       const response = await axios.get(
-        `https://api.tahupoosby.com/api/suratjalan/get-dsj/${id.data.suratjalan_id}`,
+        `http://127.0.0.1:8000/api/suratjalan/get-dsj/${id.data.suratjalan_id}`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -131,7 +131,7 @@ function DetailSJ() {
         };
         console.log(datatosend);
         const response = await axios.post(
-          "https://api.tahupoosby.com/api/suratjalan/suratjalan-approval",
+          "http://127.0.0.1:8000/api/suratjalan/suratjalan-approval",
           datatosend,
           {
             headers: { Authorization: `Bearer ${accessToken}` },
@@ -163,7 +163,7 @@ function DetailSJ() {
         };
         console.log(datatosend);
         const response = await axios.post(
-          "https://api.tahupoosby.com/api/suratjalan/suratjalan-reject",
+          "http://127.0.0.1:8000/api/suratjalan/suratjalan-reject",
           datatosend,
           {
             headers: { Authorization: `Bearer ${accessToken}` },
@@ -189,7 +189,7 @@ function DetailSJ() {
         alert("nama harus diisi");
       } else {
         const response = await axios.post(
-          `https://api.tahupoosby.com/api/suratjalan/kirim-suratjalan`,
+          `http://127.0.0.1:8000/api/suratjalan/kirim-suratjalan`,
           {
             suratjalan_nota: headerSuratJalan.suratjalan_nota,
             nama_pengirim: nama,
@@ -231,7 +231,7 @@ function DetailSJ() {
       if (selectedBarang.length === 0) {
         if (window.confirm("apakah tidak ada data yang rusak saat pengiriman")) {
           const response = await axios.post(
-            `https://api.tahupoosby.com/api/suratjalan/selesai-suratjalan`,
+            `http://127.0.0.1:8000/api/suratjalan/selesai-suratjalan`,
             {
               suratjalan_nota: headerSuratJalan.suratjalan_nota,
             },
@@ -249,14 +249,14 @@ function DetailSJ() {
             return;
           }
           const response = await axios.post(
-            `https://api.tahupoosby.com/api/suratjalan/selesai-suratjalan`,
+            `http://127.0.0.1:8000/api/suratjalan/selesai-suratjalan`,
             {
               suratjalan_nota: headerSuratJalan.suratjalan_nota,
             },
             { headers: { Authorization: `Bearer ${accessToken}` } }
           );
           const res = await axios.post(
-            `https://api.tahupoosby.com/api/suratjalan/surat-jalan-rusak`,
+            `http://127.0.0.1:8000/api/suratjalan/surat-jalan-rusak`,
             {
               barang_rusak: selectedBarang,
               dataId: dataId,
@@ -301,7 +301,7 @@ function DetailSJ() {
         }
 
         const res = await axios.post(
-          `https://api.tahupoosby.com/api/suratjalan/surat-jalan-rusak`,
+          `http://127.0.0.1:8000/api/suratjalan/surat-jalan-rusak`,
           {
             barang_rusak: selectedBarang,
             dataId: dataId,

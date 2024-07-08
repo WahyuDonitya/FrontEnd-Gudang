@@ -75,14 +75,14 @@ function ListTempatBarang() {
     try {
       if (!gudangId) {
         const res = await axios.get(
-          `https://api.tahupoosby.com/api/positioning/get-position-by-barang/${dataId}`,
+          `http://127.0.0.1:8000/api/positioning/get-position-by-barang/${dataId}`,
           { headers: { Authorization: `Bearer ${accessToken}` } }
         );
         // console.log(res.data);
         setTempatBarang(res.data);
       } else {
         const res = await axios.get(
-          `https://api.tahupoosby.com/api/positioning/get-position-by-barang/${dataId}/${gudangId}`,
+          `http://127.0.0.1:8000/api/positioning/get-position-by-barang/${dataId}/${gudangId}`,
           { headers: { Authorization: `Bearer ${accessToken}` } }
         );
         // console.log(res.data);
@@ -96,7 +96,7 @@ function ListTempatBarang() {
   const getPositionAvailable = async () => {
     try {
       const response = await axios.get(
-        "https://api.tahupoosby.com/api/positioning/get-positioning-available",
+        "http://127.0.0.1:8000/api/positioning/get-positioning-available",
         { headers: { Authorization: `Bearer ${accessToken}` } }
       );
       // console.log(response.data);
@@ -114,7 +114,7 @@ function ListTempatBarang() {
         if (window.confirm("Apakah data yang anda masukkan sudah benar?")) {
           // alert(positionDipilih);
           const response = await axios.post(
-            "https://api.tahupoosby.com/api/positioning/change-position",
+            "http://127.0.0.1:8000/api/positioning/change-position",
             {
               detailbarang_id: detailBarangId,
               rack_id: positionDipilih,

@@ -66,7 +66,7 @@ function ListBarangKeluar() {
   const getApprovalList = async () => {
     try {
       const response = await axios.get(
-        "https://api.tahupoosby.com/api/transaksi-barang/getAll-hkeluar",
+        "http://127.0.0.1:8000/api/transaksi-barang/getAll-hkeluar",
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -113,6 +113,7 @@ function ListBarangKeluar() {
     { Header: "Gudang", accessor: "gudang.gudang_nama", align: "center" },
     { Header: "Tanggal Keluar", accessor: "hkeluar_tanggal", align: "center" },
     { Header: "Status", accessor: "status", align: "center" },
+    { Header: "Status Approval", accessor: "statusapproval", align: "center" },
     { Header: "Pembuat", accessor: "pengguna_generate.pengguna_nama", align: "center" },
     { Header: "Diputus Oleh", accessor: "pengguna_action.pengguna_nama", align: "center" },
     { Header: "Comment", accessor: "hkeluar_comment", align: "center" },
@@ -167,6 +168,16 @@ function ListBarangKeluar() {
       ) : (
         <MDBox ml={-1}>
           <MDBadge badgeContent="Ditolak" color="warning" variant="gradient" size="sm" />
+        </MDBox>
+      ),
+    statusapproval:
+      item.isPartial != null ? (
+        <MDBox ml={-1}>
+          <MDBadge badgeContent="Partial" color="info" variant="gradient" size="sm" />
+        </MDBox>
+      ) : (
+        <MDBox ml={-1}>
+          <MDBadge badgeContent="Fully" color="success" variant="gradient" size="sm" />
         </MDBox>
       ),
     action: (

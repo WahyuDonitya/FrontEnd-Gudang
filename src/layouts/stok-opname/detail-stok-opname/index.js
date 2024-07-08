@@ -67,7 +67,7 @@ function DetailStokOpname() {
   const getId = async () => {
     try {
       const id = await axios.get(
-        `https://api.tahupoosby.com/api/stok-opname/get-stok-opname/${dataId}`,
+        `http://127.0.0.1:8000/api/stok-opname/get-stok-opname/${dataId}`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -76,7 +76,7 @@ function DetailStokOpname() {
       );
 
       const response = await axios.get(
-        `https://api.tahupoosby.com/api/stok-opname/get-detail-opname/${id.data.opname_id}`,
+        `http://127.0.0.1:8000/api/stok-opname/get-detail-opname/${id.data.opname_id}`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -85,7 +85,7 @@ function DetailStokOpname() {
       );
 
       const res = await axios.get(
-        `https://api.tahupoosby.com/api/stok-opname/get-penyesuaian/${id.data.opname_id}`,
+        `http://127.0.0.1:8000/api/stok-opname/get-penyesuaian/${id.data.opname_id}`,
         {
           headers: { Authorization: `Bearer ${accessToken}` },
         }
@@ -103,7 +103,7 @@ function DetailStokOpname() {
   const getDetailBarang = async (opname_id) => {
     try {
       const res = await axios.get(
-        `https://api.tahupoosby.com/api/stok-opname/get-detail-barang/${opname_id}`,
+        `http://127.0.0.1:8000/api/stok-opname/get-detail-barang/${opname_id}`,
         {
           headers: { Authorization: `Bearer ${accessToken}` },
         }
@@ -118,7 +118,7 @@ function DetailStokOpname() {
     if (window.confirm("Apakah anda ingin melakukan proses Approve?")) {
       try {
         const res = await axios.post(
-          `https://api.tahupoosby.com/api/stok-opname/approve-stok-opname`,
+          `http://127.0.0.1:8000/api/stok-opname/approve-stok-opname`,
           { opname_id: headerBarangMasuk.opname_id },
           { headers: { Authorization: `Bearer ${accessToken}` } }
         );
@@ -140,7 +140,7 @@ function DetailStokOpname() {
       }
       try {
         const res = await axios.post(
-          `https://api.tahupoosby.com/api/stok-opname/reject-stok-opname`,
+          `http://127.0.0.1:8000/api/stok-opname/reject-stok-opname`,
           { opname_id: headerBarangMasuk.opname_id },
           { headers: { Authorization: `Bearer ${accessToken}` } }
         );
@@ -180,7 +180,7 @@ function DetailStokOpname() {
     try {
       if (headerBarangMasuk.opname_status == 0) {
         const response = await axios.post(
-          `https://api.tahupoosby.com/api/stok-opname/update-status-ongoing`,
+          `http://127.0.0.1:8000/api/stok-opname/update-status-ongoing`,
           { opname_id: headerBarangMasuk.opname_id },
           { headers: { Authorization: `Bearer ${accessToken}` } }
         );

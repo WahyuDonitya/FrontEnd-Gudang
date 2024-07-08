@@ -59,7 +59,7 @@ function MasterGudang() {
   // API
   const getAllJenisGudang = async () => {
     try {
-      const response = await axios.get("https://api.tahupoosby.com/api/jenisgudang", {
+      const response = await axios.get("http://127.0.0.1:8000/api/jenisgudang", {
         headers: { Authorization: `Bearer ${accessToken}` },
       });
       setJenisGudang(response.data);
@@ -70,7 +70,7 @@ function MasterGudang() {
 
   const getGudang = async () => {
     try {
-      const response = await axios.get("https://api.tahupoosby.com/api/gudang", {
+      const response = await axios.get("http://127.0.0.1:8000/api/gudang", {
         headers: { Authorization: `Bearer ${accessToken}` },
       });
 
@@ -83,7 +83,7 @@ function MasterGudang() {
   const handleDelete = async (gudangId) => {
     if (window.confirm("Anda yakin ingin menghapus barang ini?")) {
       try {
-        await axios.delete(`https://api.tahupoosby.com/api/gudang/${gudangId}`, {
+        await axios.delete(`http://127.0.0.1:8000/api/gudang/${gudangId}`, {
           headers: { Authorization: `Bearer ${accessToken}` },
         });
         getGudang();
@@ -115,7 +115,7 @@ function MasterGudang() {
       try {
         if (gudangEditId) {
           const edit = await axios.put(
-            `https://api.tahupoosby.com/api/gudang/${gudangEditId}`,
+            `http://127.0.0.1:8000/api/gudang/${gudangEditId}`,
             {
               gudang_nama: gudang_nama,
             },
@@ -131,7 +131,7 @@ function MasterGudang() {
               jenis_gudang_id: parseInt(jenisGudangPickID),
               gudang_alamat: alamat,
             };
-            const add = await axios.post(`https://api.tahupoosby.com/api/gudang`, datakirim, {
+            const add = await axios.post(`http://127.0.0.1:8000/api/gudang`, datakirim, {
               headers: { Authorization: `Bearer ${accessToken}` },
             });
           }
@@ -173,7 +173,7 @@ function MasterGudang() {
       try {
         // Upload file to backend
         const response = await axios.post(
-          "https://api.tahupoosby.com/api/upload-excel/upload-gudang",
+          "http://127.0.0.1:8000/api/upload-excel/upload-gudang",
           formData,
           {
             headers: {

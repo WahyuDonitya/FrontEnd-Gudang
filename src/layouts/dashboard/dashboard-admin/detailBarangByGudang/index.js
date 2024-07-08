@@ -30,7 +30,7 @@ function DetailBarangByGudang() {
   const getStok = async () => {
     try {
       const response = await axios.get(
-        `https://api.tahupoosby.com/api/detailbarang/get-detail-barang-stok-by-gudangid/${dataId}`,
+        `http://127.0.0.1:8000/api/detailbarang/get-detail-barang-stok-by-gudangid/${dataId}`,
         { headers: { Authorization: `Bearer ${accessToken}` } }
       );
       setStok(response.data);

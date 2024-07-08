@@ -30,7 +30,7 @@ export default function data() {
   const getApprovalList = async () => {
     try {
       const response = await axios.get(
-        "https://api.tahupoosby.com/api/gudang/get-transaksi/get-header-rejected-mutasi",
+        "http://127.0.0.1:8000/api/gudang/get-transaksi/get-header-rejected-mutasi",
         {
           headers: { Authorization: `Bearer ${accessToken}` },
         }

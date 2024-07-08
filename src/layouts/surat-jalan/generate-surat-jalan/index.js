@@ -81,7 +81,7 @@ function GenerateSuratJalan() {
   const getHkeluar = async () => {
     try {
       const response = await axios.get(
-        "https://api.tahupoosby.com/api/suratjalan/get-hkeluar-approved",
+        "http://127.0.0.1:8000/api/suratjalan/get-hkeluar-approved",
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -98,7 +98,7 @@ function GenerateSuratJalan() {
   const getHtransfer = async () => {
     try {
       const response = await axios.get(
-        "https://api.tahupoosby.com/api/suratjalan/get-htransfer-approved",
+        "http://127.0.0.1:8000/api/suratjalan/get-htransfer-approved",
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -117,7 +117,7 @@ function GenerateSuratJalan() {
       setSelectedHkeluar(newValue);
       try {
         const response = await axios.get(
-          `https://api.tahupoosby.com/api/transaksi-barang/get-dkeluar/${newValue.hkeluar_id}`,
+          `http://127.0.0.1:8000/api/transaksi-barang/get-dkeluar/${newValue.hkeluar_id}`,
           { headers: { Authorization: `Bearer ${accessToken}` } }
         );
 
@@ -140,7 +140,7 @@ function GenerateSuratJalan() {
       console.log(newValue.htransfer_barang_id);
       try {
         const response = await axios.get(
-          `https://api.tahupoosby.com/api/suratjalan/get-dtransfer-approved/${newValue.htransfer_barang_id}`,
+          `http://127.0.0.1:8000/api/suratjalan/get-dtransfer-approved/${newValue.htransfer_barang_id}`,
           { headers: { Authorization: `Bearer ${accessToken}` } }
         );
         setListBarangTransfer(response.data);
@@ -197,7 +197,7 @@ function GenerateSuratJalan() {
           };
 
           const response = await axios.post(
-            "https://api.tahupoosby.com/api/suratjalan/generate-surat-jalan",
+            "http://127.0.0.1:8000/api/suratjalan/generate-surat-jalan",
             dataToSend,
             { headers: { Authorization: `Bearer ${accessToken}` } }
           );
@@ -245,7 +245,7 @@ function GenerateSuratJalan() {
         };
 
         const response = await axios.post(
-          "https://api.tahupoosby.com/api/suratjalan/generate-transfer-surat-jalan",
+          "http://127.0.0.1:8000/api/suratjalan/generate-transfer-surat-jalan",
           dataToSend,
           { headers: { Authorization: `Bearer ${accessToken}` } }
         );

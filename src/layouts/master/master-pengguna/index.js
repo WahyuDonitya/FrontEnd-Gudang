@@ -76,7 +76,7 @@ function MasterPengguna() {
   // API
   const getAllGudang = async () => {
     try {
-      const response = await axios.get("https://api.tahupoosby.com/api/gudang", {
+      const response = await axios.get("http://127.0.0.1:8000/api/gudang", {
         headers: { Authorization: `Bearer ${accessToken}` },
       });
       setGudang(response.data);
@@ -87,7 +87,7 @@ function MasterPengguna() {
 
   const getAllRole = async () => {
     try {
-      const response = await axios.get("https://api.tahupoosby.com/api/role", {
+      const response = await axios.get("http://127.0.0.1:8000/api/role", {
         headers: { Authorization: `Bearer ${accessToken}` },
       });
       setRole(response.data);
@@ -131,7 +131,7 @@ function MasterPengguna() {
           };
 
           console.log(datakirim);
-          const add = await axios.post(`https://api.tahupoosby.com/api/pengguna`, datakirim, {
+          const add = await axios.post(`http://127.0.0.1:8000/api/pengguna`, datakirim, {
             headers: { Authorization: `Bearer ${accessToken}` },
           });
           openSuccessSB();

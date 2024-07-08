@@ -35,7 +35,9 @@ function BarangMasuk() {
   const [gudangPick, setGudangPick] = useState(null);
   const [supplierPick, setSupplierPick] = useState(null);
   const [datePicker, setdatePicker] = useState(null);
+  const [datePicker2, setdatePicker2] = useState(null);
   const [batch, setBatch] = useState("");
+  const [batchProduksi, setBatchProduksi] = useState("");
   const [notaSupplier, setNotaSupplier] = useState("");
   const [barangRusak, setBarangRusak] = useState(0);
   const [selectedBarang, setSelectedBarang] = useState(null);
@@ -76,23 +78,9 @@ function BarangMasuk() {
 
   // API
 
-  // const getGudang = async () => {
-  //   try {
-  //     const response = await axios.get("https://api.tahupoosby.com/api/gudang/", {
-  //       headers: {
-  //         Authorization: `Bearer ${accessToken}`,
-  //       },
-  //     });
-  //     // console.log("Data Customer:", response.data);
-  //     setGudangs(response.data);
-  //   } catch (error) {
-  //     console.error("Terjadi kesalahan saat mengambil data Gudang:", error);
-  //   }
-  // };
-
   const getSupplier = async () => {
     try {
-      const response = await axios.get("https://api.tahupoosby.com/api/supplier", {
+      const response = await axios.get("http://127.0.0.1:8000/api/supplier", {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
@@ -106,7 +94,7 @@ function BarangMasuk() {
 
   const getBarang = async () => {
     try {
-      const response = await axios.get("https://api.tahupoosby.com/api/barang", {
+      const response = await axios.get("http://127.0.0.1:8000/api/barang", {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
@@ -139,7 +127,7 @@ function BarangMasuk() {
           };
 
           const response = await axios.post(
-            "https://api.tahupoosby.com/api/detailbarang/add",
+            "http://127.0.0.1:8000/api/detailbarang/add",
             dataKirim,
             {
               headers: {
@@ -169,7 +157,8 @@ function BarangMasuk() {
       isInputInvalid == false &&
       inputBarangNama != null &&
       inputMasukJumlah != null &&
-      datePicker != null
+      datePicker != null &&
+      datePicker2 != null
     ) {
       const barangId = parseInt(inputBarangId);
 
@@ -180,6 +169,7 @@ function BarangMasuk() {
         detailbarang_batch: batch,
         detailbarang_expdate: datePicker,
         detailbarang_jumlahrusakmasuk: barangRusak,
+        detailbarang_batchproduksi: datePicker2,
       };
       dataToSubmit.push(newBarangMasuk);
 
@@ -189,6 +179,7 @@ function BarangMasuk() {
         detailbarang_stok: inputMasukJumlah.toString(),
         detailbarang_batch: batch,
         detailbarang_expdate: datePicker,
+        detailbarang_batchproduksi: datePicker2,
         jumlahrusak: barangRusak.toString(),
       };
 
@@ -201,6 +192,7 @@ function BarangMasuk() {
       setinputMasukJumlah("");
       setBatch("");
       setdatePicker(null);
+      setdatePicker2(null);
       console.log(dataToSubmit);
     } else {
       alert("Gagal menambahkan barang karna masih ada error");
@@ -289,6 +281,7 @@ function BarangMasuk() {
     { Header: "Jumlah barang masuk", accessor: "jumlahmasuk", align: "center" },
     { Header: "Batch Barang", accessor: "batch", align: "center" },
     { Header: "Barang Exp Date", accessor: "exp", align: "center" },
+    { Header: "Barang Production Date", accessor: "prod", align: "center" },
     { Header: "Jumlah Barang Rusak", accessor: "jumlahrusak", align: "center" },
     { Header: "Action", accessor: "action", align: "center" },
   ];
@@ -300,6 +293,7 @@ function BarangMasuk() {
       // jumlahmasuk: item.detailbarang_stok,
       batch: item.detailbarang_batch,
       exp: item.detailbarang_expdate,
+      prod: item.detailbarang_batchproduksi,
       jumlahrusak: (
         <MDInput
           type="number"
@@ -432,7 +426,8 @@ function BarangMasuk() {
               <MDTypography variant="h6" fontWeight="medium">
                 List Barang Masuk
               </MDTypography>
-              <br />
+            </Grid>
+            <Grid item xs={6}>
               {Array.isArray(barangs) && barangs.length > 0 ? (
                 <Autocomplete
                   disablePortal
@@ -469,6 +464,28 @@ function BarangMasuk() {
               />
             </Grid>
             <Grid item xs={6}>
+              <MDTypography variant="h6" fontWeight="small">
+                Batch Produksi
+              </MDTypography>
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DatePicker
+                  fullWidth
+                  sx={{ width: "100%" }}
+                  value={datePicker2}
+                  onChange={(newValue) => {
+                    // Menggunakan format dayjs untuk mengonversi ke "YYYY-MM-DD"
+                    const formattedDate = newValue ? dayjs(newValue).format("YYYY-MM-DD") : "";
+                    setdatePicker2(formattedDate);
+                    const formattedDate2 = newValue ? dayjs(newValue).format("DDMMYYYY") : "";
+                    setBatchProduksi(formattedDate2);
+                  }}
+                />
+              </LocalizationProvider>
+            </Grid>
+            <Grid item xs={6}>
+              <MDTypography variant="h6" fontWeight="small">
+                Exp Date
+              </MDTypography>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DatePicker
                   fullWidth

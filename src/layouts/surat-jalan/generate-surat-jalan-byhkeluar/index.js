@@ -60,7 +60,7 @@ function GenerateSuratJalanByHkeluar() {
   const getHkeluar = async () => {
     try {
       const response = await axios.get(
-        "https://api.tahupoosby.com/api/suratjalan/get-hkeluar-approved",
+        "http://127.0.0.1:8000/api/suratjalan/get-hkeluar-approved",
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -80,7 +80,7 @@ function GenerateSuratJalanByHkeluar() {
       setSelectedHkeluar(newValue);
       try {
         const response = await axios.get(
-          `https://api.tahupoosby.com/api/transaksi-barang/get-dkeluar/${newValue.hkeluar_id}`,
+          `http://127.0.0.1:8000/api/transaksi-barang/get-dkeluar/${newValue.hkeluar_id}`,
           { headers: { Authorization: `Bearer ${accessToken}` } }
         );
 
@@ -138,7 +138,7 @@ function GenerateSuratJalanByHkeluar() {
           };
 
           const response = await axios.post(
-            "https://api.tahupoosby.com/api/suratjalan/generate-surat-jalan",
+            "http://127.0.0.1:8000/api/suratjalan/generate-surat-jalan",
             dataToSend,
             { headers: { Authorization: `Bearer ${accessToken}` } }
           );

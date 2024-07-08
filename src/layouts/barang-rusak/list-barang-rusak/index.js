@@ -68,12 +68,9 @@ function ListBarangRusak() {
   // API
   const getHbarangRusak = async () => {
     try {
-      const response = await axios.get(
-        `https://api.tahupoosby.com/api/barang-rusak/get-hbarang-rusak`,
-        {
-          headers: { Authorization: `Bearer ${accessToken}` },
-        }
-      );
+      const response = await axios.get(`http://127.0.0.1:8000/api/barang-rusak/get-hbarang-rusak`, {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
       setHrusak(response.data);
       setFilteredDataHrusak(response.data);
     } catch (error) {
@@ -85,7 +82,7 @@ function ListBarangRusak() {
     try {
       if (decodedToken.role_id == 2) {
         const response = await axios.post(
-          `https://api.tahupoosby.com/api/barang-rusak/update-sudah-dilihat`,
+          `http://127.0.0.1:8000/api/barang-rusak/update-sudah-dilihat`,
           { hbarangrusak_id: id },
           { headers: { Authorization: `Bearer ${accessToken}` } }
         );

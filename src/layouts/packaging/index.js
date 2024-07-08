@@ -84,7 +84,7 @@ function GeneratePackaging() {
   const getHmasuk = async () => {
     try {
       const response = await axios.get(
-        `https://api.tahupoosby.com/api/detailbarang/get-hbarang-masuk-approved`,
+        `http://127.0.0.1:8000/api/detailbarang/get-hbarang-masuk-approved`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -100,7 +100,7 @@ function GeneratePackaging() {
   const handleChange = async (newValue) => {
     try {
       const response = await axios.get(
-        `https://api.tahupoosby.com/api/detailbarang/get-dbarang-only-tahu-polos/${newValue.hmasuk_id}`,
+        `http://127.0.0.1:8000/api/detailbarang/get-dbarang-only-tahu-polos/${newValue.hmasuk_id}`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -134,7 +134,7 @@ function GeneratePackaging() {
           console.log(datatosend);
 
           const response = await axios.post(
-            "https://api.tahupoosby.com/api/packaging/add-packaging",
+            "http://127.0.0.1:8000/api/packaging/add-packaging",
             datatosend,
             { headers: { Authorization: `Bearer ${accessToken}` } }
           );

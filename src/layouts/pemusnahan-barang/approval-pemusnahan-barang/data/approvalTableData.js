@@ -53,7 +53,7 @@ export default function data() {
   const getApprovalList = async () => {
     try {
       const response = await axios.get(
-        "https://api.tahupoosby.com/api/pemusnahan-barang/get-approval-pemusnahan-barang-list",
+        "http://127.0.0.1:8000/api/pemusnahan-barang/get-approval-pemusnahan-barang-list",
         {
           headers: { Authorization: `Bearer ${accessToken}` },
         }

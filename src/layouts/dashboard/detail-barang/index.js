@@ -99,7 +99,7 @@ function DetailBarang() {
   const getDetailBarang = async () => {
     if (!gudangId) {
       const response = await axios.get(
-        `https://api.tahupoosby.com/api/detailbarang/get-detail-by-barang-id/${dataId}`,
+        `http://127.0.0.1:8000/api/detailbarang/get-detail-by-barang-id/${dataId}`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -109,7 +109,7 @@ function DetailBarang() {
       setDetailBarang(response.data);
     } else {
       const response = await axios.get(
-        `https://api.tahupoosby.com/api/detailbarang/get-detail-by-barang-id/${dataId}/${gudangId}`,
+        `http://127.0.0.1:8000/api/detailbarang/get-detail-by-barang-id/${dataId}/${gudangId}`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -123,7 +123,7 @@ function DetailBarang() {
   const getPositionAvailable = async () => {
     try {
       const response = await axios.get(
-        "https://api.tahupoosby.com/api/positioning/get-positioning-available",
+        "http://127.0.0.1:8000/api/positioning/get-positioning-available",
         { headers: { Authorization: `Bearer ${accessToken}` } }
       );
       // console.log(response.data);
@@ -140,7 +140,7 @@ function DetailBarang() {
       if (window.confirm("Apakah data yang anda masukkan sudah benar?")) {
         try {
           const response = await axios.post(
-            `https://api.tahupoosby.com/api/positioning/add-placement`,
+            `http://127.0.0.1:8000/api/positioning/add-placement`,
             {
               detailbarang_id: detailBarangId,
               rack_id: positionDipilih,
@@ -201,6 +201,7 @@ function DetailBarang() {
       { Header: "No . ", accessor: "nomor", width: "3%", align: "center" },
       { Header: "Batch Barang", accessor: "detailbarang_batch", align: "center" },
       { Header: "Exp Date", accessor: "detailbarang_expdate", align: "center" },
+      { Header: "Batch Produksi", accessor: "detailbarang_batchproduksi", align: "center" },
       { Header: "Jumlah Barang saat datang", accessor: "detailbarang_stokmasuk", align: "center" },
       { Header: "Jumlah rusak saat masuk", accessor: "jumlahrusakmasuk", align: "center" },
       { Header: "Stok Barang", accessor: "detailbarang_stok", align: "center" },
@@ -214,7 +215,6 @@ function DetailBarang() {
         accessor: "jumlahpack",
         align: "center",
       },
-      { Header: "Jumlah rusak pack", accessor: "jumlahrusakpack", align: "center" },
       { Header: "Status", accessor: "status", align: "center" },
       { Header: "Penempatan", accessor: "action", align: "center" },
       { Header: "Cek Tempat", accessor: "cek", align: "center" },
@@ -237,10 +237,10 @@ function DetailBarang() {
         nomor: index + 1,
         detailbarang_batch: item.detailbarang_batch,
         jumlahrusakmasuk: item.detailbarang_jumlahrusakmasuk,
+        detailbarang_batchproduksi: dayjs(item.detailbarang_batchproduksi).format("DD-MM-YYYY"),
         detailbarang_expdate: dayjs(item.detailbarang_expdate).format("DD-MM-YYYY"),
         detailbarang_stokmasuk: item.detailbarang_stokmasuk,
         jumlahpack: item.detailbarang_jumlahpack,
-        jumlahrusakpack: item.detailbarang_jumlahrusakpack,
         detailbarang_jumlahplacement: item.detailbarang_jumlahplacement,
         detailbarang_stok: item.detailbarang_stok,
         status: isExpired ? (
